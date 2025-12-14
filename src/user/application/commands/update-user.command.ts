@@ -1,0 +1,41 @@
+import { UpdateUserRequest } from './requests/update-user.request';
+import { UpdateUserResponse } from './responses/update-user.response';
+import { Command } from 'src/shared/interfaces/command.interface';
+import { UserRepository } from 'src/user/domain/repositories/user.repository';
+import { NotFoundUserException } from 'src/user/domain/exceptions/user';
+import { UpdateUser } from 'src/user/domain/services/user-update';
+
+interface UpdateUserProps {
+  request: UpdateUserRequest;
+}
+
+export class UpdateUserCommand implements Command<
+  UpdateUserProps,
+  UpdateUserResponse
+> {
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly updateUserService: UpdateUser,
+  ) {}
+
+  async execute(props: UpdateUserProps): Promise<UpdateUserResponse> {
+    const user = await this.userRepository.findById(props.request.userId);
+    if (!user) {
+      throw new NotFoundUserException();
+    }
+
+    await this.updateUserService.execute(user, {
+      email: props.request.email,
+      firstName: props.request.firstName,
+      lastName: props.request.lastName,
+      userName: props.request.userName,
+      phoneNumber: props.request.phoneNumber,
+      bio: props.request.bio,
+      profileImageUrl: props.request.profileImageUrl,
+      website: props.request.website,
+      location: props.request.location,
+    });
+
+    return { success: true };
+  }
+}
