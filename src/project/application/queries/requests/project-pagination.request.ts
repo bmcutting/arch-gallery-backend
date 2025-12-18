@@ -1,25 +1,15 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
+import { ProjectSortFields } from 'src/project/domain/enums/project-sort-fields';
 import { TransformSort } from 'src/shared/application/decorators/transform-sort.decorator';
 import { PaginationRequest } from 'src/shared/application/requests/pagination.request';
 import { SortOptionRequest } from 'src/shared/application/requests/sort-option.request';
-import { UserSortFields } from 'src/user/domain/enums/user-sort-fields';
 
-export class UserPaginationRequest extends PaginationRequest {
-  @ApiPropertyOptional({ description: 'Filtrar por nombre' })
+export class ProjectPaginationRequest extends PaginationRequest {
+  @ApiPropertyOptional({ description: 'Filtrar por título' })
   @IsOptional()
   @IsString()
-  firstName?: string;
-
-  @ApiPropertyOptional({ description: 'Filtrar por apellido' })
-  @IsOptional()
-  @IsString()
-  lastName?: string;
-
-  @ApiPropertyOptional({ description: 'Filtrar por email' })
-  @IsOptional()
-  @IsString()
-  email?: string;
+  title?: string;
 
   @ApiPropertyOptional({
     type: [SortOptionRequest],
@@ -29,6 +19,6 @@ export class UserPaginationRequest extends PaginationRequest {
       { field: 'lastName', order: 'ASC' },
     ],
   })
-  @TransformSort(UserSortFields)
-  sort?: SortOptionRequest<UserSortFields>[];
+  @TransformSort(ProjectSortFields)
+  sort?: SortOptionRequest<ProjectSortFields>[];
 }

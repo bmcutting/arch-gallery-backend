@@ -3,7 +3,7 @@ import { GetUserByIdRequest } from './requests/user-get-by-id.request';
 import { UserResponse } from './responses/user.response';
 import { UserRepository } from 'src/user/domain/repositories/user.repository';
 import { UserResponseMapper } from '../mappers/user.mapper';
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundUserException } from 'src/user/domain/exceptions/user';
 
 export class GetUserByIdQuery implements Query<
   GetUserByIdRequest,
@@ -18,6 +18,6 @@ export class GetUserByIdQuery implements Query<
       return UserResponseMapper.toResponse(found);
     }
 
-    throw new NotFoundException();
+    throw new NotFoundUserException();
   }
 }

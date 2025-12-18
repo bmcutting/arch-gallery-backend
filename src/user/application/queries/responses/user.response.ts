@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class UserResponse {
   @ApiProperty({
-    description: 'Identificador único ULID del usuario',
+    description: 'Identificador único UUID del usuario',
     example: '01J9Z9A9K7ZQW1T8S9H3B5V4FY',
   })
   id: string;

@@ -1,5 +1,13 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsInt, Min, ValidateIf } from 'class-validator';
+import {
+  IsBoolean,
+  IsDate,
+  IsInt,
+  IsOptional,
+  IsString,
+  Min,
+  ValidateIf,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class PaginationRequest {
@@ -18,4 +26,62 @@ export class PaginationRequest {
   @Min(1)
   @Type(() => Number)
   pageSize?: number;
+
+  @ApiPropertyOptional({ description: 'Término de búsqueda global' })
+  @IsOptional()
+  @IsString()
+  search?: string;
+
+  @ApiPropertyOptional({ description: 'Filtrar por fecha de creación mínima' })
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  createdAtMin?: Date;
+
+  @ApiPropertyOptional({ description: 'Filtrar por fecha de creación máxima' })
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  createdAtMax?: Date;
+
+  @ApiPropertyOptional({
+    description: 'Incluir tanto activos como eliminados (soft delete)',
+  })
+  @IsOptional()
+  @Type(() => Boolean)
+  @IsBoolean()
+  includeDeleted?: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Mostrar solo usuarios eliminados (soft delete)',
+  })
+  @IsOptional()
+  @Type(() => Boolean)
+  @IsBoolean()
+  onlyDeleted?: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Filtrar por fecha de eliminación mínima (soft delete)',
+  })
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  deletedAtMin?: Date;
+
+  @ApiPropertyOptional({
+    description: 'Filtrar por fecha de eliminación máxima (soft delete)',
+  })
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  deletedAtMax?: Date;
+
+  @ApiPropertyOptional({
+    description: 'Filtrar por estado activo/inactivo',
+    enum: [true, false],
+  })
+  @IsOptional()
+  @Type(() => Boolean)
+  @IsBoolean()
+  isActive?: boolean;
 }

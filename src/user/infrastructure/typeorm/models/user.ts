@@ -1,5 +1,6 @@
+import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project';
 import { Model } from 'src/shared/typeorm/base.model';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity({ name: 'users' })
 export class UserModel extends Model {
@@ -32,4 +33,7 @@ export class UserModel extends Model {
 
   @Column({ type: 'text', nullable: true })
   location: string;
+
+  @OneToMany(() => ProjectModel, (project) => project.user)
+  projects: ProjectModel[];
 }

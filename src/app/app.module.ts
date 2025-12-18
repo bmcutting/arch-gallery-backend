@@ -4,6 +4,8 @@ import { EnvModule } from './modules/env/env.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModel } from 'src/user/infrastructure/typeorm/models/user';
 import { EnvService } from 'src/app/modules/env/services/env';
+import { ProjectModule } from 'src/project/project.module';
+import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project';
 
 @Module({
   imports: [
@@ -21,13 +23,14 @@ import { EnvService } from 'src/app/modules/env/services/env';
           synchronize: true,
           logging: false,
           dropSchema: false,
-          entities: [UserModel],
+          entities: [UserModel, ProjectModel],
         };
       },
       inject: [EnvService],
       imports: [EnvModule],
     }),
     UserModule,
+    ProjectModule,
   ],
   controllers: [],
   providers: [],

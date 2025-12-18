@@ -1,19 +1,16 @@
 import { SortOption } from 'src/shared/domain/interfaces/sort-option';
-import { UserSortFields } from '../enums/user-sort-fields';
+import { ProjectSortFields } from '../enums/project-sort-fields';
 
-export interface UserPaginationParams {
+export interface ProjectPaginationParams {
   page?: number;
   pageSize?: number;
   search?: string;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  userName?: string;
+  title?: string;
   createdAtMin?: Date;
   createdAtMax?: Date;
   includeDeleted?: boolean;
   onlyDeleted?: boolean;
   deletedAtMin?: Date;
   deletedAtMax?: Date;
-  sort?: SortOption<UserSortFields>[];
+  sort?: SortOption<ProjectSortFields>[];
 }

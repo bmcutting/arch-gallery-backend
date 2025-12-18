@@ -17,6 +17,7 @@ export class UserResponseMapper {
       deletedAt: user.getDeletedAt(),
     };
   }
+
   static toResponseList(users: User[]): UserResponse[] {
     return users.map((user) => this.toResponse(user));
   }

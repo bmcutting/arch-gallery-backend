@@ -26,7 +26,6 @@ export class UserWhereBuilder extends BaseWhereBuilder<
     where: FindOptionsWhere<UserModel>,
     filters: UserPaginationParams,
   ): void {
-    where.id = WhereUtils.assignIfExists(filters.userId);
     where.firstName = WhereUtils.ilikeUnaccent(filters.firstName);
     where.lastName = WhereUtils.ilikeUnaccent(filters.lastName);
     where.userName = WhereUtils.ilikeUnaccent(filters.userName);

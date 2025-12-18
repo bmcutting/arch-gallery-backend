@@ -3,8 +3,14 @@ import { UserResponse } from 'src/user/application/queries/responses/user.respon
 import { GetAllUsersQuery } from 'src/user/application/queries/get-all-users.query';
 import { UserPaginationRequest } from 'src/user/application/queries/requests/user-pagination.request';
 import { TypeOrmUserRepository } from '../../typeorm/repository/user';
-import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
-import { GetUserByIdQuery } from 'src/user/application/queries/get-user-by-id';
+import {
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { GetUserByIdQuery } from 'src/user/application/queries/get-user-by-id.query';
 import { CreateUserRequest } from 'src/user/application/commands/requests/create-user.request';
 import { UserCreator } from 'src/user/domain/services/user-create';
 import { BcryptPasswordHasher } from 'src/shared/utils/password-hasher';
@@ -13,18 +19,24 @@ import { UpdateUser } from 'src/user/domain/services/user-update';
 import { UpdateUserRequest } from 'src/user/application/commands/requests/update-user.request';
 import { UpdateUserCommand } from 'src/user/application/commands/update-user.command';
 
+@ApiTags('users')
 @Controller('users')
 export class UserController {
   constructor(private readonly userRepository: TypeOrmUserRepository) {}
 
   @Post()
-  @ApiOperation({ summary: 'Crear un nuevo usuario' })
+  @ApiOperation({
+    summary: 'Crear un nuevo usuario',
+    description:
+      'Permite registrar un nuevo usuario en el sistema con sus datos básicos.',
+  })
   @ApiBody({
     type: CreateUserRequest,
     examples: {
-      example1: {
+      ejemplo1: {
         summary: 'Usuario básico',
-        description: 'Ejemplo de creación de un usuario con datos básicos',
+        description:
+          'Ejemplo de creación de un usuario con datos mínimos requeridos',
         value: {
           email: 'juan.perez@ejemplo.com',
           password: '123456',
@@ -47,12 +59,16 @@ export class UserController {
   }
 
   @Put(':id')
-  @ApiOperation({ summary: 'Actualizar un usuario' })
-  @ApiParam({ name: 'id', description: 'ID del usuario' })
+  @ApiOperation({
+    summary: 'Actualizar un usuario',
+    description:
+      'Permite modificar los datos de un usuario existente. Se pueden actualizar todos o algunos campos.',
+  })
+  @ApiParam({ name: 'id', description: 'ID único del usuario', type: String })
   @ApiBody({
     type: UpdateUserRequest,
     examples: {
-      example1: {
+      ejemplo1: {
         summary: 'Actualizar todos los campos',
         description: 'Ejemplo de actualización completa de un usuario',
         value: {
@@ -66,7 +82,7 @@ export class UserController {
           location: 'Madrid, España',
         },
       },
-      example2: {
+      ejemplo2: {
         summary: 'Actualizar email y nombre',
         description: 'Ejemplo de actualización parcial de un usuario',
         value: {
@@ -88,10 +104,15 @@ export class UserController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Obtener todos los usuarios' })
+  @ApiOperation({
+    summary: 'Obtener todos los usuarios',
+    description:
+      'Devuelve una lista paginada de todos los usuarios registrados en el sistema.',
+  })
   @ApiResponse({
     status: 200,
     description: 'Lista de usuarios obtenida exitosamente',
+    type: [UserResponse],
   })
   async getUsers(
     @Query() params: UserPaginationRequest,
@@ -102,9 +123,17 @@ export class UserController {
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Obtener un usuario por ID' })
-  @ApiParam({ name: 'id', description: 'ID del usuario', type: String })
-  @ApiResponse({ status: 200, description: 'Usuario encontrado' })
+  @ApiOperation({
+    summary: 'Obtener un usuario por Id',
+    description:
+      'Devuelve la información de un usuario específico a partir de su identificador único.',
+  })
+  @ApiParam({ name: 'id', description: 'Id único del usuario', type: String })
+  @ApiResponse({
+    status: 200,
+    description: 'Usuario encontrado',
+    type: UserResponse,
+  })
   @ApiResponse({ status: 404, description: 'Usuario no encontrado' })
   async findById(@Param('id') id: string): Promise<UserResponse> {
     const query = new GetUserByIdQuery(this.userRepository);

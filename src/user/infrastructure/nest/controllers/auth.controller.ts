@@ -9,10 +9,11 @@ import { RefreshTokenCreator } from 'src/user/domain/services/refresh-token-crea
 import { RefreshTokenVerificator } from 'src/user/domain/services/refresh-token-verificator';
 import { GetUserByRefreshTokenQuery } from 'src/user/application/queries/get-user-by-refresh.query';
 import { SignInRequest } from 'src/user/application/queries/requests/sign-in.request';
-import { SignInUserQuery } from 'src/user/application/queries/sign-in.request';
 import { BcryptPasswordHasher } from 'src/shared/utils/password-hasher';
-import { ApiBody } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { SignInUserQuery } from 'src/user/application/queries/sign-in.query';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -22,12 +23,18 @@ export class AuthController {
   ) {}
 
   @Post('refresh')
+  @ApiOperation({
+    summary: 'Refrescar sesión de usuario',
+    description:
+      'Genera nuevos tokens de acceso y refresh a partir de un token de refresh válido.',
+  })
   @ApiBody({
     type: GetUserByTokenRequest,
     examples: {
-      example: {
-        summary: 'Actualizar todos los campos',
-        description: 'Ejemplo de actualización completa de un usuario',
+      ejemplo: {
+        summary: 'Refrescar tokens',
+        description:
+          'Ejemplo de cómo refrescar la sesión de un usuario con un token válido',
         value: {
           token:
             '643ae15f04782b0f84e160e9119b6c8ce339a7e0bd5818c3ead6bf8f7d478d275ca36c92114b5ae0415cf5ee1c25e77a71bfe37935ff8d7db25fe2d4ec4f6211',
@@ -35,6 +42,12 @@ export class AuthController {
       },
     },
   })
+  @ApiResponse({
+    status: 200,
+    description: 'Tokens generados correctamente',
+    type: SignInResponse,
+  })
+  @ApiResponse({ status: 401, description: 'Token inválido o expirado' })
   async refresh(
     @Body() request: GetUserByTokenRequest,
   ): Promise<SignInResponse> {
@@ -64,12 +77,17 @@ export class AuthController {
   }
 
   @Post('sign-in')
+  @ApiOperation({
+    summary: 'Inicio de sesión de usuario',
+    description:
+      'Autentica a un usuario con email y contraseña, devolviendo tokens de acceso y refresh.',
+  })
   @ApiBody({
     type: SignInRequest,
     examples: {
-      example: {
-        summary: 'Actualizar todos los campos',
-        description: 'Ejemplo de sign-in de un usuario',
+      ejemplo: {
+        summary: 'Ejemplo de inicio de sesión',
+        description: 'Ejemplo de login de un usuario con email y contraseña',
         value: {
           email: 'juan.perez@ejemplo.com',
           password: '123456',
@@ -77,6 +95,12 @@ export class AuthController {
       },
     },
   })
+  @ApiResponse({
+    status: 200,
+    description: 'Usuario autenticado correctamente',
+    type: SignInResponse,
+  })
+  @ApiResponse({ status: 401, description: 'Credenciales inválidas' })
   async signIn(@Body() request: SignInRequest): Promise<SignInResponse> {
     const accessTokenCreator = new AccessTokenCreator(
       this.jwtServices,

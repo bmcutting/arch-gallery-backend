@@ -1,4 +1,4 @@
-export interface SignInResponse {
+export class SignInResponse {
   userName: string;
   email: string;
   id: string;
