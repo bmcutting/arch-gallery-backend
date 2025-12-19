@@ -18,6 +18,7 @@ import { ProjectResponse } from 'src/project/application/queries/responses/proje
 import { ProjectPaginationRequest } from 'src/project/application/queries/requests/project-pagination.request';
 import { GetAllProjectsQuery } from 'src/project/application/queries/get-all-projects.query';
 import { GetProjectByIdQuery } from 'src/project/application/queries/get-project-by-id.query';
+import { PaginationResponse } from 'src/shared/application/responses/pagination.response';
 
 @ApiTags('projects')
 @Controller('projects')
@@ -123,10 +124,10 @@ export class ProjectController {
   })
   async getProjects(
     @Query() params: ProjectPaginationRequest,
-  ): Promise<ProjectResponse[]> {
+  ): Promise<PaginationResponse<ProjectResponse>> {
     const query = new GetAllProjectsQuery(this.projectRepository);
     const paginationResponse = await query.execute(params);
-    return paginationResponse.items;
+    return paginationResponse;
   }
 
   @Get(':id')

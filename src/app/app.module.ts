@@ -6,6 +6,8 @@ import { UserModel } from 'src/user/infrastructure/typeorm/models/user';
 import { EnvService } from 'src/app/modules/env/services/env';
 import { ProjectModule } from 'src/project/project.module';
 import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project';
+import { CategoryModule } from 'src/category/category.module';
+import { CategoryModel } from 'src/category/infrastructure/typeorm/models/category';
 
 @Module({
   imports: [
@@ -23,7 +25,7 @@ import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project'
           synchronize: true,
           logging: false,
           dropSchema: false,
-          entities: [UserModel, ProjectModel],
+          entities: [UserModel, ProjectModel, CategoryModel],
         };
       },
       inject: [EnvService],
@@ -31,6 +33,7 @@ import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project'
     }),
     UserModule,
     ProjectModule,
+    CategoryModule,
   ],
   controllers: [],
   providers: [],

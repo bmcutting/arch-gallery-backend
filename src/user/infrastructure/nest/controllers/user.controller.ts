@@ -18,6 +18,7 @@ import { CreateUserCommand } from 'src/user/application/commands/create-user.com
 import { UpdateUser } from 'src/user/domain/services/user-update';
 import { UpdateUserRequest } from 'src/user/application/commands/requests/update-user.request';
 import { UpdateUserCommand } from 'src/user/application/commands/update-user.command';
+import { PaginationResponse } from 'src/shared/application/responses/pagination.response';
 
 @ApiTags('users')
 @Controller('users')
@@ -116,10 +117,10 @@ export class UserController {
   })
   async getUsers(
     @Query() params: UserPaginationRequest,
-  ): Promise<UserResponse[]> {
+  ): Promise<PaginationResponse<UserResponse>> {
     const getAllUsersQuery = new GetAllUsersQuery(this.userRepository);
     const paginationResponse = await getAllUsersQuery.execute(params);
-    return paginationResponse.items;
+    return paginationResponse;
   }
 
   @Get(':id')

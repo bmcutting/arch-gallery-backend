@@ -1,6 +1,7 @@
+import { CategoryModel } from 'src/category/infrastructure/typeorm/models/category';
 import { Model } from 'src/shared/typeorm/base.model';
 import { UserModel } from 'src/user/infrastructure/typeorm/models/user';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
 
 @Entity({ name: 'projects' })
 export class ProjectModel extends Model {
@@ -15,4 +16,12 @@ export class ProjectModel extends Model {
 
   @ManyToOne(() => UserModel, (user) => user.projects)
   user: UserModel;
+
+  @ManyToMany(() => CategoryModel, (category) => category.projects)
+  @JoinTable({
+    name: 'project_categories',
+    joinColumn: { name: 'projectId', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'categoryId', referencedColumnName: 'id' },
+  })
+  categories: CategoryModel[];
 }

@@ -1,28 +1,28 @@
 import { Query } from 'src/shared/interfaces/queries.interface';
-import { ProjectPaginationRequest } from './requests/project-pagination.request';
 import { PaginationResponse } from 'src/shared/application/responses/pagination.response';
-import { ProjectResponse } from './responses/project.response';
-import { ProjectResponseMapper } from '../mappers/project.mapper';
 import { PaginationResponseMapper } from 'src/shared/application/mappers/pagination-mapper';
-import { ProjectRepository } from 'src/project/domain/repositories/user.repository';
+import { CategoryPaginationRequest } from './requests/category-pagination.request';
+import { CategoryResponse } from './responses/category.response';
+import { CategoryRepository } from 'src/category/domain/repositories/category.repository';
+import { CategoryResponseMapper } from '../mappers/category.mapper';
 
-export class GetAllProjectsQuery implements Query<
-  ProjectPaginationRequest,
-  Promise<PaginationResponse<ProjectResponse>>
+export class GetAllCategoriesQuery implements Query<
+  CategoryPaginationRequest,
+  Promise<PaginationResponse<CategoryResponse>>
 > {
-  constructor(private readonly projectRepository: ProjectRepository) {}
+  constructor(private readonly categoryRepository: CategoryRepository) {}
 
   async execute(
-    request: ProjectPaginationRequest,
-  ): Promise<PaginationResponse<ProjectResponse>> {
+    request: CategoryPaginationRequest,
+  ): Promise<PaginationResponse<CategoryResponse>> {
     const { items, totalItems, pagination } =
-      await this.projectRepository.findAll({
+      await this.categoryRepository.findAll({
         page: request.page,
         pageSize: request.pageSize,
         search: request.search,
         createdAtMin: request.createdAtMin,
         createdAtMax: request.createdAtMax,
-        title: request.title,
+        name: request.name,
         deletedAtMax: request.deletedAtMax,
         deletedAtMin: request.deletedAtMin,
         includeDeleted: request.includeDeleted,
@@ -31,7 +31,7 @@ export class GetAllProjectsQuery implements Query<
       });
 
     return PaginationResponseMapper.toResponse({
-      items: ProjectResponseMapper.toResponseList(items),
+      items: CategoryResponseMapper.toResponseList(items),
       totalItems,
       ...pagination,
     });

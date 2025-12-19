@@ -23,6 +23,16 @@ export class TypeOrmProjectRepository implements ProjectRepository {
     private readonly projectRepository: Repository<ProjectModel>,
   ) {}
 
+  async create(props: CreateProjectProps): Promise<string> {
+    const project = new ProjectModel();
+    project.title = props.title;
+    project.user = { id: props.userId } as UserModel;
+
+    await this.projectRepository.save(project);
+
+    return project.id;
+  }
+
   async findById(id: string): Promise<Project | null> {
     const found = await this.projectRepository.findOne({
       where: { id },
@@ -73,15 +83,5 @@ export class TypeOrmProjectRepository implements ProjectRepository {
       isActive: false,
       deletedAt: new Date(),
     });
-  }
-
-  async create(props: CreateProjectProps): Promise<string> {
-    const project = new ProjectModel();
-    project.title = props.title;
-    project.user = { id: props.userId } as UserModel;
-
-    await this.projectRepository.save(project);
-
-    return project.id;
   }
 }

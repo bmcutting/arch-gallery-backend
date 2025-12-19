@@ -4,13 +4,13 @@ import { UserResponse } from './responses/user.response';
 import { UserPaginationRequest } from './requests/user-pagination.request';
 import { PaginationResponseMapper } from 'src/shared/application/mappers/pagination-mapper';
 import { UserResponseMapper } from '../mappers/user.mapper';
-import { TypeOrmUserRepository } from 'src/user/infrastructure/typeorm/repository/user';
+import { UserRepository } from 'src/user/domain/repositories/user.repository';
 
 export class GetAllUsersQuery implements Query<
   UserPaginationRequest,
   Promise<PaginationResponse<UserResponse>>
 > {
-  constructor(private readonly userRepository: TypeOrmUserRepository) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   async execute(
     request: UserPaginationRequest,

@@ -5,9 +5,3 @@ export class NotFoundProjectException extends HttpException {
     super(``, HttpStatus.NOT_FOUND);
   }
 }
-
-export class RepeatProjectException extends HttpException {
-  constructor() {
-    super(``, HttpStatus.CONFLICT);
-  }
-}
