@@ -63,7 +63,7 @@ export class TypeOrmCategoryRepository implements CategoryRepository {
       where: { id },
     });
 
-    return found ? CategoryTypeOrmMapper.execute(found) : null;
+    return found ? CategoryTypeOrmMapper.toDomain(found) : null;
   }
 
   async findByName(name: string): Promise<Category | null> {
@@ -71,7 +71,7 @@ export class TypeOrmCategoryRepository implements CategoryRepository {
       where: { name },
     });
 
-    return found ? CategoryTypeOrmMapper.execute(found) : null;
+    return found ? CategoryTypeOrmMapper.toDomain(found) : null;
   }
 
   async findAll(
@@ -91,7 +91,7 @@ export class TypeOrmCategoryRepository implements CategoryRepository {
     const pagination = getPaginationInfo(totalItems, props);
 
     return {
-      items: items.map((u) => CategoryTypeOrmMapper.execute(u)),
+      items: items.map((u) => CategoryTypeOrmMapper.toDomain(u)),
       totalItems,
       pagination,
     };

@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { CategoryResponse } from 'src/category/application/queries/responses/category.response';
 import { UserResponse } from 'src/user/application/queries/responses/user.response';
 
 export class ProjectResponse {
@@ -53,4 +54,11 @@ export class ProjectResponse {
     nullable: true,
   })
   user: UserResponse | null;
+
+  @ApiProperty({
+    description: 'Categorías asociadas al proyecto',
+    type: [CategoryResponse],
+    nullable: true,
+  })
+  categories: CategoryResponse[] | null;
 }

@@ -1,5 +1,6 @@
 import { Project } from 'src/project/domain/entities/project.entity';
 import { ProjectResponse } from '../queries/responses/project.response';
+import { CategoryResponseMapper } from 'src/category/application/mappers/category.mapper';
 
 export class ProjectResponseMapper {
   static toReponse(project: Project): ProjectResponse {
@@ -12,6 +13,9 @@ export class ProjectResponseMapper {
       createdAt: project.getCreatedAt(),
       deletedAt: project.getDeletedAt(),
       user: project.user,
+      categories: CategoryResponseMapper.toResponseList(
+        project.getCategories(),
+      ),
     };
   }
 
