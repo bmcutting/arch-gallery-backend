@@ -1,7 +1,16 @@
 import { CategoryModel } from 'src/category/infrastructure/typeorm/models/category';
 import { Model } from 'src/shared/typeorm/base.model';
 import { UserModel } from 'src/user/infrastructure/typeorm/models/user';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
+import { CommentModel } from './comment';
+import { LikeModel } from './like';
 
 @Entity({ name: 'projects' })
 export class ProjectModel extends Model {
@@ -24,4 +33,10 @@ export class ProjectModel extends Model {
     inverseJoinColumn: { name: 'categoryId', referencedColumnName: 'id' },
   })
   categories: CategoryModel[];
+
+  @OneToMany(() => CommentModel, (comment) => comment.project)
+  comments: CommentModel[];
+
+  @OneToMany(() => LikeModel, (like) => like.project)
+  likes: LikeModel[];
 }

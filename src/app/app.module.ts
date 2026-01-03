@@ -8,6 +8,8 @@ import { ProjectModule } from 'src/project/project.module';
 import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project';
 import { CategoryModule } from 'src/category/category.module';
 import { CategoryModel } from 'src/category/infrastructure/typeorm/models/category';
+import { CommentModel } from 'src/project/infrastructure/typeorm/models/comment';
+import { LikeModel } from 'src/project/infrastructure/typeorm/models/like';
 
 @Module({
   imports: [
@@ -25,7 +27,13 @@ import { CategoryModel } from 'src/category/infrastructure/typeorm/models/catego
           synchronize: true,
           logging: false,
           dropSchema: false,
-          entities: [UserModel, ProjectModel, CategoryModel],
+          entities: [
+            UserModel,
+            ProjectModel,
+            CategoryModel,
+            CommentModel,
+            LikeModel,
+          ],
         };
       },
       inject: [EnvService],

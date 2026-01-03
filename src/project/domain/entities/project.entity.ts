@@ -1,5 +1,7 @@
 import { Category } from 'src/category/domain/entities/category';
 import { User } from 'src/user/domain/entities/user.entity';
+import { Like } from './like.entity';
+import { Comment } from './comment.entity';
 
 interface Props {
   id: string;
@@ -8,6 +10,8 @@ interface Props {
   imagesUrl?: string[];
   user: User;
   categories?: Category[];
+  likes?: Like[];
+  comments?: Comment[];
   isActive: boolean;
   createdAt?: Date;
   deletedAt?: Date | null;
@@ -21,6 +25,8 @@ export class Project {
   imagesUrl: string[];
   user: User;
   categories: Category[];
+  likes: Like[];
+  comments: Comment[];
   isActive: boolean;
   deletedAt: Date | null;
 
@@ -31,6 +37,8 @@ export class Project {
     this.user = props.user;
     this.imagesUrl = props.imagesUrl ?? [];
     this.categories = props.categories ?? [];
+    this.likes = props.likes ?? [];
+    this.comments = props.comments ?? [];
     this.isActive = props.isActive;
     this.createdAt = props.createdAt ?? new Date();
     this.deletedAt = props.deletedAt ?? null;
@@ -71,6 +79,14 @@ export class Project {
 
   getCategories(): Category[] {
     return this.categories;
+  }
+
+  getLikes(): Like[] {
+    return this.likes;
+  }
+
+  getComments(): Comment[] {
+    return this.comments;
   }
 
   // Setters

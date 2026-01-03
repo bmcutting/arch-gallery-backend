@@ -1,3 +1,4 @@
+import { LikeModel } from 'src/project/infrastructure/typeorm/models/like';
 import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project';
 import { Model } from 'src/shared/typeorm/base.model';
 import { Column, Entity, OneToMany } from 'typeorm';
@@ -36,4 +37,6 @@ export class UserModel extends Model {
 
   @OneToMany(() => ProjectModel, (project) => project.user)
   projects: ProjectModel[];
+
+  @OneToMany(() => LikeModel, (like) => like.user) likes: LikeModel[];
 }
