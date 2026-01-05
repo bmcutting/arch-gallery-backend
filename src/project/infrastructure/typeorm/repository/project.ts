@@ -37,14 +37,14 @@ export class TypeOrmProjectRepository implements ProjectRepository {
     await this.likeRepository.save(like);
   }
 
-  removeLike(userId: string, projectId: string): Promise<void> {
-    console.log('removeLike called with:', { userId, projectId });
-    throw new Error('Method not implemented.');
+  async removeLike(userId: string, projectId: string): Promise<void> {
+    await this.likeRepository.delete({ userId, projectId });
   }
 
   async countLikes(projectId: string): Promise<number> {
-    console.log(projectId);
-    const likes = await this.likeRepository.count();
+    const likes = await this.likeRepository.count({
+      where: { project: { id: projectId } },
+    });
     return likes;
   }
 
@@ -66,8 +66,9 @@ export class TypeOrmProjectRepository implements ProjectRepository {
   }
 
   async countComments(projectId: string): Promise<number> {
-    console.log(projectId);
-    const comments = await this.commentRepository.count();
+    const comments = await this.commentRepository.count({
+      where: { project: { id: projectId } },
+    });
     return comments;
   }
 

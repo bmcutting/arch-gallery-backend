@@ -5,7 +5,6 @@ import { UserResponseMapper } from 'src/user/application/mappers/user.mapper';
 
 export class ProjectResponseMapper {
   static toReponse(project: Project): ProjectResponse {
-    console.log(project);
     return {
       id: project.id,
       title: project.title,
