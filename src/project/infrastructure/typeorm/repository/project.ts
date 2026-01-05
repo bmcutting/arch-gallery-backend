@@ -31,8 +31,8 @@ export class TypeOrmProjectRepository implements ProjectRepository {
 
   async addLike(userId: string, projectId: string): Promise<void> {
     const like = new LikeModel();
-    like.project = { id: projectId } as ProjectModel;
-    like.user = { id: userId } as UserModel;
+    like.userId = userId;
+    like.projectId = projectId;
 
     await this.likeRepository.save(like);
   }

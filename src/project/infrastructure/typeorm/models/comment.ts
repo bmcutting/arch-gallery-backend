@@ -5,6 +5,12 @@ import { Model } from 'src/shared/typeorm/base.model';
 
 @Entity({ name: 'comments' })
 export class CommentModel extends Model {
+  @Column()
+  userId: string;
+
+  @Column()
+  projectId: string;
+
   @Column({ type: 'text' })
   message: string;
 

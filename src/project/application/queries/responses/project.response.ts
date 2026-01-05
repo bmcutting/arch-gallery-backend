@@ -61,4 +61,13 @@ export class ProjectResponse {
     nullable: true,
   })
   categories: CategoryResponse[] | null;
+
+  @ApiProperty({ description: 'Cantidad de likes del proyecto', example: 42 })
+  likesCount: number;
+
+  @ApiProperty({
+    description: 'Cantidad de comentarios del proyecto',
+    example: 15,
+  })
+  commentsCount: number;
 }
