@@ -5,9 +5,18 @@ import { ProjectController } from './infrastructure/nest/controllers/project.con
 import { TypeOrmProjectRepository } from './infrastructure/typeorm/repository/project';
 import { TypeOrmUserRepository } from 'src/user/infrastructure/typeorm/repository/user';
 import { UserModel } from 'src/user/infrastructure/typeorm/models/user';
+import { LikeModel } from './infrastructure/typeorm/models/like';
+import { CommentModel } from './infrastructure/typeorm/models/comment';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ProjectModel, UserModel])],
+  imports: [
+    TypeOrmModule.forFeature([
+      ProjectModel,
+      UserModel,
+      LikeModel,
+      CommentModel,
+    ]),
+  ],
   controllers: [ProjectController],
   providers: [TypeOrmProjectRepository, TypeOrmUserRepository],
   exports: [TypeOrmProjectRepository],

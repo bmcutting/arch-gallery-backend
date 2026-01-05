@@ -1,5 +1,5 @@
 import { NotFoundUserException } from 'src/user/domain/exceptions/user';
-import { ProjectRepository } from '../repositories/user.repository';
+import { ProjectRepository } from '../repositories/project.repository';
 import { UserRepository } from 'src/user/domain/repositories/user.repository';
 
 export interface CreateProjectProps {

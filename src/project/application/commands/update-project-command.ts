@@ -1,12 +1,13 @@
 import { Command } from 'src/shared/interfaces/command.interface';
 import { UpdateProjectRequest } from './requests/update-project.request';
 import { UpdateProjectResponse } from './responses/update-project.response';
-import { ProjectRepository } from 'src/project/domain/repositories/user.repository';
+import { ProjectRepository } from 'src/project/domain/repositories/project.repository';
 import { UpdateProject } from 'src/project/domain/services/project-update';
 import { NotFoundProjectException } from 'src/project/domain/exceptions/project';
 
 interface UpdateProjectProps {
   request: UpdateProjectRequest;
+  projectId: string;
 }
 
 export class UpdateProjectCommand implements Command<
@@ -19,9 +20,7 @@ export class UpdateProjectCommand implements Command<
   ) {}
 
   async execute(props: UpdateProjectProps): Promise<UpdateProjectResponse> {
-    const project = await this.projectRepository.findById(
-      props.request.projectId,
-    );
+    const project = await this.projectRepository.findById(props.projectId);
     if (!project) {
       throw new NotFoundProjectException();
     }

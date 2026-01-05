@@ -1,7 +1,7 @@
 import { Query } from 'src/shared/interfaces/queries.interface';
 import { GetProjectByIdRequest } from './requests/project-get-by-id.request';
 import { ProjectResponse } from './responses/project.response';
-import { ProjectRepository } from 'src/project/domain/repositories/user.repository';
+import { ProjectRepository } from 'src/project/domain/repositories/project.repository';
 import { NotFoundException } from '@nestjs/common';
 import { ProjectResponseMapper } from '../mappers/project.mapper';
 

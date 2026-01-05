@@ -2,7 +2,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   CreateProjectProps,
   ProjectRepository,
-} from 'src/project/domain/repositories/user.repository';
+} from 'src/project/domain/repositories/project.repository';
 import { ProjectModel } from '../models/project';
 import { Repository } from 'typeorm';
 import { UserModel } from 'src/user/infrastructure/typeorm/models/user';
@@ -16,12 +16,60 @@ import {
   getPaginationInfo,
   getPaginationOptions,
 } from 'src/shared/utils/pagination.util';
+import { LikeModel } from '../models/like';
+import { CommentModel } from '../models/comment';
 
 export class TypeOrmProjectRepository implements ProjectRepository {
   constructor(
     @InjectRepository(ProjectModel)
     private readonly projectRepository: Repository<ProjectModel>,
+    @InjectRepository(LikeModel)
+    private readonly likeRepository: Repository<LikeModel>,
+    @InjectRepository(CommentModel)
+    private readonly commentRepository: Repository<CommentModel>,
   ) {}
+
+  async addLike(userId: string, projectId: string): Promise<void> {
+    const like = new LikeModel();
+    like.project = { id: projectId } as ProjectModel;
+    like.user = { id: userId } as UserModel;
+
+    await this.likeRepository.save(like);
+  }
+
+  removeLike(userId: string, projectId: string): Promise<void> {
+    console.log('removeLike called with:', { userId, projectId });
+    throw new Error('Method not implemented.');
+  }
+
+  async countLikes(projectId: string): Promise<number> {
+    console.log(projectId);
+    const likes = await this.likeRepository.count();
+    return likes;
+  }
+
+  async addComment(
+    userId: string,
+    projectId: string,
+    text: string,
+  ): Promise<void> {
+    const comment = new CommentModel();
+    comment.project = { id: projectId } as ProjectModel;
+    comment.user = { id: userId } as UserModel;
+    comment.message = text;
+
+    await this.commentRepository.save(comment);
+  }
+
+  async removeComment(commentId: string): Promise<void> {
+    await this.commentRepository.delete(commentId);
+  }
+
+  async countComments(projectId: string): Promise<number> {
+    console.log(projectId);
+    const comments = await this.commentRepository.count();
+    return comments;
+  }
 
   async create(props: CreateProjectProps): Promise<string> {
     const project = new ProjectModel();
@@ -39,6 +87,8 @@ export class TypeOrmProjectRepository implements ProjectRepository {
       relations: {
         user: true,
         categories: true,
+        comments: true,
+        likes: true,
       },
     });
 

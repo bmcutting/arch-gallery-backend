@@ -1,4 +1,4 @@
-import { ProjectRepository } from 'src/project/domain/repositories/user.repository';
+import { ProjectRepository } from 'src/project/domain/repositories/project.repository';
 import { CategoryRepository } from '../repositories/category.repository';
 import { NotFoundProjectException } from 'src/project/domain/exceptions/project';
 

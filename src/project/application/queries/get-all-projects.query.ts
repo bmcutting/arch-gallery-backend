@@ -4,7 +4,7 @@ import { PaginationResponse } from 'src/shared/application/responses/pagination.
 import { ProjectResponse } from './responses/project.response';
 import { ProjectResponseMapper } from '../mappers/project.mapper';
 import { PaginationResponseMapper } from 'src/shared/application/mappers/pagination-mapper';
-import { ProjectRepository } from 'src/project/domain/repositories/user.repository';
+import { ProjectRepository } from 'src/project/domain/repositories/project.repository';
 
 export class GetAllProjectsQuery implements Query<
   ProjectPaginationRequest,

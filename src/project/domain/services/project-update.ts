@@ -1,5 +1,5 @@
 import { Project } from '../entities/project.entity';
-import { ProjectRepository } from '../repositories/user.repository';
+import { ProjectRepository } from '../repositories/project.repository';
 
 export interface UpdateProjectProps {
   title?: string;

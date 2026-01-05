@@ -19,6 +19,9 @@ import { ProjectPaginationRequest } from 'src/project/application/queries/reques
 import { GetAllProjectsQuery } from 'src/project/application/queries/get-all-projects.query';
 import { GetProjectByIdQuery } from 'src/project/application/queries/get-project-by-id.query';
 import { PaginationResponse } from 'src/shared/application/responses/pagination.response';
+import { AddLikeCommand } from 'src/project/application/commands/add-like-command';
+import { AddCommentCommand } from 'src/project/application/commands/add-comment-command';
+import { AddCommentRequest } from 'src/project/application/commands/requests/add-comment.request';
 
 @ApiTags('projects')
 @Controller('projects')
@@ -108,7 +111,7 @@ export class ProjectController {
       this.projectRepository,
       updateProjectService,
     );
-    return command.execute({ request: { ...body, projectId: id } });
+    return command.execute({ request: { ...body }, projectId: id });
   }
 
   @Get()
@@ -146,5 +149,82 @@ export class ProjectController {
   async findById(@Param('id') id: string): Promise<ProjectResponse> {
     const query = new GetProjectByIdQuery(this.projectRepository);
     return query.execute({ id });
+  }
+
+  @Post(':projectid/like/userid')
+  @ApiOperation({
+    summary: 'Añade un like al proyecto',
+    description:
+      'Añade un like a un proyecto relacionando el proyecto con el usuario.',
+  })
+  @ApiParam({
+    name: 'projectid',
+    description: 'Id único del proyecto',
+    type: String,
+  })
+  @ApiParam({
+    name: 'userid',
+    description: 'Id único del usuario',
+    type: String,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Cantidad de comentarios actuales',
+    type: Number,
+  })
+  async addLike(
+    @Param('projectid') projectId: string,
+    @Param('userid') userId: string,
+  ): Promise<{ likes: number }> {
+    const command = new AddLikeCommand(this.projectRepository);
+    const totalLikes = await command.execute({ projectId, userId });
+    return { likes: totalLikes };
+  }
+
+  @Post(':projectid/comment/userid')
+  @ApiOperation({
+    summary: 'Añade un comentario al proyecto',
+    description:
+      'Añade un comentario a un proyecto relacionando el proyecto con el usuario.',
+  })
+  @ApiParam({
+    name: 'projectid',
+    description: 'Id único del proyecto',
+    type: String,
+  })
+  @ApiParam({
+    name: 'userid',
+    description: 'Id único del usuario',
+    type: String,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Cantidad de likes actuales',
+    type: Number,
+  })
+  @ApiBody({
+    type: AddCommentRequest,
+
+    examples: {
+      ejemplo: {
+        summary: 'Texto del comentario',
+        value: {
+          message: 'Excelente proyecto',
+        },
+      },
+    },
+  })
+  async addComment(
+    @Param('projectid') projectId: string,
+    @Param('userid') userId: string,
+    @Body() body: AddCommentRequest,
+  ): Promise<{ comments: number }> {
+    const command = new AddCommentCommand(this.projectRepository);
+    const totalComments = await command.execute({
+      projectId,
+      userId,
+      request: { ...body },
+    });
+    return { comments: totalComments };
   }
 }
