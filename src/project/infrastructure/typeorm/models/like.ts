@@ -12,8 +12,11 @@ export class LikeModel extends Model {
   @Column()
   projectId: string;
 
-  @ManyToOne(() => UserModel, (user) => user.likes) user: UserModel;
+  @ManyToOne(() => UserModel, (user) => user.likes, { onDelete: 'CASCADE' })
+  user: UserModel;
 
-  @ManyToOne(() => ProjectModel, (project) => project.likes)
+  @ManyToOne(() => ProjectModel, (project) => project.likes, {
+    onDelete: 'CASCADE',
+  })
   project: ProjectModel;
 }

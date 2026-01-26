@@ -23,7 +23,7 @@ export class ProjectModel extends Model {
   @Column('text', { array: true, default: [] })
   imagesUrl: string[];
 
-  @ManyToOne(() => UserModel, (user) => user.projects)
+  @ManyToOne(() => UserModel, (user) => user.projects, { onDelete: 'CASCADE' })
   user: UserModel;
 
   @ManyToMany(() => CategoryModel, (category) => category.projects)

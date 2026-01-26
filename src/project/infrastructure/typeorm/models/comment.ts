@@ -14,9 +14,13 @@ export class CommentModel extends Model {
   @Column({ type: 'text' })
   message: string;
 
-  @ManyToOne(() => ProjectModel, (project) => project.comments)
+  @ManyToOne(() => ProjectModel, (project) => project.comments, {
+    onDelete: 'CASCADE',
+  })
   project: ProjectModel;
 
-  @ManyToOne(() => UserModel)
+  @ManyToOne(() => UserModel, (user) => user.comments, {
+    onDelete: 'CASCADE',
+  })
   user: UserModel;
 }

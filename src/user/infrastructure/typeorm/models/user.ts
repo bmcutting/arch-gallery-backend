@@ -1,3 +1,4 @@
+import { CommentModel } from 'src/project/infrastructure/typeorm/models/comment';
 import { LikeModel } from 'src/project/infrastructure/typeorm/models/like';
 import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project';
 import { Model } from 'src/shared/typeorm/base.model';
@@ -35,8 +36,12 @@ export class UserModel extends Model {
   @Column({ type: 'text', nullable: true })
   location: string;
 
-  @OneToMany(() => ProjectModel, (project) => project.user)
+  @OneToMany(() => ProjectModel, (project) => project.user, { cascade: true })
   projects: ProjectModel[];
 
-  @OneToMany(() => LikeModel, (like) => like.user) likes: LikeModel[];
+  @OneToMany(() => LikeModel, (like) => like.user, { cascade: true })
+  likes: LikeModel[];
+
+  @OneToMany(() => CommentModel, (comment) => comment.user, { cascade: true })
+  comments: CommentModel[];
 }
