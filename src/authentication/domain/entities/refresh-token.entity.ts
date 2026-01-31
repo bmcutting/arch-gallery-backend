@@ -1,5 +1,7 @@
+import { v4 as uuidv4 } from 'uuid';
+
 interface Props {
-  id: string;
+  id?: string;
   userId: string;
   token: string;
   expiresAt: Date;
@@ -18,7 +20,7 @@ export class RefreshToken {
   revokedAt: Date | null;
 
   constructor(props: Props) {
-    this.id = props.id;
+    this.id = props.id ?? uuidv4();
     this.userId = props.userId;
     this.token = props.token;
     this.expiresAt = props.expiresAt;

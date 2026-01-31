@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CategoryResponse {
   @ApiProperty({
     description: 'Identificador único UUID de la categoría',
-    example: '01J9Z9A9K7ZQW1T8S9H3B5V4FY',
+    example: '0a0647d6-1a41-4c79-a88e-23ea7c3e51c7',
   })
   id: string;
 

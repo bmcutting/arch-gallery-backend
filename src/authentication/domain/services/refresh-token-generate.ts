@@ -22,7 +22,6 @@ export class GenerateRefreshToken {
     const hashedToken = TokenHasher.hash(token);
 
     const refreshToken = new RefreshToken({
-      id: '',
       userId,
       token: hashedToken,
       expiresAt,

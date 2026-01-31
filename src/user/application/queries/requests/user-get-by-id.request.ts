@@ -4,7 +4,7 @@ import { IsNotEmpty, IsString } from 'class-validator';
 export class GetUserByIdRequest {
   @ApiProperty({
     description: 'Identificador único del usuario que se desea obtener',
-    example: '01J9Z9A9K7ZQW1T8S9H3B5V4FY',
+    example: '0a0647d6-1a41-4c79-a88e-23ea7c3e51c7',
   })
   @IsString()
   @IsNotEmpty()
