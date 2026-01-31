@@ -12,6 +12,7 @@ import { CommentModel } from 'src/project/infrastructure/typeorm/models/comment'
 import { LikeModel } from 'src/project/infrastructure/typeorm/models/like';
 import { RefreshTokenModel } from 'src/authentication/infrastructure/typeorm/models/refresh-token.model';
 import { AuthenticationModule } from 'src/authentication/authentication.module';
+import { ConfigutationModule } from 'src/configuration/config.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { AuthenticationModule } from 'src/authentication/authentication.module';
     ProjectModule,
     CategoryModule,
     AuthenticationModule,
+    ConfigutationModule,
   ],
   controllers: [],
   providers: [],
