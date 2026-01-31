@@ -23,7 +23,7 @@ import { AddLikeCommand } from 'src/project/application/commands/add-like-comman
 import { AddCommentCommand } from 'src/project/application/commands/add-comment-command';
 import { AddCommentRequest } from 'src/project/application/commands/requests/add-comment.request';
 
-@ApiTags('projects')
+@ApiTags('Projects')
 @Controller('projects')
 export class ProjectController {
   constructor(

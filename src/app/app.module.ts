@@ -10,6 +10,8 @@ import { CategoryModule } from 'src/category/category.module';
 import { CategoryModel } from 'src/category/infrastructure/typeorm/models/category';
 import { CommentModel } from 'src/project/infrastructure/typeorm/models/comment';
 import { LikeModel } from 'src/project/infrastructure/typeorm/models/like';
+import { RefreshTokenModel } from 'src/authentication/infrastructure/typeorm/models/refresh-token.model';
+import { AuthenticationModule } from 'src/authentication/authentication.module';
 
 @Module({
   imports: [
@@ -33,6 +35,7 @@ import { LikeModel } from 'src/project/infrastructure/typeorm/models/like';
             CategoryModel,
             CommentModel,
             LikeModel,
+            RefreshTokenModel,
           ],
         };
       },
@@ -42,6 +45,7 @@ import { LikeModel } from 'src/project/infrastructure/typeorm/models/like';
     UserModule,
     ProjectModule,
     CategoryModule,
+    AuthenticationModule,
   ],
   controllers: [],
   providers: [],

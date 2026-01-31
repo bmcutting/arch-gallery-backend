@@ -33,8 +33,10 @@ async function bootstrap() {
       },
       'JWT-auth',
     )
-    .addTag('users', 'Operaciones de usuarios')
-    .addTag('auth', 'Operaciones de autenticación')
+    .addTag('Users', 'Operaciones de usuarios')
+    .addTag('Auth', 'Operaciones de autenticación')
+    .addTag('Projects', 'Operaciones de pryectos')
+    .addTag('Categories', 'Operaciones de categorías')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

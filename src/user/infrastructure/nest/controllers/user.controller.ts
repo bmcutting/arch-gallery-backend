@@ -20,7 +20,7 @@ import { UpdateUserRequest } from 'src/user/application/commands/requests/update
 import { UpdateUserCommand } from 'src/user/application/commands/update-user.command';
 import { PaginationResponse } from 'src/shared/application/responses/pagination.response';
 
-@ApiTags('users')
+@ApiTags('Users')
 @Controller('users')
 export class UserController {
   constructor(private readonly userRepository: TypeOrmUserRepository) {}

@@ -20,7 +20,7 @@ import { GetAllCategoriesQuery } from 'src/category/application/queries/get-all-
 import { PaginationResponse } from 'src/shared/application/responses/pagination.response';
 import { GetCategoryByIdQuery } from 'src/category/application/queries/get-category-by-id.query';
 
-@ApiTags('categories')
+@ApiTags('Categories')
 @Controller('categories')
 export class CategoryController {
   constructor(
