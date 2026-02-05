@@ -1,9 +1,20 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { UserResponse } from 'src/user/application/queries/responses/user.response';
 import { GetAllUsersQuery } from 'src/user/application/queries/get-all-users.query';
 import { UserPaginationRequest } from 'src/user/application/queries/requests/user-pagination.request';
 import { TypeOrmUserRepository } from '../../typeorm/repository/user';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiParam,
@@ -19,11 +30,34 @@ import { UpdateUser } from 'src/user/domain/services/user-update';
 import { UpdateUserRequest } from 'src/user/application/commands/requests/update-user.request';
 import { UpdateUserCommand } from 'src/user/application/commands/update-user.command';
 import { PaginationResponse } from 'src/shared/application/responses/pagination.response';
+import { JwtAuthGuard } from 'src/authentication/infrastructure/nest/guards/jwt-auth.guard';
+import { User } from 'src/user/domain/entities/user.entity';
 
 @ApiTags('Users')
 @Controller('users')
+@ApiBearerAuth('JWT-auth')
 export class UserController {
   constructor(private readonly userRepository: TypeOrmUserRepository) {}
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({
+    summary: 'Obtener el usuario autenticado',
+    description:
+      'Devuelve la información del usuario autenticado a partir del token JWT.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Usuario autenticado encontrado',
+    type: UserResponse,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Token inválido o no proporcionado',
+  })
+  getMe(@Req() req: RequestWithUser): User {
+    return req.user;
+  }
 
   @Post()
   @ApiOperation({
@@ -140,4 +174,8 @@ export class UserController {
     const query = new GetUserByIdQuery(this.userRepository);
     return query.execute({ id });
   }
+}
+
+interface RequestWithUser extends Request {
+  user: User;
 }
