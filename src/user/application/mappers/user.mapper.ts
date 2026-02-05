@@ -13,6 +13,8 @@ export class UserResponseMapper {
       website: user.website,
       location: user.location,
       isActive: user.isActive,
+      experienceYears: user.experienceYears,
+      specialization: user.specialization,
       createdAt: user.getCreatedAt(),
       deletedAt: user.getDeletedAt(),
     };

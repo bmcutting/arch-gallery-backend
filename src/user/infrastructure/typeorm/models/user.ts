@@ -36,6 +36,12 @@ export class UserModel extends Model {
   @Column({ type: 'text', nullable: true })
   location: string;
 
+  @Column({ type: 'text', nullable: true })
+  experienceYears: number;
+
+  @Column({ type: 'text', nullable: true })
+  specialization: string;
+
   @OneToMany(() => ProjectModel, (project) => project.user, { cascade: true })
   projects: ProjectModel[];
 

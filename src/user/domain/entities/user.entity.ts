@@ -10,6 +10,8 @@ interface Props {
   profileImageUrl?: string;
   website?: string;
   location?: string;
+  experienceYears?: number;
+  specialization?: string;
   isActive: boolean;
   createdAt?: Date;
   deletedAt?: Date | null;
@@ -28,6 +30,8 @@ export class User {
   profileImageUrl: string;
   website: string;
   location: string;
+  experienceYears: number;
+  specialization: string;
   isActive: boolean;
   deletedAt: Date | null;
 
@@ -43,6 +47,8 @@ export class User {
     this.profileImageUrl = props.profileImageUrl ?? '';
     this.website = props.website ?? '';
     this.location = props.location ?? '';
+    this.experienceYears = props.experienceYears ?? 0;
+    this.specialization = props.specialization ?? '';
     this.isActive = props.isActive;
     this.createdAt = props.createdAt ?? new Date();
     this.deletedAt = props.deletedAt ?? null;
@@ -97,6 +103,14 @@ export class User {
     return this.location;
   }
 
+  getSpecialization(): string | null {
+    return this.specialization;
+  }
+
+  getExperienceYears(): number | null {
+    return this.experienceYears;
+  }
+
   // Setters
   setEmail(email: string) {
     this.email = email;
@@ -132,6 +146,14 @@ export class User {
 
   setLocation(location: string) {
     this.location = location;
+  }
+
+  setExperienceYears(experienceYears: number) {
+    this.experienceYears = experienceYears;
+  }
+
+  setSpecialization(specialization: string) {
+    this.specialization = specialization;
   }
 
   delete(): void {

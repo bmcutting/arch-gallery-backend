@@ -13,6 +13,8 @@ export interface UpdateUserProps {
   profileImageUrl?: string;
   website?: string;
   location?: string;
+  experienceYears?: number;
+  specialization?: string;
 }
 
 export class UpdateUser {
@@ -76,6 +78,22 @@ export class UpdateUser {
 
     if (props.location !== undefined && props.location !== user.getLocation()) {
       user.setLocation(props.location);
+      hasChanges = true;
+    }
+
+    if (
+      props.experienceYears !== undefined &&
+      props.experienceYears !== user.getExperienceYears()
+    ) {
+      user.setExperienceYears(props.experienceYears);
+      hasChanges = true;
+    }
+
+    if (
+      props.specialization !== undefined &&
+      props.specialization !== user.getSpecialization()
+    ) {
+      user.setSpecialization(props.specialization);
       hasChanges = true;
     }
 

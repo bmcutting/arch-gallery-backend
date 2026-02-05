@@ -57,6 +57,18 @@ export class UserResponse {
   location: string;
 
   @ApiProperty({
+    description: 'Años de experiencia',
+    example: '3',
+  })
+  experienceYears: number;
+
+  @ApiProperty({
+    description: 'Especialización',
+    example: 'Urbanismo',
+  })
+  specialization: string;
+
+  @ApiProperty({
     description: 'Indica si el usuario está activo',
     example: true,
   })

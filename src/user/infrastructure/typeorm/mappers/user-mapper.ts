@@ -18,6 +18,8 @@ export class UserTypeOrmMapper {
       profileImageUrl: u.profileImageUrl,
       website: u.website,
       location: u.location,
+      experienceYears: u.experienceYears,
+      specialization: u.specialization,
       //project: u.project ? UserProjectTypeOrmMapper.execute(u.project) : null
     });
   }
