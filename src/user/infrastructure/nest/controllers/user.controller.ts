@@ -55,8 +55,9 @@ export class UserController {
     status: 401,
     description: 'Token inválido o no proporcionado',
   })
-  getMe(@Req() req: RequestWithUser): User {
-    return req.user;
+  async getMe(@Req() req: RequestWithUser): Promise<UserResponse> {
+    const query = new GetUserByIdQuery(this.userRepository);
+    return await query.execute({ id: req.user.id });
   }
 
   @Post()

@@ -21,7 +21,7 @@ export class RefreshTokenModel extends Model {
   @Column({ type: 'timestamp', nullable: true })
   revokedAt: Date | null;
 
-  @ManyToOne(() => UserModel)
+  @ManyToOne(() => UserModel, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user: UserModel;
 }
