@@ -15,6 +15,10 @@ export interface UpdateUserProps {
   location?: string;
   experienceYears?: number;
   specialization?: string;
+  instagramUrl?: string;
+  twitterUrl?: string;
+  linkedinUrl?: string;
+  languages?: string[];
 }
 
 export class UpdateUser {
@@ -22,6 +26,8 @@ export class UpdateUser {
 
   async execute(user: User, props: UpdateUserProps): Promise<User> {
     let hasChanges = false;
+
+    console.log(props);
 
     if (props.email !== undefined && props.email !== user.getEmail()) {
       const existingUser = await this.userRepository.findByEmail(props.email);
@@ -94,6 +100,38 @@ export class UpdateUser {
       props.specialization !== user.getSpecialization()
     ) {
       user.setSpecialization(props.specialization);
+      hasChanges = true;
+    }
+
+    if (
+      props.instagramUrl !== undefined &&
+      props.instagramUrl !== user.getInstagramUrl()
+    ) {
+      user.setInstagramUrl(props.instagramUrl);
+      hasChanges = true;
+    }
+
+    if (
+      props.twitterUrl !== undefined &&
+      props.twitterUrl !== user.getTwitterUrl()
+    ) {
+      user.setTwitterUrl(props.twitterUrl);
+      hasChanges = true;
+    }
+
+    if (
+      props.linkedinUrl !== undefined &&
+      props.linkedinUrl !== user.getLinkedinUrl()
+    ) {
+      user.setLinkedinUrl(props.linkedinUrl);
+      hasChanges = true;
+    }
+
+    if (
+      props.languages !== undefined &&
+      JSON.stringify(props.languages) !== JSON.stringify(user.getLanguages())
+    ) {
+      user.setLanguages(props.languages);
       hasChanges = true;
     }
 

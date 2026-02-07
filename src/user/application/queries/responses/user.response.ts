@@ -69,6 +69,35 @@ export class UserResponse {
   specialization: string;
 
   @ApiProperty({
+    description: 'Enlace al perfil de Instagram',
+    example: 'https://instagram.com/juan.arquitecto',
+    nullable: true,
+  })
+  instagramUrl: string | null;
+
+  @ApiProperty({
+    description: 'Enlace al perfil de Twitter/X',
+    example: 'https://twitter.com/juan_arq',
+    nullable: true,
+  })
+  twitterUrl: string | null;
+
+  @ApiProperty({
+    description: 'Enlace al perfil de LinkedIn',
+    example: 'https://linkedin.com/in/juan-arquitecto',
+    nullable: true,
+  })
+  linkedinUrl: string | null;
+
+  @ApiProperty({
+    description: 'Idiomas que domina el usuario',
+    example: ['Español', 'Inglés', 'Francés'],
+    type: [String],
+    nullable: true,
+  })
+  languages: string[];
+
+  @ApiProperty({
     description: 'Indica si el usuario está activo',
     example: true,
   })

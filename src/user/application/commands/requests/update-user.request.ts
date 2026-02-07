@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class UpdateUserRequest {
   userId: string;
@@ -48,4 +48,35 @@ export class UpdateUserRequest {
   @IsOptional()
   @IsString()
   location?: string;
+
+  @ApiPropertyOptional({ description: 'Años de experiencia' })
+  @IsOptional()
+  @IsNumber()
+  experienceYears?: number;
+
+  @ApiPropertyOptional({ description: 'Especialización' })
+  @IsOptional()
+  @IsString()
+  specialization?: string;
+
+  @ApiPropertyOptional({ description: 'Enlace al perfil de Instagram' })
+  @IsOptional()
+  @IsString()
+  instagramUrl?: string;
+
+  @ApiPropertyOptional({ description: 'Enlace al perfil de Twitter/X' })
+  @IsOptional()
+  @IsString()
+  twitterUrl?: string;
+
+  @ApiPropertyOptional({ description: 'Enlace al perfil de LinkedIn' })
+  @IsOptional()
+  @IsString()
+  linkedinUrl?: string;
+
+  @ApiPropertyOptional({ description: 'Idiomas que domina el usuario' })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  languages?: string[];
 }

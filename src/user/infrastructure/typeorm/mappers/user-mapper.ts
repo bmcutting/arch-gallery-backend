@@ -20,6 +20,10 @@ export class UserTypeOrmMapper {
       location: u.location,
       experienceYears: u.experienceYears,
       specialization: u.specialization,
+      instagramUrl: u.instagramUrl,
+      twitterUrl: u.twitterUrl,
+      linkedinUrl: u.linkedinUrl,
+      languages: u.languages ?? [],
       //project: u.project ? UserProjectTypeOrmMapper.execute(u.project) : null
     });
   }

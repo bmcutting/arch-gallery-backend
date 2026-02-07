@@ -12,6 +12,10 @@ interface Props {
   location?: string;
   experienceYears?: number;
   specialization?: string;
+  instagramUrl?: string;
+  twitterUrl?: string;
+  linkedinUrl?: string;
+  languages?: string[];
   isActive: boolean;
   createdAt?: Date;
   deletedAt?: Date | null;
@@ -32,6 +36,10 @@ export class User {
   location: string;
   experienceYears: number;
   specialization: string;
+  instagramUrl: string;
+  twitterUrl: string;
+  linkedinUrl: string;
+  languages: string[];
   isActive: boolean;
   deletedAt: Date | null;
 
@@ -49,6 +57,10 @@ export class User {
     this.location = props.location ?? '';
     this.experienceYears = props.experienceYears ?? 0;
     this.specialization = props.specialization ?? '';
+    this.instagramUrl = props.instagramUrl ?? '';
+    this.twitterUrl = props.twitterUrl ?? '';
+    this.linkedinUrl = props.linkedinUrl ?? '';
+    this.languages = props.languages ?? [];
     this.isActive = props.isActive;
     this.createdAt = props.createdAt ?? new Date();
     this.deletedAt = props.deletedAt ?? null;
@@ -111,6 +123,19 @@ export class User {
     return this.experienceYears;
   }
 
+  getInstagramUrl(): string | null {
+    return this.instagramUrl;
+  }
+  getTwitterUrl(): string | null {
+    return this.twitterUrl;
+  }
+  getLinkedinUrl(): string | null {
+    return this.linkedinUrl;
+  }
+  getLanguages(): string[] {
+    return this.languages;
+  }
+
   // Setters
   setEmail(email: string) {
     this.email = email;
@@ -154,6 +179,19 @@ export class User {
 
   setSpecialization(specialization: string) {
     this.specialization = specialization;
+  }
+
+  setInstagramUrl(url: string) {
+    this.instagramUrl = url;
+  }
+  setTwitterUrl(url: string) {
+    this.twitterUrl = url;
+  }
+  setLinkedinUrl(url: string) {
+    this.linkedinUrl = url;
+  }
+  setLanguages(languages: string[]) {
+    this.languages = languages;
   }
 
   delete(): void {

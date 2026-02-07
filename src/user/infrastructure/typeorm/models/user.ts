@@ -42,6 +42,18 @@ export class UserModel extends Model {
   @Column({ type: 'text', nullable: true })
   specialization: string;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  instagramUrl: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  twitterUrl: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  linkedinUrl: string;
+
+  @Column('text', { array: true, nullable: true })
+  languages: string[];
+
   @OneToMany(() => ProjectModel, (project) => project.user, { cascade: true })
   projects: ProjectModel[];
 

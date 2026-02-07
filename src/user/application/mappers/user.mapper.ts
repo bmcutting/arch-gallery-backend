@@ -15,6 +15,10 @@ export class UserResponseMapper {
       isActive: user.isActive,
       experienceYears: user.experienceYears,
       specialization: user.specialization,
+      instagramUrl: user.instagramUrl,
+      twitterUrl: user.twitterUrl,
+      linkedinUrl: user.linkedinUrl,
+      languages: user.languages ?? [],
       createdAt: user.getCreatedAt(),
       deletedAt: user.getDeletedAt(),
     };

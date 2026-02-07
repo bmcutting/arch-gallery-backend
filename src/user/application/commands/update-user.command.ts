@@ -34,6 +34,12 @@ export class UpdateUserCommand implements Command<
       profileImageUrl: props.request.profileImageUrl,
       website: props.request.website,
       location: props.request.location,
+      experienceYears: props.request.experienceYears,
+      specialization: props.request.specialization,
+      instagramUrl: props.request.instagramUrl,
+      twitterUrl: props.request.twitterUrl,
+      linkedinUrl: props.request.linkedinUrl,
+      languages: props.request.languages,
     });
 
     return { success: true };

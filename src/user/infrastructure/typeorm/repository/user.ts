@@ -85,6 +85,12 @@ export class TypeOrmUserRepository implements UserRepository {
       profileImageUrl: user.profileImageUrl,
       website: user.website,
       location: user.location,
+      experienceYears: user.experienceYears,
+      specialization: user.specialization,
+      instagramUrl: user.instagramUrl,
+      twitterUrl: user.twitterUrl,
+      linkedinUrl: user.linkedinUrl,
+      languages: user.languages ?? [],
       isActive: user.getIsActive(),
       deletedAt: user.getDeletedAt(),
     });
