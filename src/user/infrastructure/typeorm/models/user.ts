@@ -6,25 +6,25 @@ import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity({ name: 'users' })
 export class UserModel extends Model {
-  @Column({ type: 'text' })
+  @Column({ type: 'varchar', length: 100 })
   userName: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'varchar', length: 255 })
   email: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'varchar', length: 255 })
   password: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'varchar', length: 100 })
   firstName: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'varchar', length: 100 })
   lastName: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'varchar', length: 500, nullable: true })
   bio: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'varchar', length: 20, nullable: true })
   phoneNumber: string;
 
   @Column({ type: 'text', nullable: true })
@@ -33,7 +33,7 @@ export class UserModel extends Model {
   @Column({ type: 'text', nullable: true })
   website: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'varchar', length: 100, nullable: true })
   location: string;
 
   @Column({ type: 'text', nullable: true })
