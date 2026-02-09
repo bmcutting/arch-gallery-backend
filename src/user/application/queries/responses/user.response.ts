@@ -39,6 +39,13 @@ export class UserResponse {
   userName: string;
 
   @ApiProperty({
+    description: 'Número de teléfono del usuario',
+    example: '+34 600 123 456',
+    nullable: true,
+  })
+  phoneNumber: string | null;
+
+  @ApiProperty({
     description: 'Biografía del perfil del usuario',
     example: 'Arquitecto de sueños',
   })

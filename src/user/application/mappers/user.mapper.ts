@@ -9,6 +9,7 @@ export class UserResponseMapper {
       firstName: user.firstName,
       lastName: user.lastName,
       userName: user.userName,
+      phoneNumber: user.phoneNumber,
       bio: user.bio,
       website: user.website,
       location: user.location,
