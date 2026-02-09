@@ -6,10 +6,10 @@ import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity({ name: 'users' })
 export class UserModel extends Model {
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'varchar', length: 100, unique: true })
   userName: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, unique: true })
   email: string;
 
   @Column({ type: 'varchar', length: 255 })

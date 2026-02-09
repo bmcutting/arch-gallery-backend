@@ -27,8 +27,6 @@ export class UpdateUser {
   async execute(user: User, props: UpdateUserProps): Promise<User> {
     let hasChanges = false;
 
-    console.log(props);
-
     if (props.email !== undefined && props.email !== user.getEmail()) {
       const existingUser = await this.userRepository.findByEmail(props.email);
       if (existingUser) {
@@ -134,9 +132,14 @@ export class UpdateUser {
       user.setLanguages(props.languages);
       hasChanges = true;
     }
-
-    if (hasChanges) {
-      await this.userRepository.update(user);
+    try {
+      if (hasChanges) {
+        await this.userRepository.update(user);
+      }
+    } catch (err) {
+      throw new Error(
+        `Error al actualizar el usuario: ${(err as Error).message}`,
+      );
     }
 
     return user;
