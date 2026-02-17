@@ -137,4 +137,12 @@ export class TypeOrmProjectRepository implements ProjectRepository {
       deletedAt: new Date(),
     });
   }
+
+  async findByUserId(userId: string): Promise<Project[]> {
+    const projects = await this.projectRepository.find({
+      where: { user: { id: userId } },
+      relations: { user: true, categories: true, comments: true, likes: true },
+    });
+    return projects.map((project) => ProjectTypeOrmMapper.execute(project));
+  }
 }

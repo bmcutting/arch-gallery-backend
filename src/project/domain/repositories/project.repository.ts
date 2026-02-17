@@ -8,6 +8,7 @@ export interface ProjectRepository {
   findAll(props: ProjectPaginationParams): Promise<PaginationResult<Project>>;
   update(project: Project): Promise<void>;
   delete(id: string): Promise<void>;
+  findByUserId(id: string): Promise<Project[]>;
   ///likes
   addLike(userId: string, projectId: string): Promise<void>;
   removeLike(userId: string, projectId: string): Promise<void>;

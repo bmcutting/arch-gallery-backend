@@ -22,6 +22,7 @@ import { PaginationResponse } from 'src/shared/application/responses/pagination.
 import { AddLikeCommand } from 'src/project/application/commands/add-like-command';
 import { AddCommentCommand } from 'src/project/application/commands/add-comment-command';
 import { AddCommentRequest } from 'src/project/application/commands/requests/add-comment.request';
+import { GetProjectByUserIdQuery } from 'src/project/application/queries/get-project-by-user-id.query';
 
 @ApiTags('Projects')
 @Controller('projects')
@@ -228,5 +229,30 @@ export class ProjectController {
       request: { ...body },
     });
     return { comments: totalComments };
+  }
+
+  @Get('user/:id')
+  @ApiOperation({
+    summary: 'Obtener proyectos por usuario',
+    description:
+      'Devuelve la lista de proyectos asociados a un usuario específico, filtrando los proyectos activos.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Id único del usuario',
+    type: String,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de proyectos del usuario obtenida exitosamente',
+    type: [ProjectResponse],
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'No se encontraron proyectos para el usuario',
+  })
+  async getByUserId(@Param('id') id: string): Promise<ProjectResponse[]> {
+    const query = new GetProjectByUserIdQuery(this.projectRepository);
+    return await query.execute({ id });
   }
 }
