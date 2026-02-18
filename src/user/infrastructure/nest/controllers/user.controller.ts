@@ -184,6 +184,6 @@ export class UserController {
   }
 }
 
-interface RequestWithUser extends Request {
+export interface RequestWithUser extends Request {
   user: User;
 }

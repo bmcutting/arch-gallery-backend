@@ -7,6 +7,8 @@ import { TypeOrmUserRepository } from 'src/user/infrastructure/typeorm/repositor
 import { UserModel } from 'src/user/infrastructure/typeorm/models/user';
 import { LikeModel } from './infrastructure/typeorm/models/like';
 import { CommentModel } from './infrastructure/typeorm/models/comment';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -18,7 +20,12 @@ import { CommentModel } from './infrastructure/typeorm/models/comment';
     ]),
   ],
   controllers: [ProjectController],
-  providers: [TypeOrmProjectRepository, TypeOrmUserRepository],
+  providers: [
+    TypeOrmProjectRepository,
+    TypeOrmUserRepository,
+    JwtService,
+    ConfigService,
+  ],
   exports: [TypeOrmProjectRepository],
 })
 export class ProjectModule {}

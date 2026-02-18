@@ -1,9 +1,20 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { TypeOrmProjectRepository } from '../../typeorm/repository/project';
 import { CreateProjectRequest } from 'src/project/application/commands/requests/create-project.request';
 import { ProjectCreator } from 'src/project/domain/services/project-create';
 import { CreateProjectCommand } from 'src/project/application/commands/create-project-command';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiParam,
@@ -23,9 +34,12 @@ import { AddLikeCommand } from 'src/project/application/commands/add-like-comman
 import { AddCommentCommand } from 'src/project/application/commands/add-comment-command';
 import { AddCommentRequest } from 'src/project/application/commands/requests/add-comment.request';
 import { GetProjectByUserIdQuery } from 'src/project/application/queries/get-project-by-user-id.query';
+import { JwtAuthGuard } from 'src/authentication/infrastructure/nest/guards/jwt-auth.guard';
+import type { RequestWithUser } from 'src/user/infrastructure/nest/controllers/user.controller';
 
 @ApiTags('Projects')
 @Controller('projects')
+@ApiBearerAuth('JWT-auth')
 export class ProjectController {
   constructor(
     private readonly projectRepository: TypeOrmProjectRepository,
@@ -132,6 +146,31 @@ export class ProjectController {
     const query = new GetAllProjectsQuery(this.projectRepository);
     const paginationResponse = await query.execute(params);
     return paginationResponse;
+  }
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({
+    summary: 'Obtener proyectos del usuario autenticado',
+    description:
+      'Devuelve la lista de proyectos asociados al usuario autenticado, filtrando los proyectos activos. Requiere un token JWT válido.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de proyectos del usuario obtenida exitosamente',
+    type: [ProjectResponse],
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Token inválido o no proporcionado',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'No se encontraron proyectos para el usuario autenticado',
+  })
+  async getMyProjects(@Req() req: RequestWithUser): Promise<ProjectResponse[]> {
+    const query = new GetProjectByUserIdQuery(this.projectRepository);
+    return await query.execute({ id: req.user.id });
   }
 
   @Get(':id')
