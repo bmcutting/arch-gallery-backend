@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateProjectRequest {
@@ -9,6 +9,11 @@ export class CreateProjectRequest {
   @IsString()
   @IsNotEmpty()
   title: string;
+
+  @ApiProperty({ description: 'Año de creación del proyecto', example: 2025 })
+  @IsNumber()
+  @IsNotEmpty()
+  year: number;
 
   @ApiProperty({
     description: 'Descripción del proyecto',

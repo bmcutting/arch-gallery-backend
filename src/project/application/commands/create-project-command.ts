@@ -13,6 +13,7 @@ export class CreateProjectCommand implements Command<
     const projectId = await this.createProjectService.execute({
       title: props.title,
       description: props.description,
+      year: props.year,
       userId: props.userId,
     });
 

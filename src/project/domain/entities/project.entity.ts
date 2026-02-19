@@ -7,6 +7,7 @@ interface Props {
   id: string;
   title: string;
   description: string;
+  year: number;
   imagesUrl?: string[];
   user: User;
   categories?: Category[];
@@ -22,6 +23,7 @@ export class Project {
   readonly createdAt: Date;
   title: string;
   description: string;
+  year: number;
   imagesUrl: string[];
   user: User;
   categories: Category[];
@@ -34,6 +36,7 @@ export class Project {
     this.id = props.id;
     this.title = props.title;
     this.description = props.description;
+    this.year = props.year;
     this.user = props.user;
     this.imagesUrl = props.imagesUrl ?? [];
     this.categories = props.categories ?? [];
@@ -89,13 +92,19 @@ export class Project {
     return this.comments;
   }
 
+  getYear(): number {
+    return this.year;
+  }
+
   // Setters
   setTitle(title: string) {
     this.title = title;
   }
-
   setDescription(description: string) {
     this.description = description;
+  }
+  setYear(year: number) {
+    this.year = year;
   }
 
   delete(): void {

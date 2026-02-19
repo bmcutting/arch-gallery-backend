@@ -1,5 +1,5 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class UpdateProjectRequest {
   @ApiPropertyOptional({ description: 'Título del proyecto' })
@@ -11,4 +11,9 @@ export class UpdateProjectRequest {
   @IsOptional()
   @IsString()
   description?: string;
+
+  @ApiProperty({ description: 'Año de creación del proyecto', example: 2025 })
+  @IsOptional()
+  @IsNumber()
+  year: number;
 }

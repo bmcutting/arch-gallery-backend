@@ -14,6 +14,7 @@ export class ProjectTypeOrmMapper {
       title: p.title,
       isActive: true,
       description: p.description,
+      year: p.year,
       imagesUrl: p.imagesUrl,
       user: UserTypeOrmMapper.execute(p.user),
       categories: CategoryTypeOrmMapper.toDomainList(p.categories),

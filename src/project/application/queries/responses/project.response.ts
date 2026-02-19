@@ -29,6 +29,12 @@ export class ProjectResponse {
   description: string;
 
   @ApiProperty({
+    description: 'Año de creación del proyecto',
+    example: 2022,
+  })
+  year: number;
+
+  @ApiProperty({
     description: 'Urls de las imágenes del proyecto',
     example: 'http://tuimagen.com',
   })

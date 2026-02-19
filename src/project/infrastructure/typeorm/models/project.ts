@@ -20,6 +20,9 @@ export class ProjectModel extends Model {
   @Column({ type: 'text', nullable: true })
   description: string;
 
+  @Column({ type: 'int' })
+  year: number;
+
   @Column('text', { array: true, default: [] })
   imagesUrl: string[];
 

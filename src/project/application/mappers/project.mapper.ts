@@ -9,6 +9,7 @@ export class ProjectResponseMapper {
       id: project.id,
       title: project.title,
       description: project.description,
+      year: project.year,
       isActive: project.isActive,
       imagesUrl: project.imagesUrl,
       createdAt: project.getCreatedAt(),

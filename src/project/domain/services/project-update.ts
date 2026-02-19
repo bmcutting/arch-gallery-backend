@@ -4,6 +4,7 @@ import { ProjectRepository } from '../repositories/project.repository';
 export interface UpdateProjectProps {
   title?: string;
   description?: string;
+  year?: number;
 }
 
 export class UpdateProject {
@@ -25,6 +26,10 @@ export class UpdateProject {
       hasChanges = true;
     }
 
+    if (props.year !== undefined && props.year !== project.getYear()) {
+      project.setYear(props.year);
+      hasChanges = true;
+    }
     if (hasChanges) {
       await this.projectRepository.update(project);
     }

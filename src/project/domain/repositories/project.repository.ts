@@ -23,5 +23,6 @@ export interface ProjectRepository {
 export interface CreateProjectProps {
   title: string;
   description?: string;
+  year: number;
   userId: string;
 }

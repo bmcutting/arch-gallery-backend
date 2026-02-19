@@ -5,6 +5,7 @@ import { UserRepository } from 'src/user/domain/repositories/user.repository';
 export interface CreateProjectProps {
   title: string;
   description?: string;
+  year: number;
   userId: string;
 }
 
@@ -23,6 +24,7 @@ export class ProjectCreator {
     const projectId = await this.projectRepository.create({
       title: props.title,
       description: props.description,
+      year: props.year,
       userId: props.userId,
     });
 
