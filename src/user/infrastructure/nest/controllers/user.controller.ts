@@ -22,10 +22,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { GetUserByIdQuery } from 'src/user/application/queries/get-user-by-id.query';
-import { CreateUserRequest } from 'src/user/application/commands/requests/create-user.request';
+import { CreateUserRequest } from 'src/authentication/application/commands/requests/create-user.request';
 import { UserCreator } from 'src/user/domain/services/user-create';
 import { BcryptPasswordHasher } from 'src/shared/utils/password-hasher';
-import { CreateUserCommand } from 'src/user/application/commands/create-user.command';
+import { CreateUserCommand } from 'src/authentication/application/commands/create-user.command';
 import { UpdateUser } from 'src/user/domain/services/user-update';
 import { UpdateUserRequest } from 'src/user/application/commands/requests/update-user.request';
 import { UpdateUserCommand } from 'src/user/application/commands/update-user.command';
@@ -58,40 +58,6 @@ export class UserController {
   async getMe(@Req() req: RequestWithUser): Promise<UserResponse> {
     const query = new GetUserByIdQuery(this.userRepository);
     return await query.execute({ id: req.user.id });
-  }
-
-  @Post()
-  @ApiOperation({
-    summary: 'Crear un nuevo usuario',
-    description:
-      'Permite registrar un nuevo usuario en el sistema con sus datos básicos.',
-  })
-  @ApiBody({
-    type: CreateUserRequest,
-    examples: {
-      ejemplo1: {
-        summary: 'Usuario básico',
-        description:
-          'Ejemplo de creación de un usuario con datos mínimos requeridos',
-        value: {
-          email: 'juan.perez@ejemplo.com',
-          password: '123456',
-          firstName: 'Juan',
-          lastName: 'Pérez',
-          userName: 'juanperez',
-        },
-      },
-    },
-  })
-  @ApiResponse({ status: 201, description: 'Usuario creado exitosamente' })
-  @ApiResponse({ status: 400, description: 'Datos de entrada inválidos' })
-  async create(@Body() body: CreateUserRequest) {
-    const hasher = new BcryptPasswordHasher();
-    const creator = new UserCreator(hasher, this.userRepository);
-
-    const command = new CreateUserCommand(creator);
-
-    return await command.execute(body);
   }
 
   @Put(':id')

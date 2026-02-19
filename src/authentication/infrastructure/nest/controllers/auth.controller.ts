@@ -23,6 +23,9 @@ import { LogoutRequest } from 'src/authentication/application/commands/requests/
 import { RefreshTokenCommand } from 'src/authentication/application/commands/refresh-token.command';
 import { RefreshTokenRequest } from 'src/authentication/application/commands/requests/refresh-token.request';
 import { ValidateRefreshToken } from 'src/authentication/domain/services/refresh-token-validate';
+import { CreateUserRequest } from 'src/authentication/application/commands/requests/create-user.request';
+import { UserCreator } from 'src/user/domain/services/user-create';
+import { CreateUserCommand } from 'src/authentication/application/commands/create-user.command';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -158,7 +161,7 @@ export class AuthController {
         summary: 'Usuario',
         value: {
           email: 'usuario@ejemplo.com',
-          password: 'password123',
+          password: '12345678',
         },
       },
     },
@@ -228,5 +231,39 @@ export class AuthController {
     });
 
     return { message: 'Logged out successfully' };
+  }
+
+  @Post('register')
+  @ApiOperation({
+    summary: 'Crear un nuevo usuario',
+    description:
+      'Permite registrar un nuevo usuario en el sistema con sus datos básicos.',
+  })
+  @ApiBody({
+    type: CreateUserRequest,
+    examples: {
+      ejemplo1: {
+        summary: 'Usuario básico',
+        description:
+          'Ejemplo de creación de un usuario con datos mínimos requeridos',
+        value: {
+          email: 'juan.perez@ejemplo.com',
+          password: '12345678',
+          firstName: 'Juan',
+          lastName: 'Pérez',
+          userName: 'juanperez',
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 201, description: 'Usuario creado exitosamente' })
+  @ApiResponse({ status: 400, description: 'Datos de entrada inválidos' })
+  async create(@Body() body: CreateUserRequest) {
+    const hasher = new BcryptPasswordHasher();
+    const creator = new UserCreator(hasher, this.userRepository);
+
+    const command = new CreateUserCommand(creator);
+
+    return await command.execute(body);
   }
 }
