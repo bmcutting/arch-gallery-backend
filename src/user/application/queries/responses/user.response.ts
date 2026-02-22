@@ -97,6 +97,13 @@ export class UserResponse {
   linkedinUrl: string | null;
 
   @ApiProperty({
+    description: 'Enlace de la imagen de perfil',
+    example: 'https://avatars.githubusercontent.com/u/50972694',
+    nullable: true,
+  })
+  profileImageUrl: string | null;
+
+  @ApiProperty({
     description: 'Idiomas que domina el usuario',
     example: ['Español', 'Inglés', 'Francés'],
     type: [String],

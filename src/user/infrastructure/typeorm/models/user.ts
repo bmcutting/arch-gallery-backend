@@ -24,7 +24,7 @@ export class UserModel extends Model {
   @Column({ type: 'varchar', length: 500, nullable: true })
   bio: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: 'varchar', length: 50, nullable: true })
   phoneNumber: string;
 
   @Column({ type: 'text', nullable: true })

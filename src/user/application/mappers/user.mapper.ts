@@ -11,6 +11,7 @@ export class UserResponseMapper {
       userName: user.userName,
       phoneNumber: user.phoneNumber,
       bio: user.bio,
+      profileImageUrl: user.profileImageUrl,
       website: user.website,
       location: user.location,
       isActive: user.isActive,
