@@ -6,6 +6,7 @@ import { UserModel } from 'src/user/infrastructure/typeorm/models/user';
 import { DataSource } from 'typeorm';
 import { faker } from '@faker-js/faker';
 import { Seeder, SeederFactoryManager } from 'typeorm-extension';
+import * as bcrypt from 'bcryptjs';
 
 export class MainSeeder implements Seeder {
   public async run(
@@ -19,6 +20,18 @@ export class MainSeeder implements Seeder {
     const likeFactory = factoryManager.get(LikeModel);
 
     const users = await userFactory.saveMany(10);
+
+    const brianUser = new UserModel();
+    brianUser.userName = 'Brian';
+    brianUser.email = 'brian@gmail.com';
+    brianUser.password = await bcrypt.hash('12345678', 10);
+    brianUser.firstName = 'Brian';
+    brianUser.lastName = 'Dev';
+    const savedBrian = await dataSource
+      .getRepository(UserModel)
+      .save(brianUser);
+
+    users.push(savedBrian);
 
     const categoryNames = faker.helpers.uniqueArray(
       () => faker.commerce.department(),
