@@ -145,4 +145,25 @@ export class TypeOrmProjectRepository implements ProjectRepository {
     });
     return projects.map((project) => ProjectTypeOrmMapper.execute(project));
   }
+
+  async getProjectFeed(
+    cursor?: string,
+    limit: number = 10,
+  ): Promise<Project[]> {
+    const query = this.projectRepository
+      .createQueryBuilder('project')
+      .leftJoinAndSelect('project.user', 'user')
+      .orderBy('project.createdAt', 'DESC')
+      .take(limit + 1);
+
+    if (cursor) {
+      query.andWhere('project.createdAt < :cursor', {
+        cursor: new Date(cursor),
+      });
+    }
+
+    const projects = await query.getMany();
+
+    return projects.map((project) => ProjectTypeOrmMapper.execute(project));
+  }
 }

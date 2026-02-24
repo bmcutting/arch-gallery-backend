@@ -17,9 +17,11 @@ export class ProjectTypeOrmMapper {
       year: p.year,
       imagesUrl: p.imagesUrl,
       user: UserTypeOrmMapper.execute(p.user),
-      categories: CategoryTypeOrmMapper.toDomainList(p.categories),
-      likes: LikeTypeOrmMapper.toDomainList(p.likes),
-      comments: CommentTypeOrmMapper.toDomainList(p.comments),
+      categories: p.categories
+        ? CategoryTypeOrmMapper.toDomainList(p.categories)
+        : [],
+      likes: p.likes ? LikeTypeOrmMapper.toDomainList(p.likes) : [],
+      comments: p.comments ? CommentTypeOrmMapper.toDomainList(p.comments) : [],
     });
   }
 }
