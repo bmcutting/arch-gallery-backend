@@ -75,10 +75,10 @@ export class TypeOrmProjectRepository implements ProjectRepository {
   async create(props: CreateProjectProps): Promise<string> {
     const project = new ProjectModel();
     project.title = props.title;
+    project.description = props.description ?? '';
+    project.year = props.year;
     project.user = { id: props.userId } as UserModel;
-
     await this.projectRepository.save(project);
-
     return project.id;
   }
 

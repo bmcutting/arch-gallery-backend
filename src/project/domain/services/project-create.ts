@@ -20,7 +20,6 @@ export class ProjectCreator {
     if (!user) {
       throw new NotFoundUserException();
     }
-
     const projectId = await this.projectRepository.create({
       title: props.title,
       description: props.description,
