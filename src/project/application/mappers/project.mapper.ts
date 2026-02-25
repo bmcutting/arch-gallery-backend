@@ -32,6 +32,7 @@ export class ProjectResponseMapper {
     return {
       id: project.id,
       createdAt: project.createdAt,
+      year: project.year,
       title: project.title,
       previewImage: project.imagesUrl[0],
       likesCount: project.likes?.length ?? 0,

@@ -21,6 +21,12 @@ export class ProjectFeedResponse {
   title: string;
 
   @ApiProperty({
+    description: 'Año de realización del proyecto',
+    example: 2026,
+  })
+  year: number;
+
+  @ApiProperty({
     description: 'Primera imagen del proyecto',
     example: 'http://tuimagen.com',
   })

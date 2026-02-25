@@ -166,8 +166,6 @@ export class TypeOrmProjectRepository implements ProjectRepository {
 
     const projects = await query.getMany();
 
-    console.log(projects);
-
     return projects.map((project) => ProjectTypeOrmMapper.execute(project));
   }
 }
