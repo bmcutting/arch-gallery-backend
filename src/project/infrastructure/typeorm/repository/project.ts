@@ -153,6 +153,8 @@ export class TypeOrmProjectRepository implements ProjectRepository {
     const query = this.projectRepository
       .createQueryBuilder('project')
       .leftJoinAndSelect('project.user', 'user')
+      .leftJoinAndSelect('project.likes', 'like')
+      .leftJoinAndSelect('project.comments', 'comment')
       .orderBy('project.createdAt', 'DESC')
       .take(limit + 1);
 
@@ -163,6 +165,8 @@ export class TypeOrmProjectRepository implements ProjectRepository {
     }
 
     const projects = await query.getMany();
+
+    console.log(projects);
 
     return projects.map((project) => ProjectTypeOrmMapper.execute(project));
   }
