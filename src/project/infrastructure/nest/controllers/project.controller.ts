@@ -36,8 +36,10 @@ import { AddCommentRequest } from 'src/project/application/commands/requests/add
 import { GetProjectByUserIdQuery } from 'src/project/application/queries/get-project-by-user-id.query';
 import { JwtAuthGuard } from 'src/authentication/infrastructure/nest/guards/jwt-auth.guard';
 import type { RequestWithUser } from 'src/user/infrastructure/nest/controllers/user.controller';
-import { ProjectFeedResponse } from 'src/project/application/queries/responses/project-feed.response';
-import { GetProjectFeedQuery } from 'src/project/application/queries/get-feed-project.query';
+import {
+  GetProjectFeedQuery,
+  GetProjectFeedResponse,
+} from 'src/project/application/queries/get-feed-project.query';
 import { GetProjectFeedRequest } from 'src/project/application/queries/requests/project-feed.request';
 
 @ApiTags('Projects')
@@ -94,7 +96,7 @@ export class ProjectController {
   @Get('feed')
   async getFeed(
     @Query() params: GetProjectFeedRequest,
-  ): Promise<ProjectFeedResponse[]> {
+  ): Promise<GetProjectFeedResponse> {
     const query = new GetProjectFeedQuery(this.projectRepository);
     return await query.execute(params);
   }

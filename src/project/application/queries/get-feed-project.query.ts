@@ -4,20 +4,36 @@ import { ProjectFeedResponse } from './responses/project-feed.response';
 import { ProjectRepository } from 'src/project/domain/repositories/project.repository';
 import { ProjectResponseMapper } from '../mappers/project.mapper';
 
+export interface GetProjectFeedResponse {
+  items: ProjectFeedResponse[];
+  nextCursor: string | null;
+}
+
 export class GetProjectFeedQuery implements Query<
   GetProjectFeedRequest,
-  Promise<ProjectFeedResponse[]>
+  Promise<GetProjectFeedResponse>
 > {
   constructor(private readonly projectRepository: ProjectRepository) {}
 
   async execute(
     request: GetProjectFeedRequest,
-  ): Promise<ProjectFeedResponse[]> {
+  ): Promise<GetProjectFeedResponse> {
     const projects = await this.projectRepository.getProjectFeed(
       request.cursor,
       request.limit,
     );
 
-    return ProjectResponseMapper.toProjectFeedList(projects);
+    let nextCursor: string | null = null;
+    const limit = request.limit || 10;
+
+    if (projects.length > limit) {
+      const nextItem = projects[limit - 1];
+      nextCursor = nextItem.createdAt.toISOString();
+      projects.pop();
+    }
+
+    const items = ProjectResponseMapper.toProjectFeedList(projects);
+
+    return { items, nextCursor };
   }
 }
