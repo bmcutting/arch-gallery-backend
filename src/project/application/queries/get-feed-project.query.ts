@@ -26,14 +26,17 @@ export class GetProjectFeedQuery implements Query<
     let nextCursor: string | null = null;
     const limit = request.limit || 10;
 
-    if (projects.length > limit) {
+    if (projects.length >= limit) {
       const nextItem = projects[limit - 1];
-      nextCursor = nextItem.createdAt.toISOString();
+      nextCursor = nextItem.id;
       projects.pop();
     }
 
     const items = ProjectResponseMapper.toProjectFeedList(projects);
 
-    return { items, nextCursor };
+    return {
+      items,
+      nextCursor,
+    };
   }
 }

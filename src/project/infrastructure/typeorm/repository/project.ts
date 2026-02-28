@@ -155,12 +155,12 @@ export class TypeOrmProjectRepository implements ProjectRepository {
       .leftJoinAndSelect('project.user', 'user')
       .leftJoinAndSelect('project.likes', 'like')
       .leftJoinAndSelect('project.comments', 'comment')
-      .orderBy('project.createdAt', 'DESC')
+      .orderBy('project.id', 'DESC')
       .take(limit + 1);
 
     if (cursor) {
-      query.andWhere('project.createdAt < :cursor', {
-        cursor: new Date(cursor),
+      query.andWhere('project.id < :cursor', {
+        cursor: cursor,
       });
     }
 

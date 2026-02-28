@@ -94,11 +94,25 @@ export class ProjectController {
   }
 
   @Get('feed')
+  @ApiOperation({
+    summary: 'Obtener feed de proyectos',
+    description:
+      'Devuelve una de proyectos con información básica y el cursor para la siguiente página.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Feed de proyectos obtenido exitosamente',
+  })
+  @ApiResponse({ status: 400, description: 'Parámetros de entrada inválidos' })
   async getFeed(
     @Query() params: GetProjectFeedRequest,
   ): Promise<GetProjectFeedResponse> {
     const query = new GetProjectFeedQuery(this.projectRepository);
-    return await query.execute(params);
+    const result = await query.execute(params);
+
+    console.log('Feed devuelto:', result.items.length, 'proyectos');
+    console.log('NextCursor:', result.nextCursor);
+    return result;
   }
 
   @Put(':id')
