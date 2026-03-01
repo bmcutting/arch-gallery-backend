@@ -1,6 +1,6 @@
 import { UserModel } from 'src/user/infrastructure/typeorm/models/user';
 import { Column, Entity, ManyToOne } from 'typeorm';
-import { ProjectModel } from './project';
+import { ProjectModel } from '../../../../project/infrastructure/typeorm/models/project';
 import { Model } from 'src/shared/typeorm/base.model';
 
 @Entity({ name: 'comments' })

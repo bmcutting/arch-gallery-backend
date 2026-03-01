@@ -31,8 +31,6 @@ import { GetAllProjectsQuery } from 'src/project/application/queries/get-all-pro
 import { GetProjectByIdQuery } from 'src/project/application/queries/get-project-by-id.query';
 import { PaginationResponse } from 'src/shared/application/responses/pagination.response';
 import { AddLikeCommand } from 'src/project/application/commands/add-like-command';
-import { AddCommentCommand } from 'src/project/application/commands/add-comment-command';
-import { AddCommentRequest } from 'src/project/application/commands/requests/add-comment.request';
 import { GetProjectByUserIdQuery } from 'src/project/application/queries/get-project-by-user-id.query';
 import { JwtAuthGuard } from 'src/authentication/infrastructure/nest/guards/jwt-auth.guard';
 import type { RequestWithUser } from 'src/user/infrastructure/nest/controllers/user.controller';
@@ -247,53 +245,6 @@ export class ProjectController {
     const command = new AddLikeCommand(this.projectRepository);
     const totalLikes = await command.execute({ projectId, userId });
     return { likes: totalLikes };
-  }
-
-  @Post(':projectid/comment/:userid')
-  @ApiOperation({
-    summary: 'Añade un comentario al proyecto',
-    description:
-      'Añade un comentario a un proyecto relacionando el proyecto con el usuario.',
-  })
-  @ApiParam({
-    name: 'projectid',
-    description: 'Id único del proyecto',
-    type: String,
-  })
-  @ApiParam({
-    name: 'userid',
-    description: 'Id único del usuario',
-    type: String,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Cantidad de likes actuales',
-    type: Number,
-  })
-  @ApiBody({
-    type: AddCommentRequest,
-
-    examples: {
-      ejemplo: {
-        summary: 'Texto del comentario',
-        value: {
-          message: 'Excelente proyecto',
-        },
-      },
-    },
-  })
-  async addComment(
-    @Param('projectid') projectId: string,
-    @Param('userid') userId: string,
-    @Body() body: AddCommentRequest,
-  ): Promise<{ comments: number }> {
-    const command = new AddCommentCommand(this.projectRepository);
-    const totalComments = await command.execute({
-      projectId,
-      userId,
-      request: { ...body },
-    });
-    return { comments: totalComments };
   }
 
   @Get('user/:id')

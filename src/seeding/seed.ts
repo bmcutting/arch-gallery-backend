@@ -3,7 +3,7 @@ import { runSeeders, SeederOptions } from 'typeorm-extension';
 import { UserFactory } from './user.factory';
 import { MainSeeder } from './main.seeder';
 import { UserModel } from '../user/infrastructure/typeorm/models/user';
-import { CommentModel } from '../project/infrastructure/typeorm/models/comment';
+import { CommentModel } from '../comment/infrastructure/typeorm/models/comment';
 import { ProjectModel } from '../project/infrastructure/typeorm/models/project';
 import { LikeModel } from '../project/infrastructure/typeorm/models/like';
 import { CategoryModel } from '../category/infrastructure/typeorm/models/category';

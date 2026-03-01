@@ -17,7 +17,7 @@ import {
   getPaginationOptions,
 } from 'src/shared/utils/pagination.util';
 import { LikeModel } from '../models/like';
-import { CommentModel } from '../models/comment';
+import { CommentModel } from '../../../../comment/infrastructure/typeorm/models/comment';
 
 export class TypeOrmProjectRepository implements ProjectRepository {
   constructor(
@@ -46,30 +46,6 @@ export class TypeOrmProjectRepository implements ProjectRepository {
       where: { project: { id: projectId } },
     });
     return likes;
-  }
-
-  async addComment(
-    userId: string,
-    projectId: string,
-    text: string,
-  ): Promise<void> {
-    const comment = new CommentModel();
-    comment.project = { id: projectId } as ProjectModel;
-    comment.user = { id: userId } as UserModel;
-    comment.message = text;
-
-    await this.commentRepository.save(comment);
-  }
-
-  async removeComment(commentId: string): Promise<void> {
-    await this.commentRepository.delete(commentId);
-  }
-
-  async countComments(projectId: string): Promise<number> {
-    const comments = await this.commentRepository.count({
-      where: { project: { id: projectId } },
-    });
-    return comments;
   }
 
   async create(props: CreateProjectProps): Promise<string> {

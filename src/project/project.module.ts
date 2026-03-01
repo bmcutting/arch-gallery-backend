@@ -6,7 +6,7 @@ import { TypeOrmProjectRepository } from './infrastructure/typeorm/repository/pr
 import { TypeOrmUserRepository } from 'src/user/infrastructure/typeorm/repository/user';
 import { UserModel } from 'src/user/infrastructure/typeorm/models/user';
 import { LikeModel } from './infrastructure/typeorm/models/like';
-import { CommentModel } from './infrastructure/typeorm/models/comment';
+import { CommentModel } from '../comment/infrastructure/typeorm/models/comment';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 

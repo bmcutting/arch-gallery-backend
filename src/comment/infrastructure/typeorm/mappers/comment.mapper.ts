@@ -1,4 +1,4 @@
-import { Comment } from 'src/project/domain/entities/comment.entity';
+import { Comment } from 'src/comment/domain/entities/comment.entity';
 import { CommentModel } from '../models/comment';
 
 export class CommentTypeOrmMapper {

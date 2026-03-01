@@ -14,11 +14,6 @@ export interface ProjectRepository {
   addLike(userId: string, projectId: string): Promise<void>;
   removeLike(userId: string, projectId: string): Promise<void>;
   countLikes(projectId: string): Promise<number>;
-
-  // --- Comments ---
-  addComment(userId: string, projectId: string, text: string): Promise<void>;
-  removeComment(commentId: string): Promise<void>;
-  countComments(projectId: string): Promise<number>;
 }
 
 export interface CreateProjectProps {

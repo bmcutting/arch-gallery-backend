@@ -9,7 +9,7 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { CommentModel } from './comment';
+import { CommentModel } from '../../../../comment/infrastructure/typeorm/models/comment';
 import { LikeModel } from './like';
 
 @Entity({ name: 'projects' })

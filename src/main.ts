@@ -37,6 +37,7 @@ async function bootstrap() {
     .addTag('Auth', 'Operaciones de autenticación')
     .addTag('Projects', 'Operaciones de pryectos')
     .addTag('Categories', 'Operaciones de categorías')
+    .addTag('Comments', 'Operaciones de comentarios')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

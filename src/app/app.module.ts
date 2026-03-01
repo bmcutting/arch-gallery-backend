@@ -8,11 +8,12 @@ import { ProjectModule } from 'src/project/project.module';
 import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project';
 import { CategoryModule } from 'src/category/category.module';
 import { CategoryModel } from 'src/category/infrastructure/typeorm/models/category';
-import { CommentModel } from 'src/project/infrastructure/typeorm/models/comment';
+import { CommentModel } from 'src/comment/infrastructure/typeorm/models/comment';
 import { LikeModel } from 'src/project/infrastructure/typeorm/models/like';
 import { RefreshTokenModel } from 'src/authentication/infrastructure/typeorm/models/refresh-token.model';
 import { AuthenticationModule } from 'src/authentication/authentication.module';
 import { ConfigutationModule } from 'src/configuration/config.module';
+import { CommentModule } from 'src/comment/comment.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { ConfigutationModule } from 'src/configuration/config.module';
     UserModule,
     ProjectModule,
     CategoryModule,
+    CommentModule,
     AuthenticationModule,
     ConfigutationModule,
   ],

@@ -1,6 +1,6 @@
 import { Faker } from '@faker-js/faker';
 import { randomUUID } from 'crypto';
-import { CommentModel } from 'src/project/infrastructure/typeorm/models/comment';
+import { CommentModel } from 'src/comment/infrastructure/typeorm/models/comment';
 import { setSeederFactory } from 'typeorm-extension';
 
 export const CommentFactory = setSeederFactory(CommentModel, (faker: Faker) => {
