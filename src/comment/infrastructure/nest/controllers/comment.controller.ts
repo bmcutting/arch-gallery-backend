@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Param, Post, Req, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -11,6 +11,8 @@ import { TypeOrmProjectRepository } from 'src/project/infrastructure/typeorm/rep
 import { TypeOrmCommentRepository } from '../../typeorm/repository/comment';
 import { AddCommentRequest } from 'src/comment/application/commands/requests/add-comment.request';
 import { AddCommentCommand } from 'src/comment/application/commands/responses/add-comment-command';
+import { JwtAuthGuard } from 'src/authentication/infrastructure/nest/guards/jwt-auth.guard';
+import type { RequestWithUser } from 'src/user/infrastructure/nest/controllers/user.controller';
 
 @ApiTags('Comments')
 @Controller('comment')
@@ -22,6 +24,7 @@ export class CommentController {
   ) {}
 
   @Post(':projectid')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: 'Añade un comentario al proyecto',
     description:
@@ -51,13 +54,14 @@ export class CommentController {
   })
   async addComment(
     @Param('projectid') projectId: string,
-    @Param('userid') userId: string,
+    @Req() req: RequestWithUser,
     @Body() body: AddCommentRequest,
   ): Promise<{ comments: number }> {
     const command = new AddCommentCommand(
       this.commentRepository,
       this.projectRepository,
     );
+    const userId = req.user.id;
     const totalComments = await command.execute({
       projectId,
       userId,

@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Param,
-  Post,
   Put,
   Query,
   Req,
@@ -22,10 +21,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { GetUserByIdQuery } from 'src/user/application/queries/get-user-by-id.query';
-import { CreateUserRequest } from 'src/authentication/application/commands/requests/create-user.request';
-import { UserCreator } from 'src/user/domain/services/user-create';
-import { BcryptPasswordHasher } from 'src/shared/utils/password-hasher';
-import { CreateUserCommand } from 'src/authentication/application/commands/create-user.command';
 import { UpdateUser } from 'src/user/domain/services/user-update';
 import { UpdateUserRequest } from 'src/user/application/commands/requests/update-user.request';
 import { UpdateUserCommand } from 'src/user/application/commands/update-user.command';
