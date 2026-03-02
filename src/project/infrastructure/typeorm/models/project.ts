@@ -10,7 +10,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { CommentModel } from '../../../../comment/infrastructure/typeorm/models/comment';
-import { LikeModel } from './like';
+import { LikeModel } from '../../../../like/infrastructure/typeorm/models/like';
 
 @Entity({ name: 'projects' })
 export class ProjectModel extends Model {

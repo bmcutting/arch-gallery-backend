@@ -9,11 +9,12 @@ import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project'
 import { CategoryModule } from 'src/category/category.module';
 import { CategoryModel } from 'src/category/infrastructure/typeorm/models/category';
 import { CommentModel } from 'src/comment/infrastructure/typeorm/models/comment';
-import { LikeModel } from 'src/project/infrastructure/typeorm/models/like';
+import { LikeModel } from 'src/like/infrastructure/typeorm/models/like';
 import { RefreshTokenModel } from 'src/authentication/infrastructure/typeorm/models/refresh-token.model';
 import { AuthenticationModule } from 'src/authentication/authentication.module';
 import { ConfigutationModule } from 'src/configuration/config.module';
 import { CommentModule } from 'src/comment/comment.module';
+import { LikeModule } from 'src/like/like.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { CommentModule } from 'src/comment/comment.module';
     ProjectModule,
     CategoryModule,
     CommentModule,
+    LikeModule,
     AuthenticationModule,
     ConfigutationModule,
   ],

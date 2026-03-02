@@ -38,18 +38,18 @@ async function bootstrap() {
     .addTag('Projects', 'Operaciones de pryectos')
     .addTag('Categories', 'Operaciones de categorías')
     .addTag('Comments', 'Operaciones de comentarios')
+    .addTag('Likes', 'Operaciones de likes')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
+  await app.listen(process.env.PORT ?? 3000);
   console.log(
     `🚀 Server running on: http://localhost:${process.env.PORT ?? 3000}`,
   );
   console.log(
     `📚 Swagger documentation: http://localhost:${process.env.PORT ?? 3000}/api`,
   );
-
-  await app.listen(process.env.PORT ?? 3000);
 }
 void bootstrap();

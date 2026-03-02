@@ -5,7 +5,7 @@ import { MainSeeder } from './main.seeder';
 import { UserModel } from '../user/infrastructure/typeorm/models/user';
 import { CommentModel } from '../comment/infrastructure/typeorm/models/comment';
 import { ProjectModel } from '../project/infrastructure/typeorm/models/project';
-import { LikeModel } from '../project/infrastructure/typeorm/models/like';
+import { LikeModel } from '../like/infrastructure/typeorm/models/like';
 import { CategoryModel } from '../category/infrastructure/typeorm/models/category';
 import 'dotenv/config';
 import { ProjectFactory } from './project.factory';

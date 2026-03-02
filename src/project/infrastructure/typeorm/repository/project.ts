@@ -16,7 +16,7 @@ import {
   getPaginationInfo,
   getPaginationOptions,
 } from 'src/shared/utils/pagination.util';
-import { LikeModel } from '../models/like';
+import { LikeModel } from '../../../../like/infrastructure/typeorm/models/like';
 import { CommentModel } from '../../../../comment/infrastructure/typeorm/models/comment';
 
 export class TypeOrmProjectRepository implements ProjectRepository {
@@ -28,25 +28,6 @@ export class TypeOrmProjectRepository implements ProjectRepository {
     @InjectRepository(CommentModel)
     private readonly commentRepository: Repository<CommentModel>,
   ) {}
-
-  async addLike(userId: string, projectId: string): Promise<void> {
-    const like = new LikeModel();
-    like.userId = userId;
-    like.projectId = projectId;
-
-    await this.likeRepository.save(like);
-  }
-
-  async removeLike(userId: string, projectId: string): Promise<void> {
-    await this.likeRepository.delete({ userId, projectId });
-  }
-
-  async countLikes(projectId: string): Promise<number> {
-    const likes = await this.likeRepository.count({
-      where: { project: { id: projectId } },
-    });
-    return likes;
-  }
 
   async create(props: CreateProjectProps): Promise<string> {
     const project = new ProjectModel();

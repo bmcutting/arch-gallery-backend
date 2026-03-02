@@ -1,4 +1,4 @@
-import { Like } from 'src/project/domain/entities/like.entity';
+import { Like } from 'src/like/domain/entities/like.entity';
 import { LikeModel } from '../models/like';
 
 export class LikeTypeOrmMapper {

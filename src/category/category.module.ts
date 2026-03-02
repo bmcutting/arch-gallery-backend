@@ -5,7 +5,7 @@ import { CategoryController } from './infrastructure/nest/controller/category.co
 import { TypeOrmCategoryRepository } from './infrastructure/typeorm/repository/category';
 import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project';
 import { TypeOrmProjectRepository } from 'src/project/infrastructure/typeorm/repository/project';
-import { LikeModel } from 'src/project/infrastructure/typeorm/models/like';
+import { LikeModel } from 'src/like/infrastructure/typeorm/models/like';
 import { CommentModel } from 'src/comment/infrastructure/typeorm/models/comment';
 
 @Module({

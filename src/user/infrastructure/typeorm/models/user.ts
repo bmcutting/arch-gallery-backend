@@ -1,5 +1,5 @@
 import { CommentModel } from 'src/comment/infrastructure/typeorm/models/comment';
-import { LikeModel } from 'src/project/infrastructure/typeorm/models/like';
+import { LikeModel } from 'src/like/infrastructure/typeorm/models/like';
 import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project';
 import { Model } from 'src/shared/typeorm/base.model';
 import { Column, Entity, OneToMany } from 'typeorm';

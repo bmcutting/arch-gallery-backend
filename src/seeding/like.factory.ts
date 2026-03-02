@@ -1,6 +1,6 @@
 import { Faker } from '@faker-js/faker';
 import { randomUUID } from 'crypto';
-import { LikeModel } from 'src/project/infrastructure/typeorm/models/like';
+import { LikeModel } from 'src/like/infrastructure/typeorm/models/like';
 import { setSeederFactory } from 'typeorm-extension';
 
 export const LikeFactory = setSeederFactory(LikeModel, (faker: Faker) => {

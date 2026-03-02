@@ -1,6 +1,6 @@
 import { CategoryModel } from 'src/category/infrastructure/typeorm/models/category';
 import { CommentModel } from 'src/comment/infrastructure/typeorm/models/comment';
-import { LikeModel } from 'src/project/infrastructure/typeorm/models/like';
+import { LikeModel } from 'src/like/infrastructure/typeorm/models/like';
 import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project';
 import { UserModel } from 'src/user/infrastructure/typeorm/models/user';
 import { DataSource } from 'typeorm';

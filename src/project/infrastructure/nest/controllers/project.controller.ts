@@ -30,7 +30,6 @@ import { ProjectPaginationRequest } from 'src/project/application/queries/reques
 import { GetAllProjectsQuery } from 'src/project/application/queries/get-all-projects.query';
 import { GetProjectByIdQuery } from 'src/project/application/queries/get-project-by-id.query';
 import { PaginationResponse } from 'src/shared/application/responses/pagination.response';
-import { AddLikeCommand } from 'src/project/application/commands/add-like-command';
 import { GetProjectByUserIdQuery } from 'src/project/application/queries/get-project-by-user-id.query';
 import { JwtAuthGuard } from 'src/authentication/infrastructure/nest/guards/jwt-auth.guard';
 import type { RequestWithUser } from 'src/user/infrastructure/nest/controllers/user.controller';
@@ -213,38 +212,6 @@ export class ProjectController {
   async findById(@Param('id') id: string): Promise<ProjectResponse> {
     const query = new GetProjectByIdQuery(this.projectRepository);
     return query.execute({ id });
-  }
-
-  @Post(':projectId/likes/:userId')
-  @ApiOperation({
-    summary: 'Añade un like al proyecto',
-    description:
-      'Añade un like a un proyecto relacionando el proyecto con el usuario.',
-  })
-  @ApiParam({
-    name: 'projectId',
-    description: 'Id único del proyecto',
-    type: String,
-  })
-  @ApiParam({
-    name: 'userId',
-    description: 'Id único del usuario',
-    type: String,
-  })
-  @ApiResponse({
-    description: 'Cantidad de likes actuales',
-    schema: {
-      type: 'object',
-      properties: { likes: { type: 'number', example: 42 } },
-    },
-  })
-  async addLike(
-    @Param('projectId') projectId: string,
-    @Param('userId') userId: string,
-  ): Promise<{ likes: number }> {
-    const command = new AddLikeCommand(this.projectRepository);
-    const totalLikes = await command.execute({ projectId, userId });
-    return { likes: totalLikes };
   }
 
   @Get('user/:id')

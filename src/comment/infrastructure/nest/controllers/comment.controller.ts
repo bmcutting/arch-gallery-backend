@@ -25,7 +25,7 @@ import { DeleteCommentCommand } from 'src/comment/application/commands/delete-co
 import { DeleteCommentResponse } from 'src/comment/application/commands/responses/delete-comment.response';
 
 @ApiTags('Comments')
-@Controller('comment')
+@Controller('comments')
 @ApiBearerAuth('JWT-auth')
 export class CommentController {
   constructor(

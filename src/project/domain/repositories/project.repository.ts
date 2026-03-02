@@ -10,10 +10,6 @@ export interface ProjectRepository {
   delete(id: string): Promise<void>;
   findByUserId(id: string): Promise<Project[]>;
   getProjectFeed(cursor?: string, limit?: number): Promise<Project[]>;
-  ///likes
-  addLike(userId: string, projectId: string): Promise<void>;
-  removeLike(userId: string, projectId: string): Promise<void>;
-  countLikes(projectId: string): Promise<number>;
 }
 
 export interface CreateProjectProps {

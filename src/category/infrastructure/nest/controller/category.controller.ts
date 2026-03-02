@@ -1,6 +1,7 @@
 import { TypeOrmProjectRepository } from 'src/project/infrastructure/typeorm/repository/project';
 import { TypeOrmCategoryRepository } from '../../typeorm/repository/category';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiParam,
@@ -22,6 +23,7 @@ import { GetCategoryByIdQuery } from 'src/category/application/queries/get-categ
 
 @ApiTags('Categories')
 @Controller('categories')
+@ApiBearerAuth('JWT-auth')
 export class CategoryController {
   constructor(
     private readonly projectRepository: TypeOrmProjectRepository,

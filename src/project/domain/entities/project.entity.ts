@@ -1,6 +1,6 @@
 import { Category } from 'src/category/domain/entities/category';
 import { User } from 'src/user/domain/entities/user.entity';
-import { Like } from './like.entity';
+import { Like } from '../../../like/domain/entities/like.entity';
 import { Comment } from '../../../comment/domain/entities/comment.entity';
 
 interface Props {

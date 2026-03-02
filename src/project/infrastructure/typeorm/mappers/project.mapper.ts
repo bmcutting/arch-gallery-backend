@@ -2,7 +2,7 @@ import { Project } from 'src/project/domain/entities/project.entity';
 import { ProjectModel } from '../models/project';
 import { UserTypeOrmMapper } from 'src/user/infrastructure/typeorm/mappers/user-mapper';
 import { CategoryTypeOrmMapper } from 'src/category/infrastructure/typeorm/mappers/category.mapper';
-import { LikeTypeOrmMapper } from './like.mapper';
+import { LikeTypeOrmMapper } from '../../../../like/infrastructure/typeorm/mappers/like.mapper';
 import { CommentTypeOrmMapper } from '../../../../comment/infrastructure/typeorm/mappers/comment.mapper';
 
 export class ProjectTypeOrmMapper {
