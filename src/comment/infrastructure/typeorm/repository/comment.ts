@@ -4,11 +4,11 @@ import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project'
 import { Repository } from 'typeorm';
 import { CommentModel } from '../models/comment';
 import { UserModel } from 'src/user/infrastructure/typeorm/models/user';
+import { CommentTypeOrmMapper } from '../mappers/comment.mapper';
+import { Comment } from 'src/comment/domain/entities/comment.entity';
 
 export class TypeOrmCommentRepository implements CommentRepository {
   constructor(
-    @InjectRepository(ProjectModel)
-    private readonly projectRepository: Repository<ProjectModel>,
     @InjectRepository(CommentModel)
     private readonly commentRepository: Repository<CommentModel>,
   ) {}
@@ -26,7 +26,7 @@ export class TypeOrmCommentRepository implements CommentRepository {
     await this.commentRepository.save(comment);
   }
 
-  async removeComment(commentId: string): Promise<void> {
+  async removeComment(commentId: string) {
     await this.commentRepository.delete(commentId);
   }
 
@@ -35,5 +35,13 @@ export class TypeOrmCommentRepository implements CommentRepository {
       where: { project: { id: projectId } },
     });
     return comments;
+  }
+
+  async findById(id: string): Promise<Comment | null> {
+    const found = await this.commentRepository.findOne({
+      where: { id },
+    });
+
+    return found ? CommentTypeOrmMapper.execute(found) : null;
   }
 }

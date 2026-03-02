@@ -1,4 +1,12 @@
-import { Body, Controller, Param, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -10,9 +18,11 @@ import {
 import { TypeOrmProjectRepository } from 'src/project/infrastructure/typeorm/repository/project';
 import { TypeOrmCommentRepository } from '../../typeorm/repository/comment';
 import { AddCommentRequest } from 'src/comment/application/commands/requests/add-comment.request';
-import { AddCommentCommand } from 'src/comment/application/commands/responses/add-comment-command';
+import { AddCommentCommand } from 'src/comment/application/commands/add-comment-command';
 import { JwtAuthGuard } from 'src/authentication/infrastructure/nest/guards/jwt-auth.guard';
 import type { RequestWithUser } from 'src/user/infrastructure/nest/controllers/user.controller';
+import { DeleteCommentCommand } from 'src/comment/application/commands/delete-comment-command';
+import { DeleteCommentResponse } from 'src/comment/application/commands/responses/delete-comment.response';
 
 @ApiTags('Comments')
 @Controller('comment')
@@ -68,5 +78,27 @@ export class CommentController {
       request: { ...body },
     });
     return { comments: totalComments };
+  }
+
+  @Delete(':commentId')
+  @ApiOperation({
+    summary: 'Elimina un comentario del proyecto',
+    description: 'Elimina un comentario de un proyecto.',
+  })
+  @ApiParam({
+    name: 'commentid',
+    description: 'Id único del comentario',
+    type: String,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Resultado de la operación de eliminación',
+    type: Boolean,
+  })
+  async removeComment(
+    @Param('commentid') commentId: string,
+  ): Promise<DeleteCommentResponse> {
+    const command = new DeleteCommentCommand(this.commentRepository);
+    return command.execute({ commentId });
   }
 }

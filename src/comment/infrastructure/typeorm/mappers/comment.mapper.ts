@@ -3,6 +3,7 @@ import { CommentModel } from '../models/comment';
 
 export class CommentTypeOrmMapper {
   constructor() {}
+
   static execute(c: CommentModel): Comment {
     return new Comment({
       id: c.id,
