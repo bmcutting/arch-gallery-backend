@@ -2,7 +2,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { LikeRepository } from 'src/like/domain/repositories/like.repository';
 import { LikeModel } from '../models/like';
 import { Repository } from 'typeorm';
-import { NotFoundLikeException, RepeatLikeException } from 'src/like/domain/exceptions/like';
+import {
+  NotFoundLikeException,
+  RepeatLikeException,
+} from 'src/like/domain/exceptions/like';
 
 export class TypeOrmLikeRepository implements LikeRepository {
   constructor(

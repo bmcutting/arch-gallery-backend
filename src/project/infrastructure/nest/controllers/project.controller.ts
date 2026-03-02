@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -38,6 +39,7 @@ import {
   GetProjectFeedResponse,
 } from 'src/project/application/queries/get-feed-project.query';
 import { GetProjectFeedRequest } from 'src/project/application/queries/requests/project-feed.request';
+import { DeleteProjectCommand } from 'src/project/application/commands/delete-project-command';
 
 @ApiTags('Projects')
 @Controller('projects')
@@ -212,6 +214,23 @@ export class ProjectController {
   async findById(@Param('id') id: string): Promise<ProjectResponse> {
     const query = new GetProjectByIdQuery(this.projectRepository);
     return query.execute({ id });
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Eliminar proyecto' })
+  @ApiParam({ name: 'id', description: 'Id del proyecto' })
+  @ApiResponse({
+    status: 200,
+    description: 'Proyecto eliminado exitosamente',
+  })
+  @ApiResponse({ status: 403, description: 'Permisos insuficientes' })
+  @ApiResponse({ status: 404, description: 'Proyecto no encontrado' })
+  async delete(@Param('id') projectId: string) {
+    const command = new DeleteProjectCommand(this.projectRepository);
+
+    return command.execute({
+      projectId,
+    });
   }
 
   @Get('user/:id')
