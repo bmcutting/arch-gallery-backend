@@ -112,6 +112,7 @@ export class TypeOrmProjectRepository implements ProjectRepository {
       .leftJoinAndSelect('project.user', 'user')
       .leftJoinAndSelect('project.likes', 'like')
       .leftJoinAndSelect('project.comments', 'comment')
+      .leftJoinAndSelect('project.categories', 'category')
       .orderBy('project.id', 'DESC')
       .take(limit + 1);
 

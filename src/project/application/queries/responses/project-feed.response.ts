@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { CategoryResponse } from 'src/category/application/queries/responses/category.response';
 
 export class ProjectFeedResponse {
   @ApiProperty({
@@ -43,6 +44,13 @@ export class ProjectFeedResponse {
     example: 10,
   })
   commentsCount: number;
+
+  @ApiProperty({
+    description: 'Categorías asociadas al proyecto',
+    type: [CategoryResponse],
+    nullable: true,
+  })
+  categories: CategoryResponse[] | null;
 
   @ApiProperty({
     description: 'Autor del proyecto',

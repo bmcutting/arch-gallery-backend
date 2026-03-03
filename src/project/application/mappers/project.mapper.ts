@@ -37,6 +37,9 @@ export class ProjectResponseMapper {
       previewImage: project.imagesUrl[0],
       likesCount: project.likes?.length ?? 0,
       commentsCount: project.comments?.length ?? 0,
+      categories: CategoryResponseMapper.toResponseList(
+        project.getCategories(),
+      ),
       author: {
         id: project.getUser().id,
         name: project.getUser().userName,

@@ -109,8 +109,6 @@ export class ProjectController {
     const query = new GetProjectFeedQuery(this.projectRepository);
     const result = await query.execute(params);
 
-    console.log('Feed devuelto:', result.items.length, 'proyectos');
-    console.log('NextCursor:', result.nextCursor);
     return result;
   }
 
