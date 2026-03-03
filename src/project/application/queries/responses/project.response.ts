@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { CategoryResponse } from 'src/category/application/queries/responses/category.response';
+import { LikeResponse } from 'src/like/application/commands/responses/like.response';
 import { UserResponse } from 'src/user/application/queries/responses/user.response';
 
 export class ProjectResponse {
@@ -68,8 +69,8 @@ export class ProjectResponse {
   })
   categories: CategoryResponse[] | null;
 
-  @ApiProperty({ description: 'Cantidad de likes del proyecto', example: 42 })
-  likesCount: number;
+  @ApiProperty({ description: 'Likes del proyecto', example: 42 })
+  likes: LikeResponse[] | null;
 
   @ApiProperty({
     description: 'Cantidad de comentarios del proyecto',

@@ -3,6 +3,7 @@ import { ProjectResponse } from '../queries/responses/project.response';
 import { CategoryResponseMapper } from 'src/category/application/mappers/category.mapper';
 import { UserResponseMapper } from 'src/user/application/mappers/user.mapper';
 import { ProjectFeedResponse } from '../queries/responses/project-feed.response';
+import { LikeResponseMapper } from 'src/like/application/mappers/like.mapper';
 
 export class ProjectResponseMapper {
   static toReponse(project: Project): ProjectResponse {
@@ -19,7 +20,7 @@ export class ProjectResponseMapper {
       categories: CategoryResponseMapper.toResponseList(
         project.getCategories(),
       ),
-      likesCount: project.likes?.length ?? 0,
+      likes: LikeResponseMapper.toResponseList(project.getLikes()),
       commentsCount: project.comments?.length ?? 0,
     };
   }
