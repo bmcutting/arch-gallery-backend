@@ -1,5 +1,5 @@
 import { Like } from 'src/like/domain/entities/like.entity';
-import { LikeResponse } from '../commands/responses/like.response';
+import { LikeResponse } from '../queries/responses/like.response';
 
 export class LikeResponseMapper {
   static toReponse(like: Like): LikeResponse {
