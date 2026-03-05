@@ -88,7 +88,7 @@ export class ProjectController {
       this.userRepository,
     );
     const command = new CreateProjectCommand(creator);
-
+    console.log(body);
     return await command.execute(body);
   }
 
