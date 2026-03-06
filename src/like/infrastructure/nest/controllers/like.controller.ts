@@ -1,4 +1,4 @@
-import { Controller, Param, Post, Req } from '@nestjs/common';
+import { Controller, Param, Post, Req, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -9,6 +9,7 @@ import {
 import { AddLikeCommand } from 'src/like/application/commands/add-like-command';
 import type { RequestWithUser } from 'src/user/infrastructure/nest/controllers/user.controller';
 import { TypeOrmLikeRepository } from '../../typeorm/repository/like';
+import { JwtAuthGuard } from 'src/authentication/infrastructure/nest/guards/jwt-auth.guard';
 
 @ApiTags('Likes')
 @Controller('likes')
@@ -17,6 +18,7 @@ export class LikeController {
   constructor(private readonly likeRepository: TypeOrmLikeRepository) {}
 
   @Post(':projectId')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: 'Añade un like al proyecto',
     description:
