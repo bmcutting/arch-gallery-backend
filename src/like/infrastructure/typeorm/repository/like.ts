@@ -2,10 +2,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { LikeRepository } from 'src/like/domain/repositories/like.repository';
 import { LikeModel } from '../models/like';
 import { Repository } from 'typeorm';
-import {
-  NotFoundLikeException,
-  RepeatLikeException,
-} from 'src/like/domain/exceptions/like';
+import { RepeatLikeException } from 'src/like/domain/exceptions/like';
+import { Like } from 'src/like/domain/entities/like.entity';
+import { LikeTypeOrmMapper } from '../mappers/like.mapper';
 
 export class TypeOrmLikeRepository implements LikeRepository {
   constructor(
@@ -24,14 +23,8 @@ export class TypeOrmLikeRepository implements LikeRepository {
     await this.likeRepository.save(like);
   }
 
-  async removeLike(userId: string, projectId: string): Promise<void> {
-    const existing = await this.likeRepository.findOne({
-      where: { userId, projectId },
-    });
-    if (!existing) {
-      throw new NotFoundLikeException();
-    }
-    await this.likeRepository.delete({ userId, projectId });
+  async removeLike(likeId: string): Promise<void> {
+    await this.likeRepository.delete(likeId);
   }
 
   async countLikes(projectId: string): Promise<number> {
@@ -39,5 +32,13 @@ export class TypeOrmLikeRepository implements LikeRepository {
       where: { project: { id: projectId } },
     });
     return likes;
+  }
+
+  async findById(id: string): Promise<Like | null> {
+    const found = await this.likeRepository.findOne({
+      where: { id },
+    });
+
+    return found ? LikeTypeOrmMapper.execute(found) : null;
   }
 }

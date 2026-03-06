@@ -1,4 +1,11 @@
-import { Controller, Param, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -10,6 +17,8 @@ import { AddLikeCommand } from 'src/like/application/commands/add-like-command';
 import type { RequestWithUser } from 'src/user/infrastructure/nest/controllers/user.controller';
 import { TypeOrmLikeRepository } from '../../typeorm/repository/like';
 import { JwtAuthGuard } from 'src/authentication/infrastructure/nest/guards/jwt-auth.guard';
+import { DeleteLikeResponse } from 'src/like/application/commands/responses/delete-like.response';
+import { DeleteLikeCommand } from 'src/like/application/commands/delete-like-command';
 
 @ApiTags('Likes')
 @Controller('likes')
@@ -44,5 +53,25 @@ export class LikeController {
     const userId = req.user.id;
     const totalLikes = await command.execute({ projectId, userId });
     return { likes: totalLikes };
+  }
+
+  @Delete(':id')
+  @ApiOperation({
+    summary: 'Elimina un like del proyecto',
+    description: 'Elimina un like de un proyecto.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Id único del like',
+    type: String,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Resultado de la operación de eliminación',
+    type: Boolean,
+  })
+  async removeLike(@Param('id') id: string): Promise<DeleteLikeResponse> {
+    const command = new DeleteLikeCommand(this.likeRepository);
+    return command.execute({ likeId: id });
   }
 }
