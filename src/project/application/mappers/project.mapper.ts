@@ -37,8 +37,8 @@ export class ProjectResponseMapper {
       year: project.year,
       title: project.title,
       previewImage: project.imagesUrl[0],
-      likesCount: project.likes?.length ?? 0,
-      commentsCount: project.comments?.length ?? 0,
+      likes: LikeResponseMapper.toResponseList(project.getLikes()),
+      comments: CommentResponseMapper.toResponseList(project.getComments()),
       categories: CategoryResponseMapper.toResponseList(
         project.getCategories(),
       ),

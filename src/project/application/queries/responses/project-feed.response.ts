@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { CategoryResponse } from 'src/category/application/queries/responses/category.response';
+import { CommentResponse } from 'src/comment/application/queries/responses/comment.response';
+import { LikeResponse } from 'src/like/application/queries/responses/like.response';
 
 export class ProjectFeedResponse {
   @ApiProperty({
@@ -34,16 +36,18 @@ export class ProjectFeedResponse {
   previewImage: string;
 
   @ApiProperty({
-    description: 'Cantidad de likes del proyecto',
-    example: 42,
+    description: 'Likes del proyecto',
+    type: [LikeResponse],
+    nullable: true,
   })
-  likesCount: number;
+  likes: LikeResponse[] | null;
 
   @ApiProperty({
-    description: 'Cantidad de comentarios del proyecto',
-    example: 10,
+    description: 'Comentarios del proyecto',
+    type: [CommentResponse],
+    nullable: true,
   })
-  commentsCount: number;
+  comments: CommentResponse[] | null;
 
   @ApiProperty({
     description: 'Categorías asociadas al proyecto',

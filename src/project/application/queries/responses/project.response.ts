@@ -79,7 +79,8 @@ export class ProjectResponse {
 
   @ApiProperty({
     description: 'Comentarios del proyecto',
-    example: 15,
+    type: [CommentResponse],
+    nullable: true,
   })
   comments: CommentResponse[] | null;
 }
