@@ -30,7 +30,10 @@ export class ProjectResponseMapper {
     return projects.map((project) => this.toReponse(project));
   }
 
-  static toProjectFeed(project: Project): ProjectFeedResponse {
+  static toProjectFeed(
+    project: Project,
+    currentUserId: string,
+  ): ProjectFeedResponse {
     return {
       id: project.id,
       createdAt: project.createdAt,
@@ -39,6 +42,8 @@ export class ProjectResponseMapper {
       previewImage: project.imagesUrl[0],
       likes: LikeResponseMapper.toResponseList(project.getLikes()),
       comments: CommentResponseMapper.toResponseList(project.getComments()),
+      likedByUser:
+        project.likes?.some((like) => like.userId === currentUserId) ?? false,
       categories: CategoryResponseMapper.toResponseList(
         project.getCategories(),
       ),
@@ -50,7 +55,13 @@ export class ProjectResponseMapper {
     };
   }
 
-  static toProjectFeedList(projects: Project[]): ProjectFeedResponse[] {
-    return projects.map((project) => this.toProjectFeed(project));
+  static toProjectFeedList(
+    projects: Project[],
+    currentUserId: string,
+  ): ProjectFeedResponse[] {
+    console.log(currentUserId);
+    return projects.map((project) =>
+      this.toProjectFeed(project, currentUserId),
+    );
   }
 }

@@ -50,6 +50,12 @@ export class ProjectFeedResponse {
   comments: CommentResponse[] | null;
 
   @ApiProperty({
+    description: 'Indica si el usuario autenticado ya dio like',
+    example: true,
+  })
+  likedByUser: boolean;
+
+  @ApiProperty({
     description: 'Categorías asociadas al proyecto',
     type: [CategoryResponse],
     nullable: true,

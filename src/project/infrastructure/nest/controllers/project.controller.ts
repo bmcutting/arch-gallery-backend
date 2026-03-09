@@ -93,10 +93,11 @@ export class ProjectController {
   }
 
   @Get('feed')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: 'Obtener feed de proyectos',
     description:
-      'Devuelve una de proyectos con información básica y el cursor para la siguiente página.',
+      'Devuelve una lista de proyectos con información básica y el cursor para la siguiente página.',
   })
   @ApiResponse({
     status: 200,
@@ -105,7 +106,10 @@ export class ProjectController {
   @ApiResponse({ status: 400, description: 'Parámetros de entrada inválidos' })
   async getFeed(
     @Query() params: GetProjectFeedRequest,
+    @Req() req: RequestWithUser,
   ): Promise<GetProjectFeedResponse> {
+    params.currentUserId = req.user.id;
+
     const query = new GetProjectFeedQuery(this.projectRepository);
     const result = await query.execute(params);
 

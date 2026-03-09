@@ -1,4 +1,4 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsInt, IsOptional, Min } from 'class-validator';
 
 export class GetProjectFeedRequest {
@@ -15,4 +15,10 @@ export class GetProjectFeedRequest {
   @IsInt()
   @Min(1)
   limit?: number;
+
+  @ApiProperty({
+    description: 'Identificador del usuario autenticado',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  currentUserId: string;
 }
