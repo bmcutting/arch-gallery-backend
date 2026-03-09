@@ -1,3 +1,3 @@
 export class DeleteLikeResponse {
-  success: boolean;
+  likesCount: number;
 }

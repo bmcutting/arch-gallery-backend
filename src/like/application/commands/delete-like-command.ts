@@ -18,6 +18,8 @@ export class DeleteLikeCommand implements Command<
 
     await this.likeRepository.removeLike(props.likeId);
 
-    return { success: true };
+    const likesCount = await this.likeRepository.countLikes(like.projectId);
+
+    return { likesCount };
   }
 }
