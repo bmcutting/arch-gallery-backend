@@ -17,7 +17,6 @@ import { AddLikeCommand } from 'src/like/application/commands/add-like-command';
 import type { RequestWithUser } from 'src/user/infrastructure/nest/controllers/user.controller';
 import { TypeOrmLikeRepository } from '../../typeorm/repository/like';
 import { JwtAuthGuard } from 'src/authentication/infrastructure/nest/guards/jwt-auth.guard';
-import { DeleteLikeResponse } from 'src/like/application/commands/responses/delete-like.response';
 import { DeleteLikeCommand } from 'src/like/application/commands/delete-like-command';
 
 @ApiTags('Likes')
@@ -48,30 +47,40 @@ export class LikeController {
   async addLike(
     @Param('projectId') projectId: string,
     @Req() req: RequestWithUser,
-  ): Promise<{ likes: number }> {
+  ): Promise<number> {
     const command = new AddLikeCommand(this.likeRepository);
     const userId = req.user.id;
     const totalLikes = await command.execute({ projectId, userId });
-    return { likes: totalLikes };
+    return totalLikes;
   }
 
-  @Delete(':id')
+  @Delete(':projectId')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: 'Elimina un like del proyecto',
     description: 'Elimina un like de un proyecto.',
   })
   @ApiParam({
-    name: 'id',
-    description: 'Id único del like',
+    name: 'projectId',
+    description: 'Id único del proyecto',
     type: String,
   })
   @ApiResponse({
-    status: 200,
-    description: 'Resultado de la operación de eliminación',
-    type: Boolean,
+    description: 'Cantidad de likes actuales',
+    schema: {
+      type: 'object',
+      properties: { likes: { type: 'number', example: 42 } },
+    },
   })
-  async removeLike(@Param('id') id: string): Promise<DeleteLikeResponse> {
+  async removeLike(
+    @Param('projectId') id: string,
+    @Req() req: RequestWithUser,
+  ): Promise<number> {
     const command = new DeleteLikeCommand(this.likeRepository);
-    return command.execute({ likeId: id });
+    const totalLikes = await command.execute({
+      projectId: id,
+      userId: req.user.id,
+    });
+    return totalLikes;
   }
 }
