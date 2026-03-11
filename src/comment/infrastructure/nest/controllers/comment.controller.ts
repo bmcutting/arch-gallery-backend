@@ -33,7 +33,7 @@ export class CommentController {
     private readonly projectRepository: TypeOrmProjectRepository,
   ) {}
 
-  @Post(':projectid')
+  @Post(':projectId')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: 'Añade un comentario al proyecto',
@@ -41,7 +41,7 @@ export class CommentController {
       'Añade un comentario a un proyecto relacionando el proyecto con el usuario.',
   })
   @ApiParam({
-    name: 'projectid',
+    name: 'projectId',
     description: 'Id único del proyecto',
     type: String,
   })
@@ -63,10 +63,10 @@ export class CommentController {
     },
   })
   async addComment(
-    @Param('projectid') projectId: string,
+    @Param('projectId') projectId: string,
     @Req() req: RequestWithUser,
     @Body() body: AddCommentRequest,
-  ): Promise<{ comments: number }> {
+  ): Promise<number> {
     const command = new AddCommentCommand(
       this.commentRepository,
       this.projectRepository,
@@ -77,7 +77,7 @@ export class CommentController {
       userId,
       request: { ...body },
     });
-    return { comments: totalComments };
+    return totalComments;
   }
 
   @Delete(':commentId')
