@@ -5,4 +5,5 @@ export interface CommentRepository {
   findById(commentId: string): Promise<Comment | null>;
   removeComment(commentId: string);
   countComments(projectId: string): Promise<number>;
+  findByProjectId(projectId: string): Promise<Comment[]>;
 }

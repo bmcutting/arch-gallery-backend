@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Post,
   Req,
@@ -23,6 +24,7 @@ import { JwtAuthGuard } from 'src/authentication/infrastructure/nest/guards/jwt-
 import type { RequestWithUser } from 'src/user/infrastructure/nest/controllers/user.controller';
 import { DeleteCommentCommand } from 'src/comment/application/commands/delete-comment-command';
 import { DeleteCommentResponse } from 'src/comment/application/commands/responses/delete-comment.response';
+import { CommentResponse } from 'src/comment/application/queries/responses/comment.response';
 
 @ApiTags('Comments')
 @Controller('comments')
@@ -78,6 +80,29 @@ export class CommentController {
       request: { ...body },
     });
     return totalComments;
+  }
+
+  @Get(':projectId')
+  @ApiOperation({
+    summary: 'Obtiene todos los comentarios de un proyecto',
+    description:
+      'Devuelve la lista completa de comentarios asociados a un proyecto.',
+  })
+  @ApiParam({
+    name: 'projectId',
+    description: 'Id único del proyecto',
+    type: String,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de comentarios del proyecto',
+    type: [CommentResponse],
+  })
+  async getCommentsByProject(
+    @Param('projectId') projectId: string,
+  ): Promise<CommentResponse[]> {
+    const comments = await this.commentRepository.findByProjectId(projectId);
+    return comments;
   }
 
   @Delete(':commentId')

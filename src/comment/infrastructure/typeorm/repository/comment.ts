@@ -44,4 +44,13 @@ export class TypeOrmCommentRepository implements CommentRepository {
 
     return found ? CommentTypeOrmMapper.execute(found) : null;
   }
+
+  async findByProjectId(projectId: string): Promise<Comment[]> {
+    const found = await this.commentRepository.find({
+      where: { projectId },
+      order: { createdAt: 'DESC' },
+    });
+
+    return found.map((entity) => CommentTypeOrmMapper.execute(entity));
+  }
 }
