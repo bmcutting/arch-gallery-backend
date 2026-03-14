@@ -51,7 +51,6 @@ export class TypeOrmCommentRepository implements CommentRepository {
       relations: { user: true },
       order: { createdAt: 'DESC' },
     });
-
     return found.map((entity) => CommentTypeOrmMapper.execute(entity));
   }
 }

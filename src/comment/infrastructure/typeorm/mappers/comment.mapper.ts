@@ -13,11 +13,17 @@ export class CommentTypeOrmMapper {
       isActive: c.isActive,
       createdAt: c.createdAt,
       deletedAt: c.deletedAt,
-      user: {
-        id: c.user.id,
-        userName: c.user.userName,
-        profileImageUrl: c.user.profileImageUrl,
-      },
+      user: c.user
+        ? {
+            id: c.user.id,
+            userName: c.user.userName,
+            profileImageUrl: c.user.profileImageUrl,
+          }
+        : {
+            id: '',
+            userName: 'Usuario desconocido',
+            profileImageUrl: '',
+          },
     });
   }
 

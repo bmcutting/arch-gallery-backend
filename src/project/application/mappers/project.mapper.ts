@@ -59,7 +59,6 @@ export class ProjectResponseMapper {
     projects: Project[],
     currentUserId: string,
   ): ProjectFeedResponse[] {
-    console.log(currentUserId);
     return projects.map((project) =>
       this.toProjectFeed(project, currentUserId),
     );
