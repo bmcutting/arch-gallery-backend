@@ -6,6 +6,11 @@ interface Props {
   isActive: boolean;
   createdAt?: Date;
   deletedAt?: Date | null;
+  user: {
+    id: string;
+    userName: string;
+    profileImageUrl: string;
+  };
 }
 
 export class Comment {
@@ -16,6 +21,11 @@ export class Comment {
   projectId: string;
   isActive: boolean;
   deletedAt: Date | null;
+  user: {
+    id: string;
+    userName: string;
+    profileImageUrl: string;
+  };
 
   constructor(props: Props) {
     this.id = props.id;
@@ -25,6 +35,7 @@ export class Comment {
     this.isActive = props.isActive;
     this.createdAt = props.createdAt ?? new Date();
     this.deletedAt = props.deletedAt ?? null;
+    this.user = props.user;
   }
 
   //Getters

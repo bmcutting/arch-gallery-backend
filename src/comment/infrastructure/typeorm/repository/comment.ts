@@ -48,6 +48,7 @@ export class TypeOrmCommentRepository implements CommentRepository {
   async findByProjectId(projectId: string): Promise<Comment[]> {
     const found = await this.commentRepository.find({
       where: { projectId },
+      relations: { user: true },
       order: { createdAt: 'DESC' },
     });
 

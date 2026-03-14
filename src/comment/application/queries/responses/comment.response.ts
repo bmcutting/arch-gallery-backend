@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { UserSummaryResponse } from 'src/user/application/queries/responses/user-summary.response';
 
 export class CommentResponse {
   @ApiProperty({
@@ -24,4 +25,7 @@ export class CommentResponse {
     example: 'Excelente proyecto',
   })
   message: string;
+
+  @ApiProperty({ type: UserSummaryResponse })
+  user: UserSummaryResponse;
 }
