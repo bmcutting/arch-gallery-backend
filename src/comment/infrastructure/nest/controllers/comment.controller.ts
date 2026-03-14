@@ -25,6 +25,7 @@ import type { RequestWithUser } from 'src/user/infrastructure/nest/controllers/u
 import { DeleteCommentCommand } from 'src/comment/application/commands/delete-comment-command';
 import { DeleteCommentResponse } from 'src/comment/application/commands/responses/delete-comment.response';
 import { CommentResponse } from 'src/comment/application/queries/responses/comment.response';
+import { GetCommentsByProjectIdQuery } from 'src/comment/application/queries/get-comments-by-project-id.query';
 
 @ApiTags('Comments')
 @Controller('comments')
@@ -101,8 +102,8 @@ export class CommentController {
   async getCommentsByProject(
     @Param('projectId') projectId: string,
   ): Promise<CommentResponse[]> {
-    const comments = await this.commentRepository.findByProjectId(projectId);
-    return comments;
+    const query = new GetCommentsByProjectIdQuery(this.commentRepository);
+    return query.execute({ projectId });
   }
 
   @Delete(':commentId')

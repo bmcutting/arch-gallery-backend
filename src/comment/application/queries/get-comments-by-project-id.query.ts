@@ -16,7 +16,6 @@ export class GetCommentsByProjectIdQuery implements Query<
     const comments = await this.commentRepository.findByProjectId(
       request.projectId,
     );
-
     return CommentResponseMapper.toResponseList(comments);
   }
 }
