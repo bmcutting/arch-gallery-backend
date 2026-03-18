@@ -66,6 +66,8 @@ export class ProjectController {
         value: {
           title: 'Diseño futuro',
           description: 'Un diseño elegante con toques futuristas',
+          categories: ['Arte', 'Urbanismo'],
+          year: 2026,
           userId: '22d468e9-f816-40ae-9d86-b95a75edc524',
         },
       },
@@ -75,6 +77,7 @@ export class ProjectController {
           'Ejemplo de creación de un proyecto solo con título y usuario',
         value: {
           title: 'Casa minimalista',
+          year: 2026,
           userId: 'a3f5d9c2-7b8e-4d1a-9c3b-1f2e5d6a7b8c',
         },
       },

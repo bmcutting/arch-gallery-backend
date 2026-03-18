@@ -5,6 +5,7 @@ import { UserRepository } from 'src/user/domain/repositories/user.repository';
 export interface CreateProjectProps {
   title: string;
   description?: string;
+  categories?: string[];
   year: number;
   userId: string;
 }
@@ -20,10 +21,12 @@ export class ProjectCreator {
     if (!user) {
       throw new NotFoundUserException();
     }
+
     const projectId = await this.projectRepository.create({
       title: props.title,
       description: props.description,
       year: props.year,
+      categories: props.categories,
       userId: props.userId,
     });
 

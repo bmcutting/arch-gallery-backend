@@ -1,4 +1,10 @@
-import { IsString, IsNotEmpty, IsOptional, IsNumber } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  IsNumber,
+  IsArray,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateProjectRequest {
@@ -22,6 +28,13 @@ export class CreateProjectRequest {
   @IsString()
   @IsOptional()
   description: string;
+
+  @ApiProperty({ description: 'Categorías del proyecto' })
+  @IsOptional()
+  @IsArray()
+  @IsOptional()
+  @IsString({ each: true })
+  categories?: string[];
 
   @ApiProperty({
     description: 'Id del usuario que crea el proyecto',

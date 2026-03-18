@@ -15,6 +15,7 @@ export interface ProjectRepository {
 export interface CreateProjectProps {
   title: string;
   description?: string;
+  categories?: string[];
   year: number;
   userId: string;
 }

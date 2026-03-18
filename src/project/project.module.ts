@@ -9,6 +9,7 @@ import { LikeModel } from '../like/infrastructure/typeorm/models/like';
 import { CommentModel } from '../comment/infrastructure/typeorm/models/comment';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { CategoryModel } from 'src/category/infrastructure/typeorm/models/category';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ConfigService } from '@nestjs/config';
       UserModel,
       LikeModel,
       CommentModel,
+      CategoryModel,
     ]),
   ],
   controllers: [ProjectController],

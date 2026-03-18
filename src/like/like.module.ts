@@ -8,9 +8,17 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { LikeController } from './infrastructure/nest/controllers/like.controller';
 import { TypeOrmLikeRepository } from './infrastructure/typeorm/repository/like';
+import { CategoryModel } from 'src/category/infrastructure/typeorm/models/category';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ProjectModel, CommentModel, LikeModel])],
+  imports: [
+    TypeOrmModule.forFeature([
+      ProjectModel,
+      CommentModel,
+      LikeModel,
+      CategoryModel,
+    ]),
+  ],
   controllers: [LikeController],
   providers: [
     TypeOrmProjectRepository,

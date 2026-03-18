@@ -16,17 +16,14 @@ import {
   getPaginationInfo,
   getPaginationOptions,
 } from 'src/shared/utils/pagination.util';
-import { LikeModel } from '../../../../like/infrastructure/typeorm/models/like';
-import { CommentModel } from '../../../../comment/infrastructure/typeorm/models/comment';
+import { CategoryModel } from 'src/category/infrastructure/typeorm/models/category';
 
 export class TypeOrmProjectRepository implements ProjectRepository {
   constructor(
     @InjectRepository(ProjectModel)
     private readonly projectRepository: Repository<ProjectModel>,
-    @InjectRepository(LikeModel)
-    private readonly likeRepository: Repository<LikeModel>,
-    @InjectRepository(CommentModel)
-    private readonly commentRepository: Repository<CommentModel>,
+    @InjectRepository(CategoryModel)
+    private readonly categoryRepository: Repository<CategoryModel>,
   ) {}
 
   async create(props: CreateProjectProps): Promise<string> {
@@ -35,6 +32,26 @@ export class TypeOrmProjectRepository implements ProjectRepository {
     project.description = props.description ?? '';
     project.year = props.year;
     project.user = { id: props.userId } as UserModel;
+
+    if (props.categories && props.categories.length > 0) {
+      const categoryNames = [
+        ...new Set(props.categories.map((name) => name.trim())),
+      ];
+
+      const categories = await Promise.all(
+        categoryNames.map(async (name) => {
+          let category = await this.categoryRepository.findOneBy({ name });
+          if (!category) {
+            category = this.categoryRepository.create({ name });
+            await this.categoryRepository.save(category);
+          }
+          return category;
+        }),
+      );
+
+      project.categories = categories;
+    }
+
     await this.projectRepository.save(project);
     return project.id;
   }

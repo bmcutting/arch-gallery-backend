@@ -14,6 +14,7 @@ export class CreateProjectCommand implements Command<
       title: props.title,
       description: props.description,
       year: props.year,
+      categories: props.categories,
       userId: props.userId,
     });
 
