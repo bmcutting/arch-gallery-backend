@@ -4,7 +4,7 @@ import {
   CreateCategoryProps,
 } from 'src/category/domain/repositories/category.repository';
 import { CategoryModel } from '../models/category';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { Category } from 'src/category/domain/entities/category';
 import { CategoryPaginationParams } from 'src/category/domain/interfaces/category-pagination';
 import { PaginationResult } from 'src/shared/domain/interfaces/pagination-result';
@@ -66,12 +66,13 @@ export class TypeOrmCategoryRepository implements CategoryRepository {
     return found ? CategoryTypeOrmMapper.toDomain(found) : null;
   }
 
-  async findByName(name: string): Promise<Category | null> {
-    const found = await this.categoryRepository.findOne({
-      where: { name },
+  async findByName(name: string): Promise<Category[] | null> {
+    const found = await this.categoryRepository.find({
+      where: { name: ILike(`%${name}%`) },
+      take: 10,
     });
 
-    return found ? CategoryTypeOrmMapper.toDomain(found) : null;
+    return found ? CategoryTypeOrmMapper.toDomainList(found) : null;
   }
 
   async findAll(

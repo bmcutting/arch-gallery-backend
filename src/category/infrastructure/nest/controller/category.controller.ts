@@ -5,6 +5,7 @@ import {
   ApiBody,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -20,6 +21,7 @@ import { CategoryPaginationRequest } from 'src/category/application/queries/requ
 import { GetAllCategoriesQuery } from 'src/category/application/queries/get-all-categories.query';
 import { PaginationResponse } from 'src/shared/application/responses/pagination.response';
 import { GetCategoryByIdQuery } from 'src/category/application/queries/get-category-by-id.query';
+import { SearchCategoriesQuery } from 'src/category/application/queries/search-categories.query';
 
 @ApiTags('Categories')
 @Controller('categories')
@@ -60,6 +62,30 @@ export class CategoryController {
     const command = new CreateCategoryCommand(creator);
 
     return await command.execute(body);
+  }
+
+  @Get('search')
+  @ApiOperation({
+    summary: 'Buscar categorías por nombre',
+    description:
+      'Devuelve una lista de categorías que coinciden parcial o totalmente con el texto ingresado.',
+  })
+  @ApiQuery({
+    name: 'name',
+    required: true,
+    description: 'Texto a buscar dentro del nombre de las categorías',
+    type: String,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de categorías coincidentes',
+    type: [CategoryResponse],
+  })
+  async searchCategories(
+    @Query('name') name: string,
+  ): Promise<CategoryResponse[] | null> {
+    const searchQuery = new SearchCategoriesQuery(this.categoryRepository);
+    return await searchQuery.execute({ name });
   }
 
   @Put(':id')
@@ -120,7 +146,7 @@ export class CategoryController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Usuario encontrado',
+    description: 'Categoría encontrada',
     type: CategoryResponse,
   })
   @ApiResponse({ status: 404, description: 'Categoría no encontrada' })

@@ -5,7 +5,7 @@ import { CategoryPaginationParams } from '../interfaces/category-pagination';
 export interface CategoryRepository {
   create(props: CreateCategoryProps): Promise<string>;
   findById(id: string): Promise<Category | null>;
-  findByName(name: string): Promise<Category | null>;
+  findByName(name: string): Promise<Category[] | null>;
   findAll(props: CategoryPaginationParams): Promise<PaginationResult<Category>>;
   update(category: Category): Promise<void>;
   delete(id: string): Promise<void>;
