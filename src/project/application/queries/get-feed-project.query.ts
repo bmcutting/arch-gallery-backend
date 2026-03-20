@@ -32,10 +32,14 @@ export class GetProjectFeedQuery implements Query<
       projects.pop();
     }
 
-    const items = ProjectResponseMapper.toProjectFeedList(
-      projects,
-      request.currentUserId,
-    );
+    const responses = ProjectResponseMapper.toResponseList(projects);
+
+    const items: ProjectFeedResponse[] = responses.map((response) => ({
+      project: response,
+      likedByUser:
+        response.likes?.some((like) => like.userId === request.currentUserId) ??
+        false,
+    }));
 
     return {
       items,

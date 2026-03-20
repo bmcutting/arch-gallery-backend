@@ -2,7 +2,6 @@ import { Project } from 'src/project/domain/entities/project.entity';
 import { ProjectResponse } from '../queries/responses/project.response';
 import { CategoryResponseMapper } from 'src/category/application/mappers/category.mapper';
 import { UserResponseMapper } from 'src/user/application/mappers/user.mapper';
-import { ProjectFeedResponse } from '../queries/responses/project-feed.response';
 import { LikeResponseMapper } from 'src/like/application/mappers/like.mapper';
 import { CommentResponseMapper } from 'src/comment/application/mappers/comment.mapper';
 
@@ -28,39 +27,5 @@ export class ProjectResponseMapper {
 
   static toResponseList(projects: Project[]): ProjectResponse[] {
     return projects.map((project) => this.toReponse(project));
-  }
-
-  static toProjectFeed(
-    project: Project,
-    currentUserId: string,
-  ): ProjectFeedResponse {
-    return {
-      id: project.id,
-      createdAt: project.createdAt,
-      year: project.year,
-      title: project.title,
-      previewImage: project.imagesUrl[0],
-      likes: LikeResponseMapper.toResponseList(project.getLikes()),
-      comments: CommentResponseMapper.toResponseList(project.getComments()),
-      likedByUser:
-        project.likes?.some((like) => like.userId === currentUserId) ?? false,
-      categories: CategoryResponseMapper.toResponseList(
-        project.getCategories(),
-      ),
-      author: {
-        id: project.getUser().id,
-        name: project.getUser().userName,
-        profileImage: project.getUser().profileImageUrl,
-      },
-    };
-  }
-
-  static toProjectFeedList(
-    projects: Project[],
-    currentUserId: string,
-  ): ProjectFeedResponse[] {
-    return projects.map((project) =>
-      this.toProjectFeed(project, currentUserId),
-    );
   }
 }
