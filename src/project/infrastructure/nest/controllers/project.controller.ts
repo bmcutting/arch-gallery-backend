@@ -40,6 +40,7 @@ import {
 } from 'src/project/application/queries/get-feed-project.query';
 import { GetProjectFeedRequest } from 'src/project/application/queries/requests/project-feed.request';
 import { DeleteProjectCommand } from 'src/project/application/commands/delete-project-command';
+import { ProjectFeedResponse } from 'src/project/application/queries/responses/project-feed.response';
 
 @ApiTags('Projects')
 @Controller('projects')
@@ -186,8 +187,10 @@ export class ProjectController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Lista de proyectos del usuario obtenida exitosamente',
-    type: [ProjectResponse],
+    description:
+      'Lista de proyectos del usuario obtenida exitosamente. ' +
+      'Cada elemento incluye el objeto `project` con los datos completos y el flag `likedByUser`.',
+    type: [ProjectFeedResponse],
   })
   @ApiResponse({
     status: 401,
@@ -197,7 +200,9 @@ export class ProjectController {
     status: 404,
     description: 'No se encontraron proyectos para el usuario autenticado',
   })
-  async getMyProjects(@Req() req: RequestWithUser): Promise<ProjectResponse[]> {
+  async getMyProjects(
+    @Req() req: RequestWithUser,
+  ): Promise<ProjectFeedResponse[]> {
     const query = new GetProjectByUserIdQuery(this.projectRepository);
     return await query.execute({ id: req.user.id });
   }
@@ -250,14 +255,16 @@ export class ProjectController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Lista de proyectos del usuario obtenida exitosamente',
-    type: [ProjectResponse],
+    description:
+      'Lista de proyectos del usuario obtenida exitosamente. ' +
+      'Cada elemento incluye el objeto `project` con los datos completos y el flag `likedByUser`.',
+    type: [ProjectFeedResponse],
   })
   @ApiResponse({
     status: 404,
     description: 'No se encontraron proyectos para el usuario',
   })
-  async getByUserId(@Param('id') id: string): Promise<ProjectResponse[]> {
+  async getByUserId(@Param('id') id: string): Promise<ProjectFeedResponse[]> {
     const query = new GetProjectByUserIdQuery(this.projectRepository);
     return await query.execute({ id });
   }
