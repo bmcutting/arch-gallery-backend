@@ -4,7 +4,7 @@ import { Column, Entity, ManyToMany } from 'typeorm';
 
 @Entity({ name: 'categories' })
 export class CategoryModel extends Model {
-  @Column({ type: 'text', unique: true })
+  @Column({ type: 'text', unique: true, nullable: false })
   name: string;
 
   @ManyToMany(() => ProjectModel, (project) => project.categories)

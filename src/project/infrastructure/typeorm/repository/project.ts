@@ -56,6 +56,43 @@ export class TypeOrmProjectRepository implements ProjectRepository {
     return project.id;
   }
 
+  async update(project: Project): Promise<void> {
+    const existingProject = await this.projectRepository.findOne({
+      where: { id: project.id },
+      relations: ['categories'],
+    });
+
+    if (!existingProject) {
+      throw new Error('Project not found');
+    }
+
+    existingProject.title = project.title;
+    existingProject.description = project.description;
+    existingProject.imagesUrl = project.imagesUrl;
+
+    if (project.categories && project.categories.length > 0) {
+      const categoryNames = [
+        ...new Set(project.categories.map((cat) => cat.name.trim())),
+      ];
+
+      const categories = await Promise.all(
+        categoryNames.map(async (name) => {
+          let category = await this.categoryRepository.findOneBy({ name });
+          if (!category) {
+            category = this.categoryRepository.create({ name });
+            await this.categoryRepository.save(category);
+          }
+          return category;
+        }),
+      );
+      existingProject.categories = categories;
+    } else {
+      existingProject.categories = [];
+    }
+
+    await this.projectRepository.save(existingProject);
+  }
+
   async findById(id: string): Promise<Project | null> {
     const found = await this.projectRepository.findOne({
       where: { id },
@@ -95,14 +132,6 @@ export class TypeOrmProjectRepository implements ProjectRepository {
       totalItems,
       pagination,
     };
-  }
-
-  async update(project: Project): Promise<void> {
-    await this.projectRepository.update(project.id, {
-      createdAt: project.createdAt,
-      title: project.title,
-      description: project.description,
-    });
   }
 
   async delete(id: string): Promise<void> {

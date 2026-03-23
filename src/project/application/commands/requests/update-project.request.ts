@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
+import { CategoryResponse } from 'src/category/application/queries/responses/category.response';
 
 export class UpdateProjectRequest {
   @ApiPropertyOptional({ description: 'Título del proyecto' })
@@ -7,7 +8,7 @@ export class UpdateProjectRequest {
   @IsString()
   title?: string;
 
-  @ApiPropertyOptional({ description: 'Descripción del proyecto' })
+  @ApiProperty({ description: 'Descripción del proyecto' })
   @IsOptional()
   @IsString()
   description?: string;
@@ -16,4 +17,23 @@ export class UpdateProjectRequest {
   @IsOptional()
   @IsNumber()
   year: number;
+
+  @ApiProperty({
+    description: 'Urls de las imágenes del proyecto',
+    example: ['http://tuimagen.com', 'http://tuimagen.com'],
+  })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  imagesUrl: string[];
+
+  @ApiProperty({
+    description: 'Categorías asociadas al proyecto',
+    type: [CategoryResponse],
+    nullable: true,
+  })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  categories: string[];
 }

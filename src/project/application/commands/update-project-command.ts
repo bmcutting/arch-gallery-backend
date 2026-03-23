@@ -28,6 +28,9 @@ export class UpdateProjectCommand implements Command<
     await this.updateProjectService.execute(project, {
       title: props.request.title,
       description: props.request.description,
+      year: props.request.year,
+      imagesUrl: props.request.imagesUrl,
+      categories: props.request.categories,
     });
 
     return { success: true };

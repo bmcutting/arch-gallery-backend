@@ -136,6 +136,9 @@ export class ProjectController {
           title: 'Centro Cultural Habana',
           description:
             'Renovación integral de un edificio histórico para convertirlo en centro cultural con salas de exposición, biblioteca y auditorio.',
+          year: 2002,
+          categories: ['Parqueo', 'Vestíbulo', 'Calabaza'],
+          imagesUrl: ['imagen.com', 'portada.com'],
         },
       },
       ejemplo2: {
