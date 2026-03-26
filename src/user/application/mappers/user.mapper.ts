@@ -1,5 +1,7 @@
 import { User } from 'src/user/domain/entities/user.entity';
 import { UserResponse } from '../queries/responses/user.response';
+import { SkillResponseMapper } from './skill.mapper';
+import { ExperienceResponseMapper } from './experience.mapper';
 
 export class UserResponseMapper {
   static toResponse(user: User): UserResponse {
@@ -24,6 +26,12 @@ export class UserResponseMapper {
       languages: user.languages ?? [],
       createdAt: user.getCreatedAt(),
       deletedAt: user.getDeletedAt(),
+      skills: user.skills
+        ? SkillResponseMapper.toResponseList(user.skills)
+        : [],
+      experiences: user.experiences
+        ? ExperienceResponseMapper.toResponseList(user.experiences)
+        : [],
     };
   }
 

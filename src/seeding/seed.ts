@@ -12,6 +12,8 @@ import { ProjectFactory } from './project.factory';
 import { LikeFactory } from './like.factory';
 import { CategoryFactory } from './category.factory';
 import { CommentFactory } from './comment.factory';
+import { SkillModel } from 'src/user/infrastructure/typeorm/models/skill';
+import { ExperienceModel } from 'src/user/infrastructure/typeorm/models/experience';
 
 const options: DataSourceOptions & SeederOptions = {
   type: 'postgres',
@@ -23,7 +25,15 @@ const options: DataSourceOptions & SeederOptions = {
   synchronize: true,
   logging: false,
   dropSchema: false,
-  entities: [UserModel, CommentModel, LikeModel, CategoryModel, ProjectModel],
+  entities: [
+    UserModel,
+    CommentModel,
+    LikeModel,
+    CategoryModel,
+    ProjectModel,
+    SkillModel,
+    ExperienceModel,
+  ],
   seeds: [MainSeeder],
   factories: [
     UserFactory,

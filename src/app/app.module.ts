@@ -15,6 +15,8 @@ import { AuthenticationModule } from 'src/authentication/authentication.module';
 import { ConfigutationModule } from 'src/configuration/config.module';
 import { CommentModule } from 'src/comment/comment.module';
 import { LikeModule } from 'src/like/like.module';
+import { SkillModel } from 'src/user/infrastructure/typeorm/models/skill';
+import { ExperienceModel } from 'src/user/infrastructure/typeorm/models/experience';
 
 @Module({
   imports: [
@@ -39,6 +41,8 @@ import { LikeModule } from 'src/like/like.module';
             CommentModel,
             LikeModel,
             RefreshTokenModel,
+            SkillModel,
+            ExperienceModel,
           ],
         };
       },
