@@ -14,6 +14,8 @@ import { CategoryFactory } from './category.factory';
 import { CommentFactory } from './comment.factory';
 import { SkillModel } from 'src/user/infrastructure/typeorm/models/skill';
 import { ExperienceModel } from 'src/user/infrastructure/typeorm/models/experience';
+import { SkillFactory } from './skill.factory';
+import { ExperienceFactory } from './experience.factory';
 
 const options: DataSourceOptions & SeederOptions = {
   type: 'postgres',
@@ -41,6 +43,8 @@ const options: DataSourceOptions & SeederOptions = {
     LikeFactory,
     CategoryFactory,
     CommentFactory,
+    SkillFactory,
+    ExperienceFactory,
   ],
 };
 

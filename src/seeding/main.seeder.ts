@@ -7,6 +7,8 @@ import { DataSource } from 'typeorm';
 import { faker } from '@faker-js/faker';
 import { Seeder, SeederFactoryManager } from 'typeorm-extension';
 import * as bcrypt from 'bcryptjs';
+import { SkillModel } from 'src/user/infrastructure/typeorm/models/skill';
+import { ExperienceModel } from 'src/user/infrastructure/typeorm/models/experience';
 
 export class MainSeeder implements Seeder {
   public async run(
@@ -18,6 +20,8 @@ export class MainSeeder implements Seeder {
     const categoryFactory = factoryManager.get(CategoryModel);
     const commentFactory = factoryManager.get(CommentModel);
     const likeFactory = factoryManager.get(LikeModel);
+    const skillFactory = factoryManager.get(SkillModel);
+    const experienceFactory = factoryManager.get(ExperienceModel);
 
     const users = await userFactory.saveMany(10);
 
@@ -56,6 +60,18 @@ export class MainSeeder implements Seeder {
         .getRepository(ProjectModel)
         .save(project);
       projects.push(savedProject);
+
+      const skills = await skillFactory.saveMany(3);
+      for (const skill of skills) {
+        skill.user = user;
+        await dataSource.getRepository(SkillModel).save(skill);
+      }
+
+      const experiences = await experienceFactory.saveMany(2);
+      for (const exp of experiences) {
+        exp.user = user;
+        await dataSource.getRepository(ExperienceModel).save(exp);
+      }
     }
     for (const project of projects) {
       const comment = await commentFactory.make();
