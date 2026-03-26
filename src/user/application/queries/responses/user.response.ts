@@ -1,4 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { SkillResponse } from './skill.reponse';
+import { ExperienceResponse } from './experience.response';
 
 export class UserResponse {
   @ApiProperty({
@@ -116,6 +118,20 @@ export class UserResponse {
     nullable: true,
   })
   languages: string[];
+
+  @ApiProperty({
+    description: 'Lista de habilidades del usuario',
+    type: [SkillResponse],
+    nullable: true,
+  })
+  skills?: SkillResponse[];
+
+  @ApiProperty({
+    description: 'Lista de experiencias del usuario',
+    type: [ExperienceResponse],
+    nullable: true,
+  })
+  experiences?: ExperienceResponse[];
 
   @ApiProperty({
     description: 'Indica si el usuario está activo',

@@ -25,7 +25,7 @@ export class Skill {
     return this.name;
   }
 
-  getLevel(): Level | undefined {
+  getLevel(): Level | undefined | null {
     return this.level;
   }
 

@@ -1,11 +1,12 @@
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { UserModel } from './user';
 import { Model } from 'src/shared/typeorm/base.model';
+import { ExperienceType } from 'src/user/domain/enums/experience';
 
 @Entity({ name: 'experiences' })
 export class ExperienceModel extends Model {
-  @Column({ type: 'varchar', length: 50 })
-  type: string;
+  @Column({ type: 'enum', enum: ExperienceType })
+  type: ExperienceType;
 
   @Column({ type: 'varchar', length: 255 })
   title: string;
@@ -18,6 +19,9 @@ export class ExperienceModel extends Model {
 
   @Column({ type: 'int', nullable: true })
   endYear: number;
+
+  @Column({ type: 'text', nullable: true })
+  description: string;
 
   @Column({ type: 'boolean', default: false })
   isCurrent: boolean;
