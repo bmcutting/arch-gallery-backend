@@ -38,17 +38,18 @@ export class TypeOrmUserRepository implements UserRepository {
   }
 
   async findById(id: string): Promise<User | null> {
-    const found = await this.userRepository.findOneBy({ id: id });
-
+    const found = await this.userRepository.findOne({
+      where: { id },
+      relations: ['skills', 'experiences'], // se cargan si existen
+    });
     return found ? UserTypeOrmMapper.execute(found) : null;
   }
 
   async findByEmail(email: string): Promise<User | null> {
     const found = await this.userRepository.findOne({
-      where: { email: email },
-      //relations: UserRelationsBuilder.build(),
+      where: { email },
+      relations: ['skills', 'experiences'],
     });
-
     return found ? UserTypeOrmMapper.execute(found) : null;
   }
 
@@ -81,7 +82,8 @@ export class TypeOrmUserRepository implements UserRepository {
       firstName: user.firstName,
       lastName: user.lastName,
       phoneNumber: user.phoneNumber,
-      bio: user.bio,
+      longBio: user.longBio,
+      shortBio: user.shortBio,
       profileImageUrl: user.profileImageUrl,
       website: user.website,
       location: user.location,

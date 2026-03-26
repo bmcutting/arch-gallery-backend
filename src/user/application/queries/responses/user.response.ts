@@ -49,7 +49,13 @@ export class UserResponse {
     description: 'Biografía del perfil del usuario',
     example: 'Arquitecto de sueños',
   })
-  bio: string;
+  shortBio: string;
+
+  @ApiProperty({
+    description: 'Biografía extendida del perfil del usuario',
+    example: 'Arquitecto de sueños',
+  })
+  longBio: string;
 
   @ApiProperty({
     description: 'Sitio web del usuario',

@@ -1,3 +1,6 @@
+import { Experience } from './experience.entity';
+import { Skill } from './skill.entity';
+
 interface Props {
   id: string;
   email: string;
@@ -6,8 +9,12 @@ interface Props {
   firstName: string;
   lastName: string;
   phoneNumber?: string;
-  bio?: string;
+  shortBio?: string;
+  longBio?: string;
+  skills?: Skill[];
+  experiences?: Experience[];
   profileImageUrl?: string;
+  coverImageUrl?: string;
   website?: string;
   location?: string;
   experienceYears?: number;
@@ -30,8 +37,12 @@ export class User {
   firstName: string;
   lastName: string;
   phoneNumber: string;
-  bio: string;
+  shortBio: string;
+  longBio: string;
+  skills: Skill[];
+  experiences: Experience[];
   profileImageUrl: string;
+  coverImageUrl: string;
   website: string;
   location: string;
   experienceYears: number;
@@ -51,8 +62,12 @@ export class User {
     this.lastName = props.lastName;
     this.userName = props.userName;
     this.phoneNumber = props.phoneNumber ?? '';
-    this.bio = props.bio ?? '';
+    this.shortBio = props.shortBio ?? '';
+    this.longBio = props.longBio ?? '';
+    this.skills = props.skills ?? [];
+    this.experiences = props.experiences ?? [];
     this.profileImageUrl = props.profileImageUrl ?? '';
+    this.coverImageUrl = props.coverImageUrl ?? '';
     this.website = props.website ?? '';
     this.location = props.location ?? '';
     this.experienceYears = props.experienceYears ?? 0;
@@ -103,12 +118,28 @@ export class User {
     return this.phoneNumber;
   }
 
-  getBio(): string | null {
-    return this.bio;
+  getShortBio(): string {
+    return this.shortBio;
+  }
+
+  getLongBio(): string {
+    return this.longBio;
+  }
+
+  getSkills(): Skill[] {
+    return this.skills;
+  }
+
+  getExperiences(): Experience[] {
+    return this.experiences;
   }
 
   getProfileImageUrl(): string | null {
     return this.profileImageUrl;
+  }
+
+  getCoverImageUrl(): string | null {
+    return this.coverImageUrl;
   }
 
   getLocation(): string | null {
@@ -126,12 +157,15 @@ export class User {
   getInstagramUrl(): string | null {
     return this.instagramUrl;
   }
+
   getTwitterUrl(): string | null {
     return this.twitterUrl;
   }
+
   getLinkedinUrl(): string | null {
     return this.linkedinUrl;
   }
+
   getLanguages(): string[] {
     return this.languages;
   }
@@ -161,12 +195,28 @@ export class User {
     this.phoneNumber = phoneNumber;
   }
 
-  setBio(bio: string) {
-    this.bio = bio;
+  setShortBio(shortBio: string): void {
+    this.shortBio = shortBio;
+  }
+
+  setLongBio(longBio: string): void {
+    this.longBio = longBio;
+  }
+
+  setSkill(skills: Skill[]): void {
+    this.skills = skills;
+  }
+
+  setExperience(experiences: Experience[]): void {
+    this.experiences = experiences;
   }
 
   setProfileImageUrl(profileImageUrl: string) {
     this.profileImageUrl = profileImageUrl;
+  }
+
+  setCoverImageUrl(coverImageUrl: string) {
+    this.coverImageUrl = coverImageUrl;
   }
 
   setLocation(location: string) {

@@ -9,7 +9,8 @@ export interface UpdateUserProps {
   firstName?: string;
   lastName?: string;
   phoneNumber?: string;
-  bio?: string;
+  longBio?: string;
+  shortBio?: string;
   profileImageUrl?: string;
   website?: string;
   location?: string;
@@ -62,8 +63,13 @@ export class UpdateUser {
       hasChanges = true;
     }
 
-    if (props.bio !== undefined && props.bio !== user.getBio()) {
-      user.setBio(props.bio);
+    if (props.longBio !== undefined && props.longBio !== user.getLongBio()) {
+      user.setLongBio(props.longBio);
+      hasChanges = true;
+    }
+
+    if (props.shortBio !== undefined && props.shortBio !== user.getShortBio()) {
+      user.setShortBio(props.shortBio);
       hasChanges = true;
     }
 

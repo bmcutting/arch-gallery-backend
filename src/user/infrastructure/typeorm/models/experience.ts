@@ -1,0 +1,27 @@
+import { Column, Entity, ManyToOne } from 'typeorm';
+import { UserModel } from './user';
+import { Model } from 'src/shared/typeorm/base.model';
+
+@Entity({ name: 'experiences' })
+export class ExperienceModel extends Model {
+  @Column({ type: 'varchar', length: 50 })
+  type: string;
+
+  @Column({ type: 'varchar', length: 255 })
+  title: string;
+
+  @Column({ type: 'varchar', length: 255 })
+  institutionOrCompany: string;
+
+  @Column({ type: 'int' })
+  startYear: number;
+
+  @Column({ type: 'int', nullable: true })
+  endYear: number;
+
+  @Column({ type: 'boolean', default: false })
+  isCurrent: boolean;
+
+  @ManyToOne(() => UserModel, (user) => user.experiences)
+  user: UserModel;
+}

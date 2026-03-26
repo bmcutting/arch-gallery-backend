@@ -12,7 +12,7 @@ export const UserFactory = setSeederFactory(UserModel, (faker: Faker) => {
   user.firstName = faker.person.firstName();
   user.lastName = faker.person.lastName();
   user.phoneNumber = faker.phone.number();
-  user.bio = faker.lorem.sentence();
+  user.longBio = faker.lorem.sentence();
   user.profileImageUrl = faker.image.avatar();
   user.website = faker.internet.url();
   user.location = faker.location.city();

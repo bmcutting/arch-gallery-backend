@@ -3,6 +3,8 @@ import { LikeModel } from 'src/like/infrastructure/typeorm/models/like';
 import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project';
 import { Model } from 'src/shared/typeorm/base.model';
 import { Column, Entity, OneToMany } from 'typeorm';
+import { SkillModel } from './skill';
+import { ExperienceModel } from './experience';
 
 @Entity({ name: 'users' })
 export class UserModel extends Model {
@@ -21,8 +23,11 @@ export class UserModel extends Model {
   @Column({ type: 'varchar', length: 100 })
   lastName: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
-  bio: string;
+  @Column({ type: 'varchar', length: 200, nullable: true })
+  shortBio: string;
+
+  @Column({ type: 'varchar', length: 1000, nullable: true })
+  longBio: string;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
   phoneNumber: string;
@@ -36,7 +41,7 @@ export class UserModel extends Model {
   @Column({ type: 'varchar', length: 100, nullable: true })
   location: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'int', nullable: true })
   experienceYears: number;
 
   @Column({ type: 'text', nullable: true })
@@ -53,6 +58,14 @@ export class UserModel extends Model {
 
   @Column('text', { array: true, nullable: true })
   languages: string[];
+
+  @OneToMany(() => SkillModel, (skill) => skill.user, { cascade: true })
+  skills: SkillModel[];
+
+  @OneToMany(() => ExperienceModel, (experience) => experience.user, {
+    cascade: true,
+  })
+  experiences: ExperienceModel[];
 
   @OneToMany(() => ProjectModel, (project) => project.user, { cascade: true })
   projects: ProjectModel[];

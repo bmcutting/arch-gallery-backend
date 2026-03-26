@@ -32,7 +32,12 @@ export class UpdateUserRequest {
   @ApiPropertyOptional({ description: 'Biografía' })
   @IsOptional()
   @IsString()
-  bio?: string;
+  shortBio?: string;
+
+  @ApiPropertyOptional({ description: 'Biografía extendida' })
+  @IsOptional()
+  @IsString()
+  longBio?: string;
 
   @ApiPropertyOptional({ description: 'URL de la imagen de perfil' })
   @IsOptional()
