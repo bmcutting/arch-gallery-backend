@@ -85,6 +85,7 @@ export class TypeOrmUserRepository implements UserRepository {
       longBio: user.longBio,
       shortBio: user.shortBio,
       profileImageUrl: user.profileImageUrl,
+      coverImageUrl: user.coverImageUrl,
       website: user.website,
       location: user.location,
       experienceYears: user.experienceYears,

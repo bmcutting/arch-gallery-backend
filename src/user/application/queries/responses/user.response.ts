@@ -112,6 +112,13 @@ export class UserResponse {
   profileImageUrl: string | null;
 
   @ApiProperty({
+    description: 'Enlace de la imagen de portada del perfil',
+    example: 'https://avatars.githubusercontent.com/u/50972694',
+    nullable: true,
+  })
+  coverImageUrl: string | null;
+
+  @ApiProperty({
     description: 'Idiomas que domina el usuario',
     example: ['Español', 'Inglés', 'Francés'],
     type: [String],

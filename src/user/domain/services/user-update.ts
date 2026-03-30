@@ -12,6 +12,7 @@ export interface UpdateUserProps {
   longBio?: string;
   shortBio?: string;
   profileImageUrl?: string;
+  coverImageUrl?: string;
   website?: string;
   location?: string;
   experienceYears?: number;
@@ -78,6 +79,14 @@ export class UpdateUser {
       props.profileImageUrl !== user.getProfileImageUrl()
     ) {
       user.setProfileImageUrl(props.profileImageUrl);
+      hasChanges = true;
+    }
+
+    if (
+      props.coverImageUrl !== undefined &&
+      props.profileImageUrl !== user.getCoverImageUrl()
+    ) {
+      user.setCoverImageUrl(props.coverImageUrl);
       hasChanges = true;
     }
 

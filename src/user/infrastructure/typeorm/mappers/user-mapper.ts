@@ -19,6 +19,7 @@ export class UserTypeOrmMapper {
       longBio: u.longBio,
       shortBio: u.shortBio,
       profileImageUrl: u.profileImageUrl,
+      coverImageUrl: u.coverImageUrl,
       website: u.website,
       location: u.location,
       experienceYears: u.experienceYears,

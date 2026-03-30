@@ -36,6 +36,9 @@ export class UserModel extends Model {
   profileImageUrl: string;
 
   @Column({ type: 'text', nullable: true })
+  coverImageUrl: string;
+
+  @Column({ type: 'text', nullable: true })
   website: string;
 
   @Column({ type: 'varchar', length: 100, nullable: true })

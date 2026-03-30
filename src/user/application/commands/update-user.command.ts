@@ -33,6 +33,7 @@ export class UpdateUserCommand implements Command<
       longBio: props.request.longBio,
       shortBio: props.request.shortBio,
       profileImageUrl: props.request.profileImageUrl,
+      coverImageUrl: props.request.coverImageUrl,
       website: props.request.website,
       location: props.request.location,
       experienceYears: props.request.experienceYears,

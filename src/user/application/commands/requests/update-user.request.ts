@@ -44,6 +44,13 @@ export class UpdateUserRequest {
   @IsString()
   profileImageUrl?: string;
 
+  @ApiPropertyOptional({
+    description: 'URL de la imagen de portada del perfil',
+  })
+  @IsOptional()
+  @IsString()
+  coverImageUrl?: string;
+
   @ApiPropertyOptional({ description: 'Sitio web personal' })
   @IsOptional()
   @IsString()
