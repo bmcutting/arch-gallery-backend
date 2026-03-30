@@ -40,7 +40,7 @@ export class TypeOrmUserRepository implements UserRepository {
   async findById(id: string): Promise<User | null> {
     const found = await this.userRepository.findOne({
       where: { id },
-      relations: ['skills', 'experiences'], // se cargan si existen
+      relations: ['skills', 'experiences'],
     });
     return found ? UserTypeOrmMapper.execute(found) : null;
   }

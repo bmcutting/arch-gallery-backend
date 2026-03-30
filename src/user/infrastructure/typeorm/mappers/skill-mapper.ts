@@ -1,7 +1,7 @@
 import { Skill } from 'src/user/domain/entities/skill.entity';
 import { SkillModel } from '../models/skill';
 
-export class BrandMapper {
+export class SkillTypeOrmMapper {
   static toDomain(model: SkillModel): Skill {
     return new Skill({
       id: model.id,

@@ -1,5 +1,7 @@
 import { User } from 'src/user/domain/entities/user.entity';
 import { UserModel } from '../models/user';
+import { SkillTypeOrmMapper } from './skill-mapper';
+import { ExperienceTypeOrmMapper } from './experience-mapper';
 
 export class UserTypeOrmMapper {
   constructor() {}
@@ -25,6 +27,10 @@ export class UserTypeOrmMapper {
       twitterUrl: u.twitterUrl,
       linkedinUrl: u.linkedinUrl,
       languages: u.languages ?? [],
+      skills: u.skills ? SkillTypeOrmMapper.toDomainList(u.skills) : [],
+      experiences: u.experiences
+        ? ExperienceTypeOrmMapper.toDomainList(u.experiences)
+        : [],
       //project: u.project ? UserProjectTypeOrmMapper.execute(u.project) : null
     });
   }

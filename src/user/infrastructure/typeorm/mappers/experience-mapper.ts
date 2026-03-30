@@ -1,7 +1,7 @@
 import { Experience } from 'src/user/domain/entities/experience.entity';
 import { ExperienceModel } from '../models/experience';
 
-export class ExperienceMapper {
+export class ExperienceTypeOrmMapper {
   static toDomain(model: ExperienceModel): Experience {
     return new Experience({
       id: model.id,
