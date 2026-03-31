@@ -6,7 +6,7 @@ export interface SkillRepository {
   findById(id: string): Promise<Skill | null>;
   findByName(name: string): Promise<Skill | null>;
   findAll(userId: string): Promise<Skill[]>;
-  update(skill: Skill): Promise<void>;
+  update(skill: Skill): Promise<string>;
   delete(id: string): Promise<void>;
 }
 

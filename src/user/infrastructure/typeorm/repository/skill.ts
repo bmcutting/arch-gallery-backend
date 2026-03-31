@@ -10,6 +10,7 @@ import {
 import { Skill } from 'src/user/domain/entities/skill.entity';
 import { SkillTypeOrmMapper } from '../mappers/skill-mapper';
 import { NotFoundUserException } from 'src/user/domain/exceptions/user';
+import { NotFoundSkillException } from 'src/user/domain/exceptions/skill';
 
 @Injectable()
 export class TypeOrmSkillRepository implements SkillRepository {
@@ -78,17 +79,22 @@ export class TypeOrmSkillRepository implements SkillRepository {
     return SkillTypeOrmMapper.toDomainList(items);
   }
 
-  async update(skill: Skill): Promise<void> {
+  async update(skill: Skill): Promise<string> {
     const existing = await this.skillRepository.findOne({
-      where: { name: skill.name },
+      where: { id: skill.id },
     });
 
     if (!existing) {
-      await this.skillRepository.update(skill.id, {
-        createdAt: Date.now(),
-        name: skill.name,
-      });
+      throw new NotFoundSkillException();
     }
+
+    await this.skillRepository.update(skill.id, {
+      name: skill.name,
+      level: skill.level,
+      updatedAt: new Date(),
+    });
+
+    return skill.id;
   }
 
   async delete(id: string): Promise<void> {

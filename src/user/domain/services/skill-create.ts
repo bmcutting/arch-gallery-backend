@@ -3,7 +3,7 @@ import { NotFoundUserException } from '../exceptions/user';
 import { SkillRepository } from '../repositories/skill.repository';
 import { Level } from '../enums/level';
 
-export interface CreateUserProps {
+export interface CreateSkillProps {
   userId: string;
   name: string;
   level?: Level;
@@ -15,7 +15,7 @@ export class SkillCreator {
     private readonly skillRepository: SkillRepository,
   ) {}
 
-  async execute(props: CreateUserProps) {
+  async execute(props: CreateSkillProps) {
     const existingUser = await this.userRepository.findById(props.userId);
     if (!existingUser) {
       throw new NotFoundUserException();
