@@ -21,12 +21,12 @@ export class SkillCreator {
       throw new NotFoundUserException();
     }
 
-    const userId = await this.skillRepository.create({
+    const skillId = await this.skillRepository.create({
       userId: props.userId,
       name: props.name,
       level: props.level,
     });
 
-    return userId;
+    return skillId;
   }
 }

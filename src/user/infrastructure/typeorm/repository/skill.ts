@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SkillModel } from '../models/skill';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { UserModel } from '../models/user';
 import {
   CreateSkillProps,
@@ -21,7 +21,7 @@ export class TypeOrmSkillRepository implements SkillRepository {
     private readonly userRepository: Repository<UserModel>,
   ) {}
 
-  async create(props: CreateSkillProps): Promise<boolean> {
+  async create(props: CreateSkillProps): Promise<string> {
     const user = await this.userRepository.findOne({
       where: { id: props.userId },
       relations: { skills: true },
@@ -40,7 +40,7 @@ export class TypeOrmSkillRepository implements SkillRepository {
         user.skills.push(skill);
         await this.userRepository.save(user);
       }
-      return true;
+      return skill.id;
     }
 
     const newSkill = new SkillModel();
@@ -51,7 +51,7 @@ export class TypeOrmSkillRepository implements SkillRepository {
     user.skills.push(newSkill);
     await this.userRepository.save(user);
 
-    return true;
+    return newSkill.id;
   }
 
   async findById(id: string): Promise<Skill | null> {
@@ -62,13 +62,13 @@ export class TypeOrmSkillRepository implements SkillRepository {
     return found ? SkillTypeOrmMapper.toDomain(found) : null;
   }
 
-  async findByName(name: string): Promise<Skill | null> {
-    const found = await this.skillRepository.findOne({
-      where: { name },
-      relations: ['skills', 'experiences'],
+  async findByName(name: string): Promise<Skill[] | null> {
+    const found = await this.skillRepository.find({
+      where: { name: ILike(`%${name}%`) },
+      take: 10,
     });
 
-    return found ? SkillTypeOrmMapper.toDomain(found) : null;
+    return found ? SkillTypeOrmMapper.toDomainList(found) : null;
   }
 
   async findAll(userId: string): Promise<Skill[]> {
