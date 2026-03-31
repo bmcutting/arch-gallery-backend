@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { SkillResponse } from './skill.reponse';
+import { SkillResponse } from './skill.response';
 import { ExperienceResponse } from './experience.response';
 
 export class UserResponse {

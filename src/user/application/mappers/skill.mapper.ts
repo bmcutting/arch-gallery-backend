@@ -1,5 +1,5 @@
 import { Skill } from 'src/user/domain/entities/skill.entity';
-import { SkillResponse } from '../queries/responses/skill.reponse';
+import { SkillResponse } from '../queries/responses/skill.response';
 
 export class SkillResponseMapper {
   static toResponse(skill: Skill): SkillResponse {
