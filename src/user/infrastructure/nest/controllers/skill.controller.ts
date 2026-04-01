@@ -25,11 +25,11 @@ import { JwtAuthGuard } from 'src/authentication/infrastructure/nest/guards/jwt-
 import { CreateSkillCommand } from 'src/user/application/commands/create-skill.command';
 import { User } from 'src/user/domain/entities/user.entity';
 import { SkillResponse } from 'src/user/application/queries/responses/skill.response';
-import { CreateSkillResponse } from 'src/user/application/commands/responses/create-experience.response';
 import { UpdateSkillRequest } from 'src/user/application/commands/requests/update-skill.request';
 import { UpdateSkill } from 'src/user/domain/services/skill-update';
 import { UpdateSkillCommand } from 'src/user/application/commands/update-skill.command';
 import { SearchSkillsQuery } from 'src/user/application/queries/search-skills.query';
+import { CreateSkillResponse } from 'src/user/application/commands/responses/create-skill.response';
 
 @ApiTags('Skills')
 @Controller('skills')
@@ -43,9 +43,9 @@ export class SkillController {
   @Post()
   @UseGuards(JwtAuthGuard)
   @ApiOperation({
-    summary: 'Crear una nueva skill asociada a un proyecto',
+    summary: 'Crear una nueva skill asociada a un usuario',
     description:
-      'Permite registrar una nueva skill en el sistema asociándola a un proyecto.',
+      'Permite registrar una nueva skill en el sistema asociándola a un usuario.',
   })
   @ApiBody({
     type: CreateSkillRequest,
@@ -55,7 +55,7 @@ export class SkillController {
         description: 'Ejemplo de creación de una skill',
         value: {
           name: 'Modelado 3D',
-          projectId: '28582f21-2435-4a2e-9a4b-b002bc5cb0d6',
+          userId: '28582f21-2435-4a2e-9a4b-b002bc5cb0d6',
         },
       },
     },

@@ -3,7 +3,7 @@ import { CreateExperienceRequest } from './requests/create-experience.request';
 import { CreateExperienceResponse } from './responses/create-experience.response';
 import { ExperienceCreator } from 'src/user/domain/services/experience-create';
 
-export class CreateSkillCommand implements Command<
+export class CreateExperienceCommand implements Command<
   CreateExperienceRequest,
   CreateExperienceResponse
 > {

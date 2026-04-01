@@ -36,8 +36,10 @@ async function bootstrap() {
     .addTag('Auth', 'Operaciones de autenticación')
     .addTag('Categories', 'Operaciones de categorías')
     .addTag('Comments', 'Operaciones de comentarios')
+    .addTag('Experiences', 'Operaciones de experiencias de usuarios')
     .addTag('Likes', 'Operaciones de likes')
     .addTag('Projects', 'Operaciones de pryectos')
+    .addTag('Skills', 'Operaciones de habilidades de usuarios')
     .addTag('Users', 'Operaciones de usuarios')
     .build();
 

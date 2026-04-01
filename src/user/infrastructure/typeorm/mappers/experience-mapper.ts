@@ -8,9 +8,9 @@ export class ExperienceTypeOrmMapper {
       type: model.type,
       title: model.title,
       institutionOrCompany: model.institutionOrCompany,
-      description: model.description,
+      description: model.description ? model.description : undefined,
       startYear: model.startYear,
-      endYear: model.endYear,
+      endYear: model.endYear ? model.endYear : undefined,
       isCurrent: model.isCurrent,
     });
   }
