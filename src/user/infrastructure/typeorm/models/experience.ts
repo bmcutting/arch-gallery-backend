@@ -18,10 +18,10 @@ export class ExperienceModel extends Model {
   startYear: number;
 
   @Column({ type: 'int', nullable: true })
-  endYear: number;
+  endYear: number | null;
 
   @Column({ type: 'text', nullable: true })
-  description: string;
+  description: string | null;
 
   @Column({ type: 'boolean', default: false })
   isCurrent: boolean;

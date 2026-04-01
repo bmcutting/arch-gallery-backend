@@ -66,6 +66,10 @@ export class Experience {
   }
 
   // Setters
+  setType(type: ExperienceType): void {
+    this.type = type;
+  }
+
   setTitle(title: string): void {
     this.title = title;
   }
