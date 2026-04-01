@@ -25,7 +25,7 @@ import { JwtAuthGuard } from 'src/authentication/infrastructure/nest/guards/jwt-
 import { CreateSkillCommand } from 'src/user/application/commands/create-skill.command';
 import { User } from 'src/user/domain/entities/user.entity';
 import { SkillResponse } from 'src/user/application/queries/responses/skill.response';
-import { CreateSkillResponse } from 'src/user/application/commands/responses/create-skill.respone';
+import { CreateSkillResponse } from 'src/user/application/commands/responses/create-experience.response';
 import { UpdateSkillRequest } from 'src/user/application/commands/requests/update-skill.request';
 import { UpdateSkill } from 'src/user/domain/services/skill-update';
 import { UpdateSkillCommand } from 'src/user/application/commands/update-skill.command';

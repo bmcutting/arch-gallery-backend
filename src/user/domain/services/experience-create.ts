@@ -14,7 +14,7 @@ export interface CreateExperienceProps {
   isCurrent?: boolean;
 }
 
-export class SkillCreator {
+export class ExperienceCreator {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly experienceRepository: ExperienceRepository,
