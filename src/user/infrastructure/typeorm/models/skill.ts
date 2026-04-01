@@ -5,7 +5,7 @@ import { Level } from 'src/user/domain/enums/level';
 
 @Entity({ name: 'skills' })
 export class SkillModel extends Model {
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'varchar', length: 100, unique: true })
   name: string;
 
   @Column({ type: 'enum', enum: Level, nullable: true })

@@ -12,7 +12,7 @@ export interface UpdateExperienceProps {
   isCurrent?: boolean;
 }
 
-export class UpdateSkill {
+export class UpdateExperience {
   constructor(private readonly experienceRepository: ExperienceRepository) {}
 
   async execute(
