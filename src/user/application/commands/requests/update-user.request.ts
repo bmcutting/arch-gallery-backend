@@ -1,5 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
+import { Experience } from 'src/user/domain/entities/experience.entity';
+import { Skill } from 'src/user/domain/entities/skill.entity';
 
 export class UpdateUserRequest {
   userId: string;
@@ -91,4 +93,16 @@ export class UpdateUserRequest {
   @IsArray()
   @IsString({ each: true })
   languages?: string[];
+
+  @ApiPropertyOptional({ description: 'Hanilidades que domina el usuario' })
+  @IsOptional()
+  @IsArray()
+  skills?: Skill[];
+
+  @ApiPropertyOptional({
+    description: 'Experiencia estudiantil o profesional del usuario',
+  })
+  @IsOptional()
+  @IsArray()
+  experiences?: Experience[];
 }

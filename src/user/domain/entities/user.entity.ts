@@ -110,7 +110,7 @@ export class User {
     return this.deletedAt;
   }
 
-  getUserName(): string | null {
+  getUserName(): string {
     return this.userName;
   }
 
@@ -124,6 +124,10 @@ export class User {
 
   getLongBio(): string {
     return this.longBio;
+  }
+
+  getWebsite(): string {
+    return this.website;
   }
 
   getSkills(): Skill[] {

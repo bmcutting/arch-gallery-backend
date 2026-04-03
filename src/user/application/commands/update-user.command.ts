@@ -42,6 +42,8 @@ export class UpdateUserCommand implements Command<
       twitterUrl: props.request.twitterUrl,
       linkedinUrl: props.request.linkedinUrl,
       languages: props.request.languages,
+      skills: props.request.skills,
+      experiences: props.request.experiences,
     });
 
     return { success: true };

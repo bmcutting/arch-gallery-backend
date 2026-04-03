@@ -1,6 +1,8 @@
 import { User } from '../entities/user.entity';
 import { UserRepository } from '../repositories/user.repository';
 import { RepeatUserException } from '../exceptions/user';
+import { Skill } from '../entities/skill.entity';
+import { Experience } from '../entities/experience.entity';
 
 export interface UpdateUserProps {
   email?: string;
@@ -21,6 +23,8 @@ export interface UpdateUserProps {
   twitterUrl?: string;
   linkedinUrl?: string;
   languages?: string[];
+  skills?: Skill[];
+  experiences?: Experience[];
 }
 
 export class UpdateUser {
@@ -147,6 +151,24 @@ export class UpdateUser {
       user.setLanguages(props.languages);
       hasChanges = true;
     }
+
+    if (
+      props.skills !== undefined &&
+      JSON.stringify(props.skills) !== JSON.stringify(user.getSkills())
+    ) {
+      user.setSkill(props.skills);
+      hasChanges = true;
+    }
+
+    if (
+      props.experiences !== undefined &&
+      JSON.stringify(props.experiences) !==
+        JSON.stringify(user.getExperiences())
+    ) {
+      user.setExperience(props.experiences);
+      hasChanges = true;
+    }
+
     try {
       if (hasChanges) {
         await this.userRepository.update(user);
