@@ -53,6 +53,14 @@ export class TypeOrmUserRepository implements UserRepository {
     return found ? UserTypeOrmMapper.execute(found) : null;
   }
 
+  async findByUserName(userName: string): Promise<User | null> {
+    const found = await this.userRepository.findOne({
+      where: { userName },
+      relations: ['skills', 'experiences'],
+    });
+    return found ? UserTypeOrmMapper.execute(found) : null;
+  }
+
   async findAll(props: UserPaginationParams): Promise<PaginationResult<User>> {
     const where = UserWhereBuilder.build(props);
     const order = UserOrderBuilder.build(props.sort);
@@ -94,6 +102,8 @@ export class TypeOrmUserRepository implements UserRepository {
       twitterUrl: user.twitterUrl,
       linkedinUrl: user.linkedinUrl,
       languages: user.languages ?? [],
+      skills: user.skills ?? [],
+      experiences: user.experiences ?? [],
       isActive: user.getIsActive(),
       deletedAt: user.getDeletedAt(),
     });

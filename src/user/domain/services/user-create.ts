@@ -21,6 +21,10 @@ export class UserCreator {
     if (existingUser) {
       throw new RepeatUserException();
     }
+    const user = await this.repository.findByUserName(props.userName);
+    if (user) {
+      throw new RepeatUserException();
+    }
 
     const hashedPassword = await this.passwordHasher.hash(props.password);
 
