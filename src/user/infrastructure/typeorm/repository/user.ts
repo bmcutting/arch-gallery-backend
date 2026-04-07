@@ -16,6 +16,9 @@ import {
 } from 'src/shared/utils/pagination.util';
 import { UserWhereBuilder } from '../utils/user-where-builder';
 import { UserOrderBuilder } from '../utils/user-order-builder';
+import { NotFoundUserException } from 'src/user/domain/exceptions/user';
+import { SkillTypeOrmMapper } from '../mappers/skill-mapper';
+import { ExperienceTypeOrmMapper } from '../mappers/experience-mapper';
 
 @Injectable()
 export class TypeOrmUserRepository implements UserRepository {
@@ -83,30 +86,42 @@ export class TypeOrmUserRepository implements UserRepository {
   }
 
   async update(user: User): Promise<void> {
-    await this.userRepository.update(user.id, {
-      createdAt: user.createdAt,
-      email: user.email,
-      userName: user.userName,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      phoneNumber: user.phoneNumber,
-      longBio: user.longBio,
-      shortBio: user.shortBio,
-      profileImageUrl: user.profileImageUrl,
-      coverImageUrl: user.coverImageUrl,
-      website: user.website,
-      location: user.location,
-      experienceYears: user.experienceYears,
-      specialization: user.specialization,
-      instagramUrl: user.instagramUrl,
-      twitterUrl: user.twitterUrl,
-      linkedinUrl: user.linkedinUrl,
-      languages: user.languages ?? [],
-      skills: user.skills ?? [],
-      experiences: user.experiences ?? [],
-      isActive: user.getIsActive(),
-      deletedAt: user.getDeletedAt(),
+    const userModel = await this.userRepository.findOne({
+      where: { id: user.id },
+      relations: ['skills', 'experiences'],
     });
+
+    if (!userModel) {
+      throw new NotFoundUserException();
+    }
+
+    userModel.id = user.id;
+    userModel.createdAt = user.createdAt;
+    userModel.email = user.email;
+    userModel.userName = user.userName;
+    userModel.firstName = user.firstName;
+    userModel.lastName = user.lastName;
+    userModel.phoneNumber = user.phoneNumber;
+    userModel.longBio = user.longBio;
+    userModel.shortBio = user.shortBio;
+    userModel.profileImageUrl = user.profileImageUrl;
+    userModel.coverImageUrl = user.coverImageUrl;
+    userModel.website = user.website;
+    userModel.location = user.location;
+    userModel.experienceYears = user.experienceYears;
+    userModel.specialization = user.specialization;
+    userModel.instagramUrl = user.instagramUrl;
+    userModel.twitterUrl = user.twitterUrl;
+    userModel.linkedinUrl = user.linkedinUrl;
+    userModel.languages = user.languages;
+    userModel.skills = SkillTypeOrmMapper.toModelList(user.skills);
+    userModel.experiences = ExperienceTypeOrmMapper.toModelList(
+      user.experiences,
+    );
+    userModel.isActive = user.isActive;
+    userModel.deletedAt = user.deletedAt;
+
+    await this.userRepository.save(userModel);
   }
 
   async delete(id: string): Promise<void> {

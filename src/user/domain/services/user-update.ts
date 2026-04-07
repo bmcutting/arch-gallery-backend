@@ -88,16 +88,12 @@ export class UpdateUser {
 
     if (
       props.coverImageUrl !== undefined &&
-      props.profileImageUrl !== user.getCoverImageUrl()
-    ) {
-      user.setCoverImageUrl(props.coverImageUrl);
-      hasChanges = true;
-    }
-
-    if (props.website !== undefined && props.website !== user.website) {
-      user.website = props.website;
-      hasChanges = true;
-    }
+      props.coverImageUrl !== user.getCoverImageUrl()
+    )
+      if (props.website !== undefined && props.website !== user.website) {
+        user.website = props.website;
+        hasChanges = true;
+      }
 
     if (props.location !== undefined && props.location !== user.getLocation()) {
       user.setLocation(props.location);
@@ -152,31 +148,54 @@ export class UpdateUser {
       hasChanges = true;
     }
 
-    if (
-      props.skills !== undefined &&
-      JSON.stringify(props.skills) !== JSON.stringify(user.getSkills())
-    ) {
-      user.setSkill(props.skills);
-      hasChanges = true;
-    }
-
-    if (
-      props.experiences !== undefined &&
-      JSON.stringify(props.experiences) !==
-        JSON.stringify(user.getExperiences())
-    ) {
-      user.setExperience(props.experiences);
-      hasChanges = true;
-    }
-
-    try {
-      if (hasChanges) {
-        await this.userRepository.update(user);
-      }
-    } catch (err) {
-      throw new Error(
-        `Error al actualizar el usuario: ${(err as Error).message}`,
+    if (props.skills !== undefined) {
+      // Convertir objetos planos a instancias de Skill (dominio)
+      const skillInstances = props.skills.map(
+        (skillData) =>
+          new Skill({
+            id: skillData.id,
+            name: skillData.name,
+            level: skillData.level,
+          }),
       );
+
+      if (JSON.stringify(skillInstances) !== JSON.stringify(user.getSkills())) {
+        user.setSkill(skillInstances);
+        hasChanges = true;
+      }
+
+      if (props.experiences !== undefined) {
+        const experienceInstances = props.experiences.map(
+          (expData) =>
+            new Experience({
+              id: expData.id,
+              type: expData.type,
+              title: expData.title,
+              institutionOrCompany: expData.institutionOrCompany,
+              description: expData.description,
+              startYear: expData.startYear,
+              endYear: expData.endYear,
+              isCurrent: expData.isCurrent,
+            }),
+        );
+        if (
+          JSON.stringify(experienceInstances) !==
+          JSON.stringify(user.getExperiences())
+        ) {
+          user.setExperience(experienceInstances);
+          hasChanges = true;
+        }
+      }
+
+      try {
+        if (hasChanges) {
+          await this.userRepository.update(user);
+        }
+      } catch (err) {
+        throw new Error(
+          `Error al actualizar el usuario: ${(err as Error).message}`,
+        );
+      }
     }
 
     return user;
