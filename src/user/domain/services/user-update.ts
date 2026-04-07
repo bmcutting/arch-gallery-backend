@@ -3,6 +3,8 @@ import { UserRepository } from '../repositories/user.repository';
 import { RepeatUserException } from '../exceptions/user';
 import { Skill } from '../entities/skill.entity';
 import { Experience } from '../entities/experience.entity';
+import { ExperienceType } from '../enums/experience';
+import { Level } from '../enums/level';
 
 export interface UpdateUserProps {
   email?: string;
@@ -149,55 +151,53 @@ export class UpdateUser {
     }
 
     if (props.skills !== undefined) {
-      // Convertir objetos planos a instancias de Skill (dominio)
-      const skillInstances = props.skills.map(
-        (skillData) =>
-          new Skill({
-            id: skillData.id,
-            name: skillData.name,
-            level: skillData.level,
-          }),
-      );
+      const skillInstances = props.skills.map((skillData) => {
+        return new Skill({
+          id: skillData.id,
+          name: skillData.name,
+          level: skillData.level,
+        });
+      });
 
       if (JSON.stringify(skillInstances) !== JSON.stringify(user.getSkills())) {
         user.setSkill(skillInstances);
         hasChanges = true;
       }
+    }
 
-      if (props.experiences !== undefined) {
-        const experienceInstances = props.experiences.map(
-          (expData) =>
-            new Experience({
-              id: expData.id,
-              type: expData.type,
-              title: expData.title,
-              institutionOrCompany: expData.institutionOrCompany,
-              description: expData.description,
-              startYear: expData.startYear,
-              endYear: expData.endYear,
-              isCurrent: expData.isCurrent,
-            }),
-        );
-        if (
-          JSON.stringify(experienceInstances) !==
-          JSON.stringify(user.getExperiences())
-        ) {
-          user.setExperience(experienceInstances);
-          hasChanges = true;
-        }
-      }
+    if (props.experiences !== undefined) {
+      const experienceInstances: Experience[] = props.experiences.map(
+        (expData) =>
+          new Experience({
+            id: expData.id,
+            type: expData.type,
+            title: expData.title,
+            institutionOrCompany: expData.institutionOrCompany,
+            description: expData.description,
+            startYear: expData.startYear,
+            endYear: expData.endYear,
+            isCurrent: expData.isCurrent,
+          }),
+      );
 
-      try {
-        if (hasChanges) {
-          await this.userRepository.update(user);
-        }
-      } catch (err) {
-        throw new Error(
-          `Error al actualizar el usuario: ${(err as Error).message}`,
-        );
+      if (
+        JSON.stringify(experienceInstances) !==
+        JSON.stringify(user.getExperiences())
+      ) {
+        user.setExperience(experienceInstances);
+        hasChanges = true;
       }
     }
 
+    try {
+      if (hasChanges) {
+        await this.userRepository.update(user);
+      }
+    } catch (err) {
+      throw new Error(
+        `Error al actualizar el usuario: ${(err as Error).message}`,
+      );
+    }
     return user;
   }
 }
