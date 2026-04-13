@@ -96,7 +96,6 @@ export class TypeOrmUserRepository implements UserRepository {
     }
 
     userModel.id = user.id;
-    userModel.createdAt = user.createdAt;
     userModel.email = user.email;
     userModel.userName = user.userName;
     userModel.firstName = user.firstName;
