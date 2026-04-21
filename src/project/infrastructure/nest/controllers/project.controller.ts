@@ -170,12 +170,14 @@ export class ProjectController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Lista de proyectos obtenida exitosamente',
-    type: [ProjectResponse],
+    description:
+      'Lista de proyectos obtenida exitosamente. ' +
+      'Cada elemento incluye el objeto `project` con los datos completos y el flag `likedByUser`.',
+    type: [ProjectFeedResponse],
   })
   async getProjects(
     @Query() params: ProjectPaginationRequest,
-  ): Promise<PaginationResponse<ProjectResponse>> {
+  ): Promise<PaginationResponse<ProjectFeedResponse>> {
     const query = new GetAllProjectsQuery(this.projectRepository);
     const paginationResponse = await query.execute(params);
     return paginationResponse;

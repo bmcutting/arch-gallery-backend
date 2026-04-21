@@ -1,4 +1,4 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
 import { ProjectSortFields } from 'src/project/domain/enums/project-sort-fields';
 import { TransformSort } from 'src/shared/application/decorators/transform-sort.decorator';
@@ -21,4 +21,10 @@ export class ProjectPaginationRequest extends PaginationRequest {
   })
   @TransformSort(ProjectSortFields)
   sort?: SortOptionRequest<ProjectSortFields>[];
+
+  @ApiProperty({
+    description: 'Identificador del usuario autenticado',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  currentUserId: string;
 }
