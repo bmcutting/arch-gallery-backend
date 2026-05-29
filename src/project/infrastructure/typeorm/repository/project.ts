@@ -122,6 +122,8 @@ export class TypeOrmProjectRepository implements ProjectRepository {
       relations: {
         user: true,
         categories: true,
+        comments: true,
+        likes: true,
       },
     });
 
