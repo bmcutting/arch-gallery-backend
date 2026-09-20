@@ -8,6 +8,7 @@ export class EnvService {
   readonly DATABASE_PASSWORD: string;
   readonly DATABASE_PORT: number;
   readonly DATABASE_HOST: string;
+  readonly DATABASE_SSL: boolean;
   readonly ACCESS_TOKEN_SECRET_WORD: string;
   readonly REFRESH_TOKEN_SECRET_WORD: string;
 
@@ -21,6 +22,8 @@ export class EnvService {
       this.configService.getOrThrow<string>('DATABASE_PORT'),
     );
     this.DATABASE_HOST = this.configService.getOrThrow<string>('DATABASE_HOST');
+    this.DATABASE_SSL =
+      this.configService.get<string>('DATABASE_SSL', 'true') === 'true';
     this.ACCESS_TOKEN_SECRET_WORD =
       this.configService.getOrThrow<string>('TOKEN_SECRET_WORD');
     this.REFRESH_TOKEN_SECRET_WORD = this.configService.getOrThrow<string>(

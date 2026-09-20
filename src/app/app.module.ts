@@ -31,7 +31,7 @@ import { ExperienceModel } from 'src/user/infrastructure/typeorm/models/experien
           password: envServices.DATABASE_PASSWORD,
           username: envServices.DATABASE_USERNAME,
           database: envServices.DATABASE_NAME,
-          ssl: { rejectUnauthorized: false },
+          ssl: envServices.DATABASE_SSL ? { rejectUnauthorized: false } : false,
           synchronize: true,
           logging: false,
           dropSchema: false,
