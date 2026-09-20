@@ -20,7 +20,10 @@ import { ExperienceFactory } from './experience.factory';
 const options: DataSourceOptions & SeederOptions = {
   type: 'postgres',
   url: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
+  ssl:
+    process.env.DATABASE_SSL === 'false'
+      ? false
+      : { rejectUnauthorized: false },
   synchronize: true,
   logging: false,
   dropSchema: false,
