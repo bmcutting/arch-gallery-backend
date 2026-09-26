@@ -30,6 +30,7 @@ import { GetCommentsByProjectIdQuery } from 'src/comment/application/queries/get
 @ApiTags('Comments')
 @Controller('comments')
 @ApiBearerAuth('JWT-auth')
+@UseGuards(JwtAuthGuard)
 export class CommentController {
   constructor(
     private readonly commentRepository: TypeOrmCommentRepository,
@@ -37,7 +38,6 @@ export class CommentController {
   ) {}
 
   @Post(':projectId')
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: 'Añade un comentario al proyecto',
     description:
@@ -112,7 +112,7 @@ export class CommentController {
     description: 'Elimina un comentario de un proyecto.',
   })
   @ApiParam({
-    name: 'commentid',
+    name: 'commentId',
     description: 'Id único del comentario',
     type: String,
   })
@@ -121,10 +121,15 @@ export class CommentController {
     description: 'Resultado de la operación de eliminación',
     type: Boolean,
   })
+  @ApiResponse({ status: 403, description: 'Permisos insuficientes' })
   async removeComment(
-    @Param('commentid') commentId: string,
+    @Param('commentId') commentId: string,
+    @Req() req: RequestWithUser,
   ): Promise<DeleteCommentResponse> {
-    const command = new DeleteCommentCommand(this.commentRepository);
-    return command.execute({ commentId });
+    const command = new DeleteCommentCommand(
+      this.commentRepository,
+      this.projectRepository,
+    );
+    return command.execute({ commentId, currentUserId: req.user.id });
   }
 }

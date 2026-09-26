@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  ForbiddenException,
   Get,
   Param,
   Put,
@@ -31,11 +32,11 @@ import { User } from 'src/user/domain/entities/user.entity';
 @ApiTags('Users')
 @Controller('users')
 @ApiBearerAuth('JWT-auth')
+@UseGuards(JwtAuthGuard)
 export class UserController {
   constructor(private readonly userRepository: TypeOrmUserRepository) {}
 
   @Get('me')
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: 'Obtener el usuario autenticado',
     description:
@@ -97,8 +98,17 @@ export class UserController {
     },
   })
   @ApiResponse({ status: 200, description: 'Usuario actualizado exitosamente' })
+  @ApiResponse({ status: 403, description: 'Permisos insuficientes' })
   @ApiResponse({ status: 404, description: 'Usuario no encontrado' })
-  update(@Param('id') id: string, @Body() body: UpdateUserRequest) {
+  async update(
+    @Param('id') id: string,
+    @Req() req: RequestWithUser,
+    @Body() body: UpdateUserRequest,
+  ) {
+    if (id !== req.user.id) {
+      throw new ForbiddenException('No puedes modificar otro usuario');
+    }
+
     const updateUserService = new UpdateUser(this.userRepository);
     const command = new UpdateUserCommand(
       this.userRepository,

@@ -6,4 +6,6 @@ export class DeleteProjectRequest {
   @IsNotEmpty()
   @IsString()
   projectId: string;
+
+  currentUserId: string;
 }

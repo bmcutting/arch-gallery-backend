@@ -29,6 +29,7 @@ import { UpdateExperienceCommand } from 'src/user/application/commands/update-ex
 @ApiTags('Experiences')
 @Controller('experiences')
 @ApiBearerAuth('JWT-auth')
+@UseGuards(JwtAuthGuard)
 export class ExperienceController {
   constructor(
     private readonly userRepository: TypeOrmUserRepository,
@@ -36,7 +37,6 @@ export class ExperienceController {
   ) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: 'Crear una nueva experience asociada a un usuario',
     description:

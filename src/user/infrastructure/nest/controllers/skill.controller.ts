@@ -34,6 +34,7 @@ import { CreateSkillResponse } from 'src/user/application/commands/responses/cre
 @ApiTags('Skills')
 @Controller('skills')
 @ApiBearerAuth('JWT-auth')
+@UseGuards(JwtAuthGuard)
 export class SkillController {
   constructor(
     private readonly userRepository: TypeOrmUserRepository,
@@ -41,7 +42,6 @@ export class SkillController {
   ) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: 'Crear una nueva skill asociada a un usuario',
     description:

@@ -9,9 +9,6 @@ import {
   GenerateJwtToken,
   TokenResponse,
 } from 'src/authentication/domain/services/jwt-token-generate';
-import { GenerateTokenRequest } from 'src/authentication/application/commands/requests/generate-token.request';
-import { User } from 'src/user/domain/entities/user.entity';
-import { GenerateJwtTokenCommand } from 'src/authentication/application/commands/generate-jwt-token.command';
 import { LoginRequest } from 'src/authentication/application/commands/requests/login.request';
 import { LoginResponse } from 'src/authentication/application/commands/responses/login.response';
 import { GenerateRefreshToken } from 'src/authentication/domain/services/refresh-token-generate';
@@ -42,49 +39,6 @@ export class AuthController {
     @Inject()
     private readonly passwordHasher: BcryptPasswordHasher,
   ) {}
-
-  @Post('generate-token')
-  @ApiOperation({
-    summary: 'Generar token JWT',
-    description: 'Genera un token JWT para el usuario especificado.',
-  })
-  @ApiBody({
-    type: GenerateTokenRequest,
-    examples: {
-      user: {
-        summary: 'Usuario',
-        value: {
-          userId: '01HQK8R7N5P3Z9QX1A2B4C6D8E',
-          email: 'john.doe@example.com',
-          firstName: 'John',
-          lastName: 'Doe',
-          userName: 'johndoe',
-        },
-      },
-    },
-  })
-  @ApiResponse({ status: 201, description: 'Token generado exitosamente' })
-  async generateToken(
-    @Body() body: GenerateTokenRequest,
-  ): Promise<TokenResponse> {
-    const user = new User({
-      id: body.userId,
-      email: body.email,
-      password: '',
-      firstName: body.firstName || '',
-      lastName: body.lastName || '',
-      userName: body.userName || '',
-      isActive: true,
-    });
-
-    const jwtTokenGenerateService = new GenerateJwtToken(
-      this.jwtService,
-      this.configService,
-    );
-    const command = new GenerateJwtTokenCommand(jwtTokenGenerateService);
-
-    return await command.execute({ user });
-  }
 
   @Post('refresh')
   @ApiOperation({

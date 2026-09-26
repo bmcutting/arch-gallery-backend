@@ -22,11 +22,11 @@ import { DeleteLikeCommand } from 'src/like/application/commands/delete-like-com
 @ApiTags('Likes')
 @Controller('likes')
 @ApiBearerAuth('JWT-auth')
+@UseGuards(JwtAuthGuard)
 export class LikeController {
   constructor(private readonly likeRepository: TypeOrmLikeRepository) {}
 
   @Post(':projectId')
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: 'Añade un like al proyecto',
     description:
@@ -55,7 +55,6 @@ export class LikeController {
   }
 
   @Delete(':projectId')
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: 'Elimina un like del proyecto',
     description: 'Elimina un like de un proyecto.',

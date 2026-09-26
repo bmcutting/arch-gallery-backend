@@ -45,6 +45,7 @@ import { ProjectFeedResponse } from 'src/project/application/queries/responses/p
 @ApiTags('Projects')
 @Controller('projects')
 @ApiBearerAuth('JWT-auth')
+@UseGuards(JwtAuthGuard)
 export class ProjectController {
   constructor(
     private readonly projectRepository: TypeOrmProjectRepository,
@@ -86,17 +87,19 @@ export class ProjectController {
   })
   @ApiResponse({ status: 201, description: 'Proyecto creado exitosamente' })
   @ApiResponse({ status: 400, description: 'Datos de entrada inválidos' })
-  async create(@Body() body: CreateProjectRequest) {
+  async create(
+    @Req() req: RequestWithUser,
+    @Body() body: CreateProjectRequest,
+  ) {
     const creator = new ProjectCreator(
       this.projectRepository,
       this.userRepository,
     );
     const command = new CreateProjectCommand(creator);
-    return await command.execute(body);
+    return await command.execute({ ...body, userId: req.user.id });
   }
 
   @Get('feed')
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: 'Obtener feed de proyectos',
     description:
@@ -152,14 +155,23 @@ export class ProjectController {
     status: 200,
     description: 'Proyecto actualizado exitosamente',
   })
+  @ApiResponse({ status: 403, description: 'Permisos insuficientes' })
   @ApiResponse({ status: 404, description: 'Proyecto no encontrado' })
-  async update(@Param('id') id: string, @Body() body: UpdateProjectRequest) {
+  async update(
+    @Param('id') id: string,
+    @Req() req: RequestWithUser,
+    @Body() body: UpdateProjectRequest,
+  ) {
     const updateProjectService = new UpdateProject(this.projectRepository);
     const command = new UpdateProjectCommand(
       this.projectRepository,
       updateProjectService,
     );
-    return command.execute({ request: { ...body }, projectId: id });
+    return command.execute({
+      request: { ...body },
+      projectId: id,
+      currentUserId: req.user.id,
+    });
   }
 
   @Get()
@@ -184,7 +196,6 @@ export class ProjectController {
   }
 
   @Get('me')
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: 'Obtener proyectos del usuario autenticado',
     description:
@@ -239,11 +250,12 @@ export class ProjectController {
   })
   @ApiResponse({ status: 403, description: 'Permisos insuficientes' })
   @ApiResponse({ status: 404, description: 'Proyecto no encontrado' })
-  async delete(@Param('id') projectId: string) {
+  async delete(@Param('id') projectId: string, @Req() req: RequestWithUser) {
     const command = new DeleteProjectCommand(this.projectRepository);
 
     return command.execute({
       projectId,
+      currentUserId: req.user.id,
     });
   }
 

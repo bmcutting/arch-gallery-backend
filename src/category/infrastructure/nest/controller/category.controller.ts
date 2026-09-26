@@ -9,7 +9,16 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { CreateCategoryRequest } from 'src/category/application/commands/requests/create-category.request';
 import { CategoryCreator } from 'src/category/domain/services/category-create';
 import { CreateCategoryCommand } from 'src/category/application/commands/create-category-command';
@@ -22,10 +31,12 @@ import { GetAllCategoriesQuery } from 'src/category/application/queries/get-all-
 import { PaginationResponse } from 'src/shared/application/responses/pagination.response';
 import { GetCategoryByIdQuery } from 'src/category/application/queries/get-category-by-id.query';
 import { SearchCategoriesQuery } from 'src/category/application/queries/search-categories.query';
+import { JwtAuthGuard } from 'src/authentication/infrastructure/nest/guards/jwt-auth.guard';
 
 @ApiTags('Categories')
 @Controller('categories')
 @ApiBearerAuth('JWT-auth')
+@UseGuards(JwtAuthGuard)
 export class CategoryController {
   constructor(
     private readonly projectRepository: TypeOrmProjectRepository,

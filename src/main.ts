@@ -16,7 +16,14 @@ async function bootstrap() {
     }),
   );
 
-  app.enableCors('*');
+  const corsOrigins = (
+    process.env.CORS_ORIGINS ?? 'http://localhost:3000,http://localhost:5173'
+  )
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+  app.enableCors({ origin: corsOrigins, credentials: true });
 
   const config = new DocumentBuilder()
     .setTitle('ArchGallery Backend API')

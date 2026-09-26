@@ -5,7 +5,7 @@ import {
   IsNumber,
   IsArray,
 } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 
 export class CreateProjectRequest {
   @ApiProperty({
@@ -36,11 +36,9 @@ export class CreateProjectRequest {
   @IsString({ each: true })
   categories?: string[];
 
-  @ApiProperty({
-    description: 'Id del usuario que crea el proyecto',
-    example: '22d468e9-f816-40ae-9d86-b95a75edc524',
-  })
+  // Lo asigna el controlador desde el token; se ignora lo que llegue en el body.
+  @ApiHideProperty()
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
   userId: string;
 }

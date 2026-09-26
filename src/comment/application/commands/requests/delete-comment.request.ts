@@ -6,4 +6,6 @@ export class DeleteCommentRequest {
   @IsNotEmpty()
   @IsString()
   commentId: string;
+
+  currentUserId: string;
 }
