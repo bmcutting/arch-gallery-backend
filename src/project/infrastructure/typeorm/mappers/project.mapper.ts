@@ -12,13 +12,16 @@ export class ProjectTypeOrmMapper {
     return new Project({
       id: p.id,
       title: p.title,
-      isActive: true,
+      isActive: p.isActive,
+      deletedAt: p.deletedAt,
       description: p.description,
       year: p.year,
       imagesUrl: p.imagesUrl,
       user: UserTypeOrmMapper.execute(p.user),
       categories: p.categories
-        ? CategoryTypeOrmMapper.toDomainList(p.categories)
+        ? CategoryTypeOrmMapper.toDomainList(
+            p.categories.filter((c) => c.isActive),
+          )
         : [],
       likes: p.likes ? LikeTypeOrmMapper.toDomainList(p.likes) : [],
       comments: p.comments ? CommentTypeOrmMapper.toDomainList(p.comments) : [],

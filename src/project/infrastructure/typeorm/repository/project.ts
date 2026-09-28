@@ -95,7 +95,7 @@ export class TypeOrmProjectRepository implements ProjectRepository {
 
   async findById(id: string): Promise<Project | null> {
     const found = await this.projectRepository.findOne({
-      where: { id },
+      where: { id, isActive: true },
       relations: {
         user: true,
         categories: true,
@@ -145,7 +145,7 @@ export class TypeOrmProjectRepository implements ProjectRepository {
 
   async findByUserId(userId: string): Promise<Project[]> {
     const projects = await this.projectRepository.find({
-      where: { user: { id: userId } },
+      where: { user: { id: userId }, isActive: true },
       relations: { user: true, categories: true, comments: true, likes: true },
     });
     return projects.map((project) => ProjectTypeOrmMapper.execute(project));
@@ -157,11 +157,22 @@ export class TypeOrmProjectRepository implements ProjectRepository {
   ): Promise<Project[]> {
     const query = this.projectRepository
       .createQueryBuilder('project')
-      .leftJoinAndSelect('project.user', 'user')
+      // innerJoin y no leftJoin: el mapper de Project no admite un user nulo,
+      // asi que un proyecto de usuario desactivado debe desaparecer del feed.
+      .innerJoinAndSelect('project.user', 'user', 'user.isActive = true')
       .leftJoinAndSelect('project.likes', 'like')
       .leftJoinAndSelect('project.comments', 'comment')
-      .leftJoinAndSelect('comment.user', 'commentUser')
-      .leftJoinAndSelect('project.categories', 'category')
+      .leftJoinAndSelect(
+        'comment.user',
+        'commentUser',
+        'commentUser.isActive = true',
+      )
+      .leftJoinAndSelect(
+        'project.categories',
+        'category',
+        'category.isActive = true',
+      )
+      .where('project.isActive = :isActive', { isActive: true })
       .orderBy('project.id', 'DESC')
       .take(limit + 1);
 

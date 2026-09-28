@@ -42,7 +42,7 @@ export class TypeOrmUserRepository implements UserRepository {
 
   async findById(id: string): Promise<User | null> {
     const found = await this.userRepository.findOne({
-      where: { id },
+      where: { id, isActive: true },
       relations: ['skills', 'experiences'],
     });
     return found ? UserTypeOrmMapper.execute(found) : null;
@@ -50,7 +50,7 @@ export class TypeOrmUserRepository implements UserRepository {
 
   async findByEmail(email: string): Promise<User | null> {
     const found = await this.userRepository.findOne({
-      where: { email },
+      where: { email, isActive: true },
       relations: ['skills', 'experiences'],
     });
     return found ? UserTypeOrmMapper.execute(found) : null;
@@ -58,7 +58,7 @@ export class TypeOrmUserRepository implements UserRepository {
 
   async findByUserName(userName: string): Promise<User | null> {
     const found = await this.userRepository.findOne({
-      where: { userName },
+      where: { userName, isActive: true },
       relations: ['skills', 'experiences'],
     });
     return found ? UserTypeOrmMapper.execute(found) : null;

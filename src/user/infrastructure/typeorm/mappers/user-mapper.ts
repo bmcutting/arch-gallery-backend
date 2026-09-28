@@ -11,7 +11,8 @@ export class UserTypeOrmMapper {
       id: u.id,
       email: u.email,
       password: u.password,
-      isActive: true,
+      isActive: u.isActive,
+      deletedAt: u.deletedAt,
       userName: u.userName,
       firstName: u.firstName,
       lastName: u.lastName,
@@ -28,9 +29,15 @@ export class UserTypeOrmMapper {
       twitterUrl: u.twitterUrl,
       linkedinUrl: u.linkedinUrl,
       languages: u.languages ?? [],
-      skills: u.skills ? SkillTypeOrmMapper.toDomainList(u.skills) : [],
+      // Las relaciones se filtran aqui: un `where` sobre la relacion iria al
+      // WHERE raiz y haria desaparecer al usuario entero si no tuviera ninguna activa.
+      skills: u.skills
+        ? SkillTypeOrmMapper.toDomainList(u.skills.filter((s) => s.isActive))
+        : [],
       experiences: u.experiences
-        ? ExperienceTypeOrmMapper.toDomainList(u.experiences)
+        ? ExperienceTypeOrmMapper.toDomainList(
+            u.experiences.filter((e) => e.isActive),
+          )
         : [],
       //project: u.project ? UserProjectTypeOrmMapper.execute(u.project) : null
     });

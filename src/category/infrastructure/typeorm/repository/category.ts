@@ -29,7 +29,7 @@ export class TypeOrmCategoryRepository implements CategoryRepository {
 
   async create(props: CreateCategoryProps): Promise<string> {
     const project = await this.projectRepository.findOne({
-      where: { id: props.projectId },
+      where: { id: props.projectId, isActive: true },
       relations: { categories: true },
     });
     if (!project) {
@@ -60,7 +60,7 @@ export class TypeOrmCategoryRepository implements CategoryRepository {
 
   async findById(id: string): Promise<Category | null> {
     const found = await this.categoryRepository.findOne({
-      where: { id },
+      where: { id, isActive: true },
     });
 
     return found ? CategoryTypeOrmMapper.toDomain(found) : null;
@@ -68,7 +68,7 @@ export class TypeOrmCategoryRepository implements CategoryRepository {
 
   async findByName(name: string): Promise<Category[] | null> {
     const found = await this.categoryRepository.find({
-      where: { name: ILike(`%${name}%`) },
+      where: { name: ILike(`%${name}%`), isActive: true },
       take: 10,
     });
 
@@ -119,7 +119,7 @@ export class TypeOrmCategoryRepository implements CategoryRepository {
 
   async addCategory(projectId: string, categoryId: string): Promise<void> {
     const project = await this.projectRepository.findOne({
-      where: { id: projectId },
+      where: { id: projectId, isActive: true },
       relations: {
         categories: true,
       },
@@ -129,7 +129,7 @@ export class TypeOrmCategoryRepository implements CategoryRepository {
     }
 
     const category = await this.categoryRepository.findOne({
-      where: { id: categoryId },
+      where: { id: categoryId, isActive: true },
       relations: {
         projects: true,
       },

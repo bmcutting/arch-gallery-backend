@@ -23,7 +23,7 @@ export class TypeOrmExperienceRepository implements ExperienceRepository {
 
   async create(props: CreateExperienceProps): Promise<string> {
     const user = await this.userRepository.findOne({
-      where: { id: props.userId },
+      where: { id: props.userId, isActive: true },
     });
     if (!user) {
       throw new NotFoundUserException();
@@ -47,7 +47,7 @@ export class TypeOrmExperienceRepository implements ExperienceRepository {
 
   async findById(id: string): Promise<Experience | null> {
     const found = await this.experienceRepository.findOne({
-      where: { id },
+      where: { id, isActive: true },
     });
 
     return found ? ExperienceTypeOrmMapper.toDomain(found) : null;
@@ -55,7 +55,7 @@ export class TypeOrmExperienceRepository implements ExperienceRepository {
 
   async findAll(userId: string): Promise<Experience[]> {
     const items = await this.experienceRepository.find({
-      where: { user: { id: userId } },
+      where: { user: { id: userId }, isActive: true },
     });
 
     return ExperienceTypeOrmMapper.toDomainList(items);

@@ -23,7 +23,7 @@ export class TypeOrmSkillRepository implements SkillRepository {
 
   async create(props: CreateSkillProps): Promise<string> {
     const user = await this.userRepository.findOne({
-      where: { id: props.userId },
+      where: { id: props.userId, isActive: true },
       relations: { skills: true },
     });
     if (!user) {
@@ -56,7 +56,7 @@ export class TypeOrmSkillRepository implements SkillRepository {
 
   async findById(id: string): Promise<Skill | null> {
     const found = await this.skillRepository.findOne({
-      where: { id },
+      where: { id, isActive: true },
     });
 
     return found ? SkillTypeOrmMapper.toDomain(found) : null;
@@ -64,7 +64,7 @@ export class TypeOrmSkillRepository implements SkillRepository {
 
   async findByName(name: string): Promise<Skill[] | null> {
     const found = await this.skillRepository.find({
-      where: { name: ILike(`%${name}%`) },
+      where: { name: ILike(`%${name}%`), isActive: true },
       take: 10,
     });
 
@@ -73,7 +73,7 @@ export class TypeOrmSkillRepository implements SkillRepository {
 
   async findAll(userId: string): Promise<Skill[]> {
     const items = await this.skillRepository.find({
-      where: { user: { id: userId } },
+      where: { user: { id: userId }, isActive: true },
     });
 
     return SkillTypeOrmMapper.toDomainList(items);
