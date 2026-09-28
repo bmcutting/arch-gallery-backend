@@ -17,6 +17,9 @@
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
+    // Las entidades de TypeORM declaran sus columnas sin inicializador: el valor
+    // lo pone el ORM al hidratar. Explicito para que no dependa de `strict`.
+    "strictPropertyInitialization": false,
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
