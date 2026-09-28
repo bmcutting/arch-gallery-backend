@@ -1,7 +1,7 @@
 import { User } from 'src/user/domain/entities/user.entity';
 import { GenerateJwtToken, TokenResponse } from './jwt-token-generate';
 import { UserRepository } from 'src/user/domain/repositories/user.repository';
-import { PasswordHasher } from 'src/shared/utils/password-hasher';
+import type { PasswordHasher } from 'src/user/domain/interfaces/password-hasher';
 import { GenerateRefreshToken } from './refresh-token-generate';
 import { InvalidCredentialsException } from 'src/shared/domain/exceptions/invalid-credentials.exception';
 

@@ -8,14 +8,14 @@ import { Repository } from 'typeorm';
 import { UserModel } from 'src/user/infrastructure/typeorm/models/user';
 import { Project } from 'src/project/domain/entities/project.entity';
 import { ProjectPaginationParams } from 'src/project/domain/interfaces/project-pagination';
-import { PaginationResult } from 'src/shared/domain/interfaces/pagination-result';
+import { PaginationResult } from 'src/shared/domain/interfaces/pagination';
 import { ProjectTypeOrmMapper } from '../mappers/project.mapper';
 import { ProjectWhereBuilder } from '../utils/project-where-builder';
 import { ProjectOrderBuilder } from '../utils/project-order-builder';
 import {
   getPaginationInfo,
   getPaginationOptions,
-} from 'src/shared/utils/pagination.util';
+} from 'src/shared/infrastructure/utils/pagination.util';
 import { CategoryModel } from 'src/category/infrastructure/typeorm/models/category';
 
 export class TypeOrmProjectRepository implements ProjectRepository {

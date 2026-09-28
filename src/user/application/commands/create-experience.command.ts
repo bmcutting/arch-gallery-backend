@@ -1,4 +1,4 @@
-import { Command } from 'src/shared/interfaces/command.interface';
+import { Command } from 'src/shared/application/interfaces/command.interface';
 import { CreateExperienceRequest } from './requests/create-experience.request';
 import { CreateExperienceResponse } from './responses/create-experience.response';
 import { ExperienceCreator } from 'src/user/domain/services/experience-create';

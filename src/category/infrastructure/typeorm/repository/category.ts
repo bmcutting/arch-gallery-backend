@@ -7,7 +7,7 @@ import { CategoryModel } from '../models/category';
 import { ILike, Repository } from 'typeorm';
 import { Category } from 'src/category/domain/entities/category';
 import { CategoryPaginationParams } from 'src/category/domain/interfaces/category-pagination';
-import { PaginationResult } from 'src/shared/domain/interfaces/pagination-result';
+import { PaginationResult } from 'src/shared/domain/interfaces/pagination';
 import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project';
 import { NotFoundProjectException } from 'src/project/domain/exceptions/project';
 import { CategoryTypeOrmMapper } from '../mappers/category.mapper';
@@ -17,7 +17,7 @@ import { CategoryOrderBuilder } from '../utils/category-order-builder';
 import {
   getPaginationInfo,
   getPaginationOptions,
-} from 'src/shared/utils/pagination.util';
+} from 'src/shared/infrastructure/utils/pagination.util';
 
 export class TypeOrmCategoryRepository implements CategoryRepository {
   constructor(

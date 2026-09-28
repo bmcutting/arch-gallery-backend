@@ -1,8 +1,8 @@
-import { BaseWhereBuilder } from 'src/shared/utils/base-where-builder';
+import { BaseWhereBuilder } from 'src/shared/infrastructure/typeorm/utils/base-where-builder';
 import { ProjectModel } from '../models/project';
 import { ProjectPaginationParams } from 'src/project/domain/interfaces/project-pagination';
 import { FindOptionsWhere } from 'typeorm';
-import { WhereUtils } from 'src/shared/utils/create-where';
+import { WhereUtils } from 'src/shared/infrastructure/typeorm/utils/where-utils';
 
 export class ProjectWhereBuilder extends BaseWhereBuilder<
   ProjectModel,
@@ -12,8 +12,6 @@ export class ProjectWhereBuilder extends BaseWhereBuilder<
     where: FindOptionsWhere<ProjectModel>,
     filters: ProjectPaginationParams,
   ): FindOptionsWhere<ProjectModel> | FindOptionsWhere<ProjectModel>[] {
-    where.isActive = this.getSoftDeleteFilter(filters);
-
     this.applyStandardFilters(where, filters);
 
     if (filters.search) {
@@ -46,13 +44,5 @@ export class ProjectWhereBuilder extends BaseWhereBuilder<
     });
 
     return searchConditions;
-  }
-
-  private getSoftDeleteFilter(
-    filters: ProjectPaginationParams,
-  ): boolean | undefined {
-    if (filters.onlyDeleted) return false;
-    if (filters.includeDeleted) return undefined;
-    return true;
   }
 }

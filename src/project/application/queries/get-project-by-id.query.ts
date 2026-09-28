@@ -1,4 +1,4 @@
-import { Query } from 'src/shared/interfaces/queries.interface';
+import { Query } from 'src/shared/application/interfaces/queries.interface';
 import { GetProjectByIdRequest } from './requests/project-get-by-id.request';
 import { ProjectResponse } from './responses/project.response';
 import { ProjectRepository } from 'src/project/domain/repositories/project.repository';
@@ -7,7 +7,7 @@ import { ProjectResponseMapper } from '../mappers/project.mapper';
 
 export class GetProjectByIdQuery implements Query<
   GetProjectByIdRequest,
-  Promise<ProjectResponse>
+  ProjectResponse
 > {
   constructor(private readonly projectRepository: ProjectRepository) {}
 

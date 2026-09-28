@@ -1,4 +1,4 @@
-import { Command } from 'src/shared/interfaces/command.interface';
+import { Command } from 'src/shared/application/interfaces/command.interface';
 import { UpdateCategoryRequest } from './requests/update-category.request';
 import { UpdateCategory } from 'src/category/domain/services/category-update';
 import { UpdateCategoryResponse } from './responses/update-category.response';

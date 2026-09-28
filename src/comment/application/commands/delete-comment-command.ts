@@ -1,4 +1,4 @@
-import { Command } from 'src/shared/interfaces/command.interface';
+import { Command } from 'src/shared/application/interfaces/command.interface';
 import { DeleteCommentResponse } from './responses/delete-comment.response';
 import { DeleteCommentRequest } from './requests/delete-comment.request';
 import { CommentRepository } from 'src/comment/domain/repositories/comment.repository';

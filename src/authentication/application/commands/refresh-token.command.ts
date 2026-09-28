@@ -5,7 +5,7 @@ import {
 import { GenerateRefreshToken } from 'src/authentication/domain/services/refresh-token-generate';
 import { RevokeRefreshToken } from 'src/authentication/domain/services/refresh-token-revoke';
 import { ValidateRefreshToken } from 'src/authentication/domain/services/refresh-token-validate';
-import { Command } from 'src/shared/interfaces/command.interface';
+import { Command } from 'src/shared/application/interfaces/command.interface';
 
 interface Props {
   refreshToken: string;

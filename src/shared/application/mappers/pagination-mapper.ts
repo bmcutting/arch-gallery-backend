@@ -5,16 +5,16 @@ export class PaginationResponseMapper {
     items: T[];
     totalItems: number;
     totalPages: number;
-    pageSize: number;
+    limit: number;
     hasNextPage: boolean;
   }): PaginationResponse<T> {
-    const { items, totalItems, totalPages, pageSize, hasNextPage } = params;
+    const { items, totalItems, totalPages, limit, hasNextPage } = params;
 
     return {
       items,
       totalItems,
       totalPages,
-      pageSize,
+      limit,
       hasNextPage,
     };
   }

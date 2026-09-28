@@ -1,5 +1,5 @@
 import { ValidateJwtToken } from 'src/authentication/domain/services/jwt-token-validate';
-import { Command } from 'src/shared/interfaces/command.interface';
+import { Command } from 'src/shared/application/interfaces/command.interface';
 import { User } from 'src/user/domain/entities/user.entity';
 
 interface Props {

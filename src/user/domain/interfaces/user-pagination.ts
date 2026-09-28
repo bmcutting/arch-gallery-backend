@@ -3,7 +3,7 @@ import { UserSortFields } from '../enums/user-sort-fields';
 
 export interface UserPaginationParams {
   page?: number;
-  pageSize?: number;
+  limit?: number;
   search?: string;
   firstName?: string;
   lastName?: string;
@@ -11,8 +11,7 @@ export interface UserPaginationParams {
   userName?: string;
   createdAtMin?: Date;
   createdAtMax?: Date;
-  includeDeleted?: boolean;
-  onlyDeleted?: boolean;
+  isActive?: boolean;
   deletedAtMin?: Date;
   deletedAtMax?: Date;
   sort?: SortOption<UserSortFields>[];

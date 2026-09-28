@@ -1,6 +1,6 @@
 import { SortOption } from 'src/shared/domain/interfaces/sort-option';
 import { FindOptionsOrder } from 'typeorm';
-import { BaseOrderBuilder } from 'src/shared/utils/base-order-builder';
+import { BaseOrderBuilder } from 'src/shared/infrastructure/typeorm/utils/base-order-builder';
 import { CategoryModel } from '../models/category';
 import { CategorySortFields } from 'src/category/domain/enums/category-sort-fields';
 
@@ -20,10 +20,6 @@ export class CategoryOrderBuilder extends BaseOrderBuilder<
           break;
       }
     });
-  }
-
-  protected getDefaultOrder(): FindOptionsOrder<CategoryModel> {
-    return { createdAt: 'DESC' };
   }
 
   static build(

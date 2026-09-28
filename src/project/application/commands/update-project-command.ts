@@ -1,4 +1,4 @@
-import { Command } from 'src/shared/interfaces/command.interface';
+import { Command } from 'src/shared/application/interfaces/command.interface';
 import { UpdateProjectRequest } from './requests/update-project.request';
 import { UpdateProjectResponse } from './responses/update-project.response';
 import { ProjectRepository } from 'src/project/domain/repositories/project.repository';

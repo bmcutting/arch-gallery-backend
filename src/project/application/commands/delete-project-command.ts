@@ -1,7 +1,7 @@
 import { ProjectRepository } from 'src/project/domain/repositories/project.repository';
 import { DeleteProjectRequest } from './requests/delete-project.request';
 import { DeleteProjectResponse } from './responses/delete-project.response';
-import { Command } from 'src/shared/interfaces/command.interface';
+import { Command } from 'src/shared/application/interfaces/command.interface';
 import { NotFoundProjectException } from 'src/project/domain/exceptions/project';
 import { ForbiddenException } from '@nestjs/common';
 

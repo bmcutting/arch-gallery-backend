@@ -1,4 +1,4 @@
-import { Query } from 'src/shared/interfaces/queries.interface';
+import { Query } from 'src/shared/application/interfaces/queries.interface';
 import { GetProjectFeedRequest } from './requests/project-feed.request';
 import { ProjectFeedResponse } from './responses/project-feed.response';
 import { ProjectRepository } from 'src/project/domain/repositories/project.repository';
@@ -11,7 +11,7 @@ export interface GetProjectFeedResponse {
 
 export class GetProjectFeedQuery implements Query<
   GetProjectFeedRequest,
-  Promise<GetProjectFeedResponse>
+  GetProjectFeedResponse
 > {
   constructor(private readonly projectRepository: ProjectRepository) {}
 

@@ -1,6 +1,6 @@
 import { UserRepository } from '../repositories/user.repository';
 import { RepeatUserException } from '../exceptions/user';
-import { PasswordHasher } from 'src/shared/utils/password-hasher';
+import type { PasswordHasher } from 'src/user/domain/interfaces/password-hasher';
 
 export interface CreateUserProps {
   email: string;

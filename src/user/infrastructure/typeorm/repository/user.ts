@@ -6,14 +6,14 @@ import {
 } from 'src/user/domain/repositories/user.repository';
 import { UserModel } from '../models/user';
 import { Repository } from 'typeorm';
-import { PaginationResult } from 'src/shared/domain/interfaces/pagination-result';
+import { PaginationResult } from 'src/shared/domain/interfaces/pagination';
 import { User } from 'src/user/domain/entities/user.entity';
 import { UserPaginationParams } from 'src/user/domain/interfaces/user-pagination';
 import { UserTypeOrmMapper } from '../mappers/user-mapper';
 import {
   getPaginationInfo,
   getPaginationOptions,
-} from 'src/shared/utils/pagination.util';
+} from 'src/shared/infrastructure/utils/pagination.util';
 import { UserWhereBuilder } from '../utils/user-where-builder';
 import { UserOrderBuilder } from '../utils/user-order-builder';
 import { NotFoundUserException } from 'src/user/domain/exceptions/user';

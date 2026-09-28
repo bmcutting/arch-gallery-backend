@@ -1,4 +1,4 @@
-import { Command } from 'src/shared/interfaces/command.interface';
+import { Command } from 'src/shared/application/interfaces/command.interface';
 import { CreateCategoryRequest } from './requests/create-category.request';
 import { CreateCategoryResponse } from './responses/create-category.response';
 import { CategoryCreator } from 'src/category/domain/services/category-create';

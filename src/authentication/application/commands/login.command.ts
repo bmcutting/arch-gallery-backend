@@ -1,4 +1,4 @@
-import { Command } from 'src/shared/interfaces/command.interface';
+import { Command } from 'src/shared/application/interfaces/command.interface';
 import { LoginResponse } from './responses/login.response';
 import { AuthenticateUserWithTokens } from 'src/authentication/domain/services/user-authenticate-with-tokens';
 import { UserResponseMapper } from 'src/user/application/mappers/user.mapper';

@@ -1,6 +1,6 @@
 import { UpdateUserRequest } from './requests/update-user.request';
 import { UpdateUserResponse } from './responses/update-user.response';
-import { Command } from 'src/shared/interfaces/command.interface';
+import { Command } from 'src/shared/application/interfaces/command.interface';
 import { UserRepository } from 'src/user/domain/repositories/user.repository';
 import { NotFoundUserException } from 'src/user/domain/exceptions/user';
 import { UpdateUser } from 'src/user/domain/services/user-update';

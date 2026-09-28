@@ -1,4 +1,4 @@
-import { Command } from 'src/shared/interfaces/command.interface';
+import { Command } from 'src/shared/application/interfaces/command.interface';
 import { UpdateExperienceRequest } from './requests/update-experience.request';
 import { UpdateExperienceResponse } from './responses/update-experience.response';
 import { ExperienceRepository } from 'src/user/domain/repositories/experience.repository';

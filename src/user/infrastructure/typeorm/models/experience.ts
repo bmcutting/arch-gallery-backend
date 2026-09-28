@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { UserModel } from './user';
-import { Model } from 'src/shared/typeorm/base.model';
+import { Model } from 'src/shared/infrastructure/typeorm/models/base.model';
 import { ExperienceType } from 'src/user/domain/enums/experience';
 
 @Entity({ name: 'experiences' })

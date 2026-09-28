@@ -1,8 +1,8 @@
-import { BaseWhereBuilder } from 'src/shared/utils/base-where-builder';
+import { BaseWhereBuilder } from 'src/shared/infrastructure/typeorm/utils/base-where-builder';
 import { UserModel } from '../models/user';
 import { UserPaginationParams } from 'src/user/domain/interfaces/user-pagination';
 import { FindOptionsWhere } from 'typeorm';
-import { WhereUtils } from 'src/shared/utils/create-where';
+import { WhereUtils } from 'src/shared/infrastructure/typeorm/utils/where-utils';
 
 export class UserWhereBuilder extends BaseWhereBuilder<
   UserModel,
@@ -12,8 +12,6 @@ export class UserWhereBuilder extends BaseWhereBuilder<
     where: FindOptionsWhere<UserModel>,
     filters: UserPaginationParams,
   ): FindOptionsWhere<UserModel> | FindOptionsWhere<UserModel>[] {
-    where.isActive = this.getSoftDeleteFilter(filters);
-
     this.applyStandardFilters(where, filters);
 
     if (filters.search) {
@@ -64,13 +62,5 @@ export class UserWhereBuilder extends BaseWhereBuilder<
     });
 
     return searchConditions;
-  }
-
-  private getSoftDeleteFilter(
-    filters: UserPaginationParams,
-  ): boolean | undefined {
-    if (filters.onlyDeleted) return false;
-    if (filters.includeDeleted) return undefined;
-    return true;
   }
 }

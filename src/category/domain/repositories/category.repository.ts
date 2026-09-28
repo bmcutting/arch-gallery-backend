@@ -1,4 +1,4 @@
-import { PaginationResult } from 'src/shared/domain/interfaces/pagination-result';
+import { PaginationResult } from 'src/shared/domain/interfaces/pagination';
 import { Category } from '../entities/category';
 import { CategoryPaginationParams } from '../interfaces/category-pagination';
 

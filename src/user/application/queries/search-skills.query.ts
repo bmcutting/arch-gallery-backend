@@ -1,4 +1,4 @@
-import { Query } from 'src/shared/interfaces/queries.interface';
+import { Query } from 'src/shared/application/interfaces/queries.interface';
 import { SkillResponse } from './responses/skill.response';
 import { SkillRepository } from 'src/user/domain/repositories/skill.repository';
 import { SkillResponseMapper } from '../mappers/skill.mapper';
@@ -6,7 +6,7 @@ import { SearchSkillsRequest } from './requests/search-skill.request';
 
 export class SearchSkillsQuery implements Query<
   SearchSkillsRequest,
-  Promise<SkillResponse[] | null>
+  SkillResponse[] | null
 > {
   constructor(private readonly skillRepository: SkillRepository) {}
 

@@ -1,5 +1,5 @@
 import { PaginationResponse } from 'src/shared/application/responses/pagination.response';
-import { Query } from 'src/shared/interfaces/queries.interface';
+import { Query } from 'src/shared/application/interfaces/queries.interface';
 import { UserResponse } from './responses/user.response';
 import { UserPaginationRequest } from './requests/user-pagination.request';
 import { PaginationResponseMapper } from 'src/shared/application/mappers/pagination-mapper';
@@ -8,7 +8,7 @@ import { UserRepository } from 'src/user/domain/repositories/user.repository';
 
 export class GetAllUsersQuery implements Query<
   UserPaginationRequest,
-  Promise<PaginationResponse<UserResponse>>
+  PaginationResponse<UserResponse>
 > {
   constructor(private readonly userRepository: UserRepository) {}
 
@@ -18,7 +18,7 @@ export class GetAllUsersQuery implements Query<
     const { items, totalItems, pagination } = await this.userRepository.findAll(
       {
         page: request.page,
-        pageSize: request.pageSize,
+        limit: request.limit,
         search: request.search,
         createdAtMin: request.createdAtMin,
         createdAtMax: request.createdAtMax,
@@ -26,8 +26,7 @@ export class GetAllUsersQuery implements Query<
         lastName: request.lastName,
         deletedAtMax: request.deletedAtMax,
         deletedAtMin: request.deletedAtMin,
-        includeDeleted: request.includeDeleted,
-        onlyDeleted: request.onlyDeleted,
+        isActive: request.isActive,
         sort: request.sort,
       },
     );

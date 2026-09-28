@@ -3,13 +3,12 @@ import { ProjectSortFields } from '../enums/project-sort-fields';
 
 export interface ProjectPaginationParams {
   page?: number;
-  pageSize?: number;
+  limit?: number;
   search?: string;
   title?: string;
   createdAtMin?: Date;
   createdAtMax?: Date;
-  includeDeleted?: boolean;
-  onlyDeleted?: boolean;
+  isActive?: boolean;
   deletedAtMin?: Date;
   deletedAtMax?: Date;
   sort?: SortOption<ProjectSortFields>[];

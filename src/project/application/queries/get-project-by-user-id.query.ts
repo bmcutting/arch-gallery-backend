@@ -1,4 +1,4 @@
-import { Query } from 'src/shared/interfaces/queries.interface';
+import { Query } from 'src/shared/application/interfaces/queries.interface';
 import { GetProjectByUserIdRequest } from './requests/project-get-by-user-id.request';
 import { ProjectRepository } from 'src/project/domain/repositories/project.repository';
 import { ProjectResponseMapper } from '../mappers/project.mapper';
@@ -7,7 +7,7 @@ import { ProjectFeedResponse } from './responses/project-feed.response';
 
 export class GetProjectByUserIdQuery implements Query<
   GetProjectByUserIdRequest,
-  Promise<ProjectFeedResponse[]>
+  ProjectFeedResponse[]
 > {
   constructor(private readonly projectRepository: ProjectRepository) {}
   async execute({

@@ -1,5 +1,5 @@
 import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project';
-import { Model } from 'src/shared/typeorm/base.model';
+import { Model } from 'src/shared/infrastructure/typeorm/models/base.model';
 import { Column, Entity, ManyToMany } from 'typeorm';
 
 @Entity({ name: 'categories' })

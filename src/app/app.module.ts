@@ -17,10 +17,12 @@ import { CommentModule } from 'src/comment/comment.module';
 import { LikeModule } from 'src/like/like.module';
 import { SkillModel } from 'src/user/infrastructure/typeorm/models/skill';
 import { ExperienceModel } from 'src/user/infrastructure/typeorm/models/experience';
+import { SharedModule } from 'src/shared/shared.module';
 
 @Module({
   imports: [
     EnvModule,
+    SharedModule,
     UserModule,
     TypeOrmModule.forRootAsync({
       useFactory(envServices: EnvService) {

@@ -1,4 +1,4 @@
-import { Query } from 'src/shared/interfaces/queries.interface';
+import { Query } from 'src/shared/application/interfaces/queries.interface';
 import { PaginationResponse } from 'src/shared/application/responses/pagination.response';
 import { PaginationResponseMapper } from 'src/shared/application/mappers/pagination-mapper';
 import { CategoryPaginationRequest } from './requests/category-pagination.request';
@@ -8,7 +8,7 @@ import { CategoryResponseMapper } from '../mappers/category.mapper';
 
 export class GetAllCategoriesQuery implements Query<
   CategoryPaginationRequest,
-  Promise<PaginationResponse<CategoryResponse>>
+  PaginationResponse<CategoryResponse>
 > {
   constructor(private readonly categoryRepository: CategoryRepository) {}
 
@@ -18,15 +18,14 @@ export class GetAllCategoriesQuery implements Query<
     const { items, totalItems, pagination } =
       await this.categoryRepository.findAll({
         page: request.page,
-        pageSize: request.pageSize,
+        limit: request.limit,
         search: request.search,
         createdAtMin: request.createdAtMin,
         createdAtMax: request.createdAtMax,
         name: request.name,
         deletedAtMax: request.deletedAtMax,
         deletedAtMin: request.deletedAtMin,
-        includeDeleted: request.includeDeleted,
-        onlyDeleted: request.onlyDeleted,
+        isActive: request.isActive,
         sort: request.sort,
       });
 

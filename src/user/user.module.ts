@@ -12,6 +12,7 @@ import { TypeOrmSkillRepository } from './infrastructure/typeorm/repository/skil
 import { TypeOrmExperienceRepository } from './infrastructure/typeorm/repository/experience';
 import { SkillModel } from './infrastructure/typeorm/models/skill';
 import { ExperienceModel } from './infrastructure/typeorm/models/experience';
+import { BcryptPasswordHasher } from './infrastructure/services/bcrypt-password-hasher';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserModel, SkillModel, ExperienceModel])],
@@ -20,6 +21,7 @@ import { ExperienceModel } from './infrastructure/typeorm/models/experience';
     TypeOrmUserRepository,
     TypeOrmSkillRepository,
     TypeOrmExperienceRepository,
+    BcryptPasswordHasher,
     EnvService,
     JwtService,
     ConfigService,
@@ -28,6 +30,7 @@ import { ExperienceModel } from './infrastructure/typeorm/models/experience';
     TypeOrmUserRepository,
     TypeOrmSkillRepository,
     TypeOrmExperienceRepository,
+    BcryptPasswordHasher,
   ],
 })
 export class UserModule {}

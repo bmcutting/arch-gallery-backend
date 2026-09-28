@@ -1,4 +1,4 @@
-import { Command } from 'src/shared/interfaces/command.interface';
+import { Command } from 'src/shared/application/interfaces/command.interface';
 import { AddCommentRequest } from './requests/add-comment.request';
 import { NotFoundProjectException } from 'src/project/domain/exceptions/project';
 import { CommentRepository } from 'src/comment/domain/repositories/comment.repository';

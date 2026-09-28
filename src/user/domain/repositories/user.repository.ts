@@ -1,4 +1,4 @@
-import { PaginationResult } from 'src/shared/domain/interfaces/pagination-result';
+import { PaginationResult } from 'src/shared/domain/interfaces/pagination';
 import { User } from '../entities/user.entity';
 import { UserPaginationParams } from '../interfaces/user-pagination';
 

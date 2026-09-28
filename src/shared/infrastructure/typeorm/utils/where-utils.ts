@@ -74,16 +74,6 @@ export class WhereUtils {
     return value !== undefined ? value : undefined;
   }
 
-  static addIfDefinedMany<T>(
-    obj: T,
-    fields: Partial<{ [K in keyof T]: T[K] | undefined }>,
-  ): void {
-    (Object.keys(fields) as (keyof T)[]).forEach((key) => {
-      const value = fields[key];
-      if (value !== undefined) obj[key] = value;
-    });
-  }
-
   static orCondition<T>(values?: T | T[]): FindOperator<T> | T | undefined {
     if (values === undefined || values === null) return undefined;
 

@@ -1,4 +1,4 @@
-import { Command } from 'src/shared/interfaces/command.interface';
+import { Command } from 'src/shared/application/interfaces/command.interface';
 import { CreateUserRequest } from './requests/create-user.request';
 import { CreateUserResponse } from '../../../user/application/commands/responses/create-user.response';
 import { UserCreator } from 'src/user/domain/services/user-create';

@@ -1,4 +1,4 @@
-import { Command } from 'src/shared/interfaces/command.interface';
+import { Command } from 'src/shared/application/interfaces/command.interface';
 import { SkillRepository } from 'src/user/domain/repositories/skill.repository';
 import { UpdateSkillResponse } from './responses/update-skill.response';
 import { NotFoundSkillException } from 'src/user/domain/exceptions/skill';

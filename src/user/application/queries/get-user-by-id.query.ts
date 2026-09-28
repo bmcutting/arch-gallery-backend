@@ -1,4 +1,4 @@
-import { Query } from 'src/shared/interfaces/queries.interface';
+import { Query } from 'src/shared/application/interfaces/queries.interface';
 import { GetUserByIdRequest } from './requests/user-get-by-id.request';
 import { UserResponse } from './responses/user.response';
 import { UserRepository } from 'src/user/domain/repositories/user.repository';
@@ -7,7 +7,7 @@ import { NotFoundUserException } from 'src/user/domain/exceptions/user';
 
 export class GetUserByIdQuery implements Query<
   GetUserByIdRequest,
-  Promise<UserResponse>
+  UserResponse
 > {
   constructor(private readonly repository: UserRepository) {}
 

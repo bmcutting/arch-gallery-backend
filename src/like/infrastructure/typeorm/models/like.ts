@@ -1,4 +1,4 @@
-import { Model } from 'src/shared/typeorm/base.model';
+import { Model } from 'src/shared/infrastructure/typeorm/models/base.model';
 import { UserModel } from 'src/user/infrastructure/typeorm/models/user';
 import { Column, Entity, ManyToOne, Unique } from 'typeorm';
 import { ProjectModel } from '../../../../project/infrastructure/typeorm/models/project';

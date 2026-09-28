@@ -2,7 +2,7 @@ import { SortOption } from 'src/shared/domain/interfaces/sort-option';
 import { ProjectModel } from '../models/project';
 import { ProjectSortFields } from 'src/project/domain/enums/project-sort-fields';
 import { FindOptionsOrder } from 'typeorm';
-import { BaseOrderBuilder } from 'src/shared/utils/base-order-builder';
+import { BaseOrderBuilder } from 'src/shared/infrastructure/typeorm/utils/base-order-builder';
 
 export class ProjectOrderBuilder extends BaseOrderBuilder<
   ProjectModel,
@@ -20,10 +20,6 @@ export class ProjectOrderBuilder extends BaseOrderBuilder<
           break;
       }
     });
-  }
-
-  protected getDefaultOrder(): FindOptionsOrder<ProjectModel> {
-    return { createdAt: 'DESC' };
   }
 
   static build(

@@ -1,6 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import {
-  IsBoolean,
   IsDate,
   IsInt,
   IsOptional,
@@ -9,11 +8,12 @@ import {
   ValidateIf,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { IsBooleanOptional } from '../decorators/is-boolean.decorator';
 
 export class PaginationRequest {
   @ApiPropertyOptional({ description: 'Número de página, empieza en 1' })
-  @ValidateIf((o: PaginationRequest) => o.pageSize !== undefined) // validate page if pageSize is provided
-  @IsInt({ message: 'Page must be an integer if pageSize is provided' })
+  @ValidateIf((o: PaginationRequest) => o.limit !== undefined) // validate page if limit is provided
+  @IsInt({ message: 'Page must be an integer if limit is provided' })
   @Min(1)
   @Type(() => Number)
   page?: number;
@@ -21,11 +21,11 @@ export class PaginationRequest {
   @ApiPropertyOptional({
     description: 'Cantidad de elementos por página, empieza en 1',
   })
-  @ValidateIf((o: PaginationRequest) => o.page !== undefined) // validate pageSize if page is provided
-  @IsInt({ message: 'pageSize must be an integer if page is provided' })
+  @ValidateIf((o: PaginationRequest) => o.page !== undefined) // validate limit if page is provided
+  @IsInt({ message: 'limit must be an integer if page is provided' })
   @Min(1)
   @Type(() => Number)
-  pageSize?: number;
+  limit?: number;
 
   @ApiPropertyOptional({ description: 'Término de búsqueda global' })
   @IsOptional()
@@ -45,22 +45,6 @@ export class PaginationRequest {
   createdAtMax?: Date;
 
   @ApiPropertyOptional({
-    description: 'Incluir tanto activos como eliminados (soft delete)',
-  })
-  @IsOptional()
-  @Type(() => Boolean)
-  @IsBoolean()
-  includeDeleted?: boolean;
-
-  @ApiPropertyOptional({
-    description: 'Mostrar solo usuarios eliminados (soft delete)',
-  })
-  @IsOptional()
-  @Type(() => Boolean)
-  @IsBoolean()
-  onlyDeleted?: boolean;
-
-  @ApiPropertyOptional({
     description: 'Filtrar por fecha de eliminación mínima (soft delete)',
   })
   @IsOptional()
@@ -77,11 +61,10 @@ export class PaginationRequest {
   deletedAtMax?: Date;
 
   @ApiPropertyOptional({
-    description: 'Filtrar por estado activo/inactivo',
-    enum: [true, false],
+    description:
+      'Filtrar por estado. Omitido o `true` devuelve solo los activos; ' +
+      '`false` devuelve solo los eliminados (soft delete).',
   })
-  @IsOptional()
-  @Type(() => Boolean)
-  @IsBoolean()
+  @IsBooleanOptional()
   isActive?: boolean;
 }

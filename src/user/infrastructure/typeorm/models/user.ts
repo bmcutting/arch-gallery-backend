@@ -1,7 +1,7 @@
 import { CommentModel } from 'src/comment/infrastructure/typeorm/models/comment';
 import { LikeModel } from 'src/like/infrastructure/typeorm/models/like';
 import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project';
-import { Model } from 'src/shared/typeorm/base.model';
+import { Model } from 'src/shared/infrastructure/typeorm/models/base.model';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { SkillModel } from './skill';
 import { ExperienceModel } from './experience';

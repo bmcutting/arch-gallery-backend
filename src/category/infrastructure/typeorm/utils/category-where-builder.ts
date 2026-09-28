@@ -1,6 +1,6 @@
-import { BaseWhereBuilder } from 'src/shared/utils/base-where-builder';
+import { BaseWhereBuilder } from 'src/shared/infrastructure/typeorm/utils/base-where-builder';
 import { FindOptionsWhere } from 'typeorm';
-import { WhereUtils } from 'src/shared/utils/create-where';
+import { WhereUtils } from 'src/shared/infrastructure/typeorm/utils/where-utils';
 import { CategoryModel } from '../models/category';
 import { CategoryPaginationParams } from 'src/category/domain/interfaces/category-pagination';
 
@@ -12,8 +12,6 @@ export class CategoryWhereBuilder extends BaseWhereBuilder<
     where: FindOptionsWhere<CategoryModel>,
     filters: CategoryPaginationParams,
   ): FindOptionsWhere<CategoryModel> | FindOptionsWhere<CategoryModel>[] {
-    where.isActive = this.getSoftDeleteFilter(filters);
-
     this.applyStandardFilters(where, filters);
 
     if (filters.search) {
@@ -46,13 +44,5 @@ export class CategoryWhereBuilder extends BaseWhereBuilder<
     });
 
     return searchConditions;
-  }
-
-  private getSoftDeleteFilter(
-    filters: CategoryPaginationParams,
-  ): boolean | undefined {
-    if (filters.onlyDeleted) return false;
-    if (filters.includeDeleted) return undefined;
-    return true;
   }
 }

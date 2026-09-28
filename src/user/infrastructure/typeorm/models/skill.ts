@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { UserModel } from './user';
-import { Model } from 'src/shared/typeorm/base.model';
+import { Model } from 'src/shared/infrastructure/typeorm/models/base.model';
 import { Level } from 'src/user/domain/enums/level';
 
 @Entity({ name: 'skills' })

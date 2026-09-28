@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 
 interface Props {
   id?: string;
@@ -20,7 +20,7 @@ export class RefreshToken {
   revokedAt: Date | null;
 
   constructor(props: Props) {
-    this.id = props.id ?? uuidv4();
+    this.id = props.id ?? randomUUID();
     this.userId = props.userId;
     this.token = props.token;
     this.expiresAt = props.expiresAt;

@@ -1,9 +1,5 @@
 import * as bcrypt from 'bcryptjs';
-
-export interface PasswordHasher {
-  hash(plainPassword: string): Promise<string>;
-  compare(plainPassword: string, hashedPassword: string): Promise<boolean>;
-}
+import type { PasswordHasher } from 'src/user/domain/interfaces/password-hasher';
 
 export class BcryptPasswordHasher implements PasswordHasher {
   private readonly saltRounds = 10;

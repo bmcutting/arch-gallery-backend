@@ -1,5 +1,5 @@
 import { RevokeRefreshToken } from 'src/authentication/domain/services/refresh-token-revoke';
-import { Command } from 'src/shared/interfaces/command.interface';
+import { Command } from 'src/shared/application/interfaces/command.interface';
 
 interface Props {
   refreshToken: string;

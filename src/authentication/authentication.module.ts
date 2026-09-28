@@ -6,7 +6,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from 'src/user/user.module';
 import { AuthController } from './infrastructure/nest/controllers/auth.controller';
 import { TypeOrmRefreshTokenRepository } from './infrastructure/typeorm/repositories/refresh-token.repository';
-import { SharedModule } from 'src/shared/shared.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtAuthGuard } from './infrastructure/nest/guards/jwt-auth.guard';
 
@@ -26,7 +25,6 @@ import { JwtAuthGuard } from './infrastructure/nest/guards/jwt-auth.guard';
       inject: [ConfigService],
     }),
     forwardRef(() => UserModule),
-    SharedModule,
   ],
   controllers: [AuthController],
   providers: [JwtAuthGuard, TypeOrmRefreshTokenRepository],

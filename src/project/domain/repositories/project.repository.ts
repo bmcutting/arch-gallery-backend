@@ -1,6 +1,6 @@
 import { Project } from '../entities/project.entity';
 import { ProjectPaginationParams } from '../interfaces/project-pagination';
-import { PaginationResult } from 'src/shared/domain/interfaces/pagination-result';
+import { PaginationResult } from 'src/shared/domain/interfaces/pagination';
 
 export interface ProjectRepository {
   create(props: CreateProjectProps): Promise<string>;

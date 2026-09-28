@@ -11,7 +11,7 @@ export class PaginationResponse<T> {
   totalPages: number;
 
   @ApiProperty({ description: 'Cantidad de elementos por página' })
-  pageSize: number;
+  limit: number;
 
   @ApiProperty({ description: 'Indica si hay una página siguiente' })
   hasNextPage: boolean;

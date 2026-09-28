@@ -1,4 +1,4 @@
-import { Command } from 'src/shared/interfaces/command.interface';
+import { Command } from 'src/shared/application/interfaces/command.interface';
 import { DeleteLikeRequest } from './requests/delete-like.request';
 import { LikeRepository } from 'src/like/domain/repositories/like.repository';
 

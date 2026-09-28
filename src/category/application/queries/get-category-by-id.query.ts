@@ -1,4 +1,4 @@
-import { Query } from 'src/shared/interfaces/queries.interface';
+import { Query } from 'src/shared/application/interfaces/queries.interface';
 import { CategoryResponseMapper } from '../mappers/category.mapper';
 import { CategoryRepository } from 'src/category/domain/repositories/category.repository';
 import { NotFoundCategoryException } from 'src/category/domain/exceptions/category';
@@ -7,7 +7,7 @@ import { GetCategoryByIdRequest } from './requests/category-get-by-id.request';
 
 export class GetCategoryByIdQuery implements Query<
   GetCategoryByIdRequest,
-  Promise<CategoryResponse>
+  CategoryResponse
 > {
   constructor(private readonly categoryRepository: CategoryRepository) {}
 

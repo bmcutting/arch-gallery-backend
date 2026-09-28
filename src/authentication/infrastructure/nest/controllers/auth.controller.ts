@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { TypeOrmUserRepository } from 'src/user/infrastructure/typeorm/repository/user';
 import { TypeOrmRefreshTokenRepository } from '../../typeorm/repositories/refresh-token.repository';
-import { BcryptPasswordHasher } from 'src/shared/utils/password-hasher';
+import { BcryptPasswordHasher } from 'src/user/infrastructure/services/bcrypt-password-hasher';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   GenerateJwtToken,
