@@ -1,29 +1,41 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { Logger as NestLogger } from '@nestjs/common';
+import { Logger } from 'nestjs-pino';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { EnvService } from './env/services/env';
+import { SafeValidationPipe } from './shared/infrastructure/nest/pipes/safe-validation.pipe';
+import { parseCorsOrigins } from './shared/infrastructure/utils/cors';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  // `bufferLogs` retiene lo que Nest escribe durante el arranque hasta que
+  // `useLogger` esta puesto; sin esto esas lineas saldrian con el logger por
+  // defecto y se perderia el formato.
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  app.useLogger(app.get(Logger));
+
   const env = app.get(EnvService);
   const swaggerEnabled = env.NODE_ENV !== 'production' || env.SWAGGER_ENABLED;
 
   app.useGlobalPipes(
-    new ValidationPipe({
+    new SafeValidationPipe({
       transform: true,
       whitelist: true,
+      forbidNonWhitelisted: true,
       transformOptions: { enableImplicitConversion: true },
     }),
   );
 
-  // La allowlist con parseCorsOrigins llega en la Fase 2b.
-  const corsOrigins = (env.CORS_ORIGINS || env.FRONTEND_URL)
-    .split(',')
-    .map((origin) => origin.trim())
-    .filter(Boolean);
-
-  app.enableCors({ origin: corsOrigins, credentials: true });
+  app.enableCors({
+    origin: parseCorsOrigins(env.CORS_ORIGINS || env.FRONTEND_URL),
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    // `x-request-id` va emparejado con el `genReqId` de Pino: permite que el
+    // frontend mande su propio id de correlacion y seguirlo en los dos logs.
+    allowedHeaders: ['Authorization', 'Content-Type', 'x-request-id'],
+    // La autenticacion va por `Authorization: Bearer`, no por cookies.
+    credentials: false,
+    maxAge: 86400,
+  });
 
   const config = new DocumentBuilder()
     .setTitle('ArchGallery Backend API')
@@ -44,6 +56,7 @@ async function bootstrap() {
     .addTag('Categories', 'Operaciones de categorías')
     .addTag('Comments', 'Operaciones de comentarios')
     .addTag('Experiences', 'Operaciones de experiencias de usuarios')
+    .addTag('Health', 'Estado del servicio')
     .addTag('Likes', 'Operaciones de likes')
     .addTag('Projects', 'Operaciones de pryectos')
     .addTag('Skills', 'Operaciones de habilidades de usuarios')
@@ -63,7 +76,7 @@ async function bootstrap() {
 
   await app.listen(env.PORT);
 
-  const logger = new Logger('Bootstrap');
+  const logger = new NestLogger('Bootstrap');
   logger.log(`Server running on http://localhost:${env.PORT}`);
   if (swaggerEnabled) {
     logger.log(`Swagger documentation at http://localhost:${env.PORT}/api`);
