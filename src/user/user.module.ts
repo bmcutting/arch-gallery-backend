@@ -3,9 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmUserRepository } from './infrastructure/typeorm/repository/user';
 import { UserModel } from './infrastructure/typeorm/models/user';
 import { UserController } from './infrastructure/nest/controllers/user.controller';
-import { EnvService } from 'src/app/modules/env/services/env';
 import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
 import { ExperienceController } from './infrastructure/nest/controllers/experience.controller';
 import { SkillController } from './infrastructure/nest/controllers/skill.controller';
 import { TypeOrmSkillRepository } from './infrastructure/typeorm/repository/skill';
@@ -22,9 +20,7 @@ import { BcryptPasswordHasher } from './infrastructure/services/bcrypt-password-
     TypeOrmSkillRepository,
     TypeOrmExperienceRepository,
     BcryptPasswordHasher,
-    EnvService,
     JwtService,
-    ConfigService,
   ],
   exports: [
     TypeOrmUserRepository,

@@ -8,7 +8,6 @@ import { TypeOrmProjectRepository } from 'src/project/infrastructure/typeorm/rep
 import { LikeModel } from 'src/like/infrastructure/typeorm/models/like';
 import { CommentModel } from 'src/comment/infrastructure/typeorm/models/comment';
 import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -24,7 +23,6 @@ import { ConfigService } from '@nestjs/config';
     TypeOrmCategoryRepository,
     TypeOrmProjectRepository,
     JwtService,
-    ConfigService,
   ],
   exports: [TypeOrmCategoryRepository],
 })

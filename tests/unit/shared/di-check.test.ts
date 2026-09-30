@@ -7,6 +7,7 @@ import { DomainExceptionFilter } from 'src/shared/infrastructure/nest/filters/do
 import { Global, Module } from '@nestjs/common';
 
 import { SharedModule } from 'src/shared/shared.module';
+import { EnvModule } from 'src/env/env.module';
 import { CategoryModule } from 'src/category/category.module';
 import { ProjectModule } from 'src/project/project.module';
 import { UserModule } from 'src/user/user.module';
@@ -45,7 +46,12 @@ class FakeDataSourceModule {}
 
 async function compile(...modules: unknown[]) {
   let builder = Test.createTestingModule({
-    imports: [FakeDataSourceModule, SharedModule, ...(modules as never[])],
+    imports: [
+      FakeDataSourceModule,
+      EnvModule,
+      SharedModule,
+      ...(modules as never[]),
+    ],
   });
   for (const model of MODELS) {
     builder = builder.overrideProvider(getRepositoryToken(model)).useValue({});
@@ -58,13 +64,26 @@ async function compile(...modules: unknown[]) {
 describe('grafo de inyección de dependencias', () => {
   // EnvService usa getOrThrow, así que UserModule no se instancia sin estas variables.
   beforeAll(() => {
-    process.env.DATABASE_NAME ??= 'test';
-    process.env.DATABASE_USERNAME ??= 'test';
-    process.env.DATABASE_PASSWORD ??= 'test';
-    process.env.DATABASE_PORT ??= '5432';
-    process.env.DATABASE_HOST ??= 'localhost';
-    process.env.TOKEN_SECRET_WORD ??= 'test';
-    process.env.REFRESH_SECRET_WORD ??= 'test';
+    process.env.NODE_ENV ??= 'local';
+    process.env.PORT ??= '3000';
+    process.env.DB_HOST ??= 'localhost';
+    process.env.DB_PORT ??= '5432';
+    process.env.DB_NAME ??= 'test';
+    process.env.DB_USERNAME ??= 'test';
+    process.env.DB_PASSWORD ??= 'test';
+    process.env.DB_SYNCHRONIZE ??= 'false';
+    process.env.DB_RUN_MIGRATIONS ??= 'false';
+    process.env.DB_DROP_SCHEMA ??= 'false';
+    process.env.DB_SSL ??= 'false';
+    process.env.DB_SSL_REJECT_UNAUTHORIZED ??= 'true';
+    process.env.SWAGGER_ENABLED ??= 'false';
+    process.env.FRONTEND_URL ??= 'http://localhost:5173';
+    process.env.JWT_SECRET ??= 'test';
+    process.env.JWT_EXPIRATION_TIME ??= '1d';
+    process.env.JWT_ALGORITHM ??= 'HS256';
+    process.env.REFRESH_TOKEN_EXPIRATION_TIME ??= '30d';
+    process.env.LOG_LEVEL ??= 'info';
+    process.env.LOG_HEALTHCHECK ??= 'false';
   });
   it.each([
     ['CategoryModule', CategoryModule],

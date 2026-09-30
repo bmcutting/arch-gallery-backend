@@ -20,9 +20,20 @@
     // Las entidades de TypeORM declaran sus columnas sin inicializador: el valor
     // lo pone el ORM al hidratar. Explicito para que no dependa de `strict`.
     "strictPropertyInitialization": false,
+    // Los inicializadores de campo se emiten dentro del constructor, despues de
+    // asignar los parametros. Permite `readonly X = this.config.getOrThrow(...)`
+    // en EnvService, y evita que los campos declarados sin inicializar de los
+    // modelos de TypeORM se materialicen como propiedades con valor undefined.
+    "useDefineForClassFields": false,
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false
+  },
+  // baseUrl resuelve los imports absolutos `src/...` al compilar, pero ts-node
+  // los necesita tambien en runtime: la CLI de TypeORM y el seeder cargan los
+  // modelos directamente desde .ts.
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
   }
 }

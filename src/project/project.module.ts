@@ -8,7 +8,6 @@ import { UserModel } from 'src/user/infrastructure/typeorm/models/user';
 import { LikeModel } from '../like/infrastructure/typeorm/models/like';
 import { CommentModel } from '../comment/infrastructure/typeorm/models/comment';
 import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
 import { CategoryModel } from 'src/category/infrastructure/typeorm/models/category';
 
 @Module({
@@ -26,7 +25,6 @@ import { CategoryModel } from 'src/category/infrastructure/typeorm/models/catego
     TypeOrmProjectRepository,
     TypeOrmUserRepository,
     JwtService,
-    ConfigService,
   ],
   exports: [TypeOrmProjectRepository],
 })

@@ -5,7 +5,6 @@ import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project'
 import { LikeModel } from './infrastructure/typeorm/models/like';
 import { TypeOrmProjectRepository } from 'src/project/infrastructure/typeorm/repository/project';
 import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
 import { LikeController } from './infrastructure/nest/controllers/like.controller';
 import { TypeOrmLikeRepository } from './infrastructure/typeorm/repository/like';
 import { CategoryModel } from 'src/category/infrastructure/typeorm/models/category';
@@ -24,7 +23,6 @@ import { CategoryModel } from 'src/category/infrastructure/typeorm/models/catego
     TypeOrmProjectRepository,
     TypeOrmLikeRepository,
     JwtService,
-    ConfigService,
   ],
   exports: [TypeOrmLikeRepository],
 })
