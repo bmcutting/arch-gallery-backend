@@ -3,8 +3,6 @@ import { UserRepository } from '../repositories/user.repository';
 import { RepeatUserException } from '../exceptions/user';
 import { Skill } from '../entities/skill.entity';
 import { Experience } from '../entities/experience.entity';
-import { ExperienceType } from '../enums/experience';
-import { Level } from '../enums/level';
 import type IdGenerator from 'src/shared/domain/interfaces/id.generator';
 
 export interface UpdateUserProps {
