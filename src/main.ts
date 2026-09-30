@@ -1,12 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { EnvService } from './env/services/env';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    rawBody: true,
-  });
+  const app = await NestFactory.create(AppModule);
+  const env = app.get(EnvService);
+  const swaggerEnabled = env.NODE_ENV !== 'production' || env.SWAGGER_ENABLED;
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -16,9 +17,8 @@ async function bootstrap() {
     }),
   );
 
-  const corsOrigins = (
-    process.env.CORS_ORIGINS ?? 'http://localhost:3000,http://localhost:5173'
-  )
+  // La allowlist con parseCorsOrigins llega en la Fase 2b.
+  const corsOrigins = (env.CORS_ORIGINS || env.FRONTEND_URL)
     .split(',')
     .map((origin) => origin.trim())
     .filter(Boolean);
@@ -50,15 +50,23 @@ async function bootstrap() {
     .addTag('Users', 'Operaciones de usuarios')
     .build();
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  if (swaggerEnabled) {
+    SwaggerModule.setup('api', app, SwaggerModule.createDocument(app, config), {
+      jsonDocumentUrl: 'api/json',
+      swaggerOptions: {
+        persistAuthorization: true,
+        tagsSorter: 'alpha',
+        operationsSorter: 'alpha',
+      },
+    });
+  }
 
-  await app.listen(process.env.PORT ?? 3000);
-  console.log(
-    `🚀 Server running on: http://localhost:${process.env.PORT ?? 3000}`,
-  );
-  console.log(
-    `📚 Swagger documentation: http://localhost:${process.env.PORT ?? 3000}/api`,
-  );
+  await app.listen(env.PORT);
+
+  const logger = new Logger('Bootstrap');
+  logger.log(`Server running on http://localhost:${env.PORT}`);
+  if (swaggerEnabled) {
+    logger.log(`Swagger documentation at http://localhost:${env.PORT}/api`);
+  }
 }
 void bootstrap();
