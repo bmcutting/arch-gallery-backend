@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class DeleteProjectRequest {
   @ApiProperty({ description: 'Id del proyecto a eliminar' })
@@ -7,5 +7,8 @@ export class DeleteProjectRequest {
   @IsString()
   projectId: string;
 
+  @ApiHideProperty()
+  @IsOptional()
+  @IsString()
   currentUserId: string;
 }

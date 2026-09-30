@@ -1,9 +1,12 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiHideProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Experience } from 'src/user/domain/entities/experience.entity';
 import { Skill } from 'src/user/domain/entities/skill.entity';
 
 export class UpdateUserRequest {
+  @ApiHideProperty()
+  @IsOptional()
+  @IsString()
   userId: string;
 
   @ApiPropertyOptional({ description: 'Correo electrónico del usuario' })

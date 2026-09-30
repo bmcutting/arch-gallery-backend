@@ -1,12 +1,11 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional } from 'class-validator';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { IsOptional, IsString } from 'class-validator';
 import { ExperienceType } from 'src/user/domain/enums/experience';
 
 export class UpdateExperienceRequest {
-  @ApiProperty({
-    description: 'Id único de la experiencia a actualizar',
-    example: 'a1b2c3d4-e5f6-7890-abcd-1234567890ef',
-  })
+  @ApiHideProperty()
+  @IsOptional()
+  @IsString()
   experienceId: string;
 
   @ApiProperty({
