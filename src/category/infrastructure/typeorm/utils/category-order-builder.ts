@@ -1,7 +1,7 @@
 import { SortOption } from 'src/shared/domain/interfaces/sort-option';
 import { FindOptionsOrder } from 'typeorm';
 import { BaseOrderBuilder } from 'src/shared/infrastructure/typeorm/utils/base-order-builder';
-import { CategoryModel } from '../models/category';
+import { CategoryModel } from '../models/category.model';
 import { CategorySortFields } from 'src/category/domain/enums/category-sort-fields';
 
 export class CategoryOrderBuilder extends BaseOrderBuilder<

@@ -1,5 +1,5 @@
 import { UserSortFields } from 'src/user/domain/enums/user-sort-fields';
-import { UserModel } from '../models/user';
+import { UserModel } from '../models/user.model';
 import { SortOption } from 'src/shared/domain/interfaces/sort-option';
 import { FindOptionsOrder } from 'typeorm';
 import { BaseOrderBuilder } from 'src/shared/infrastructure/typeorm/utils/base-order-builder';

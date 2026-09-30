@@ -1,12 +1,12 @@
 import {
   Column,
   CreateDateColumn,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 export class Model {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn({ type: 'varchar', length: 26 })
   id: string;
 
   @CreateDateColumn({ type: 'timestamptz' })

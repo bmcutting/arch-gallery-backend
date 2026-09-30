@@ -1,8 +1,8 @@
-import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project';
+import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project.model';
 import { Model } from 'src/shared/infrastructure/typeorm/models/base.model';
 import { Column, Entity, ManyToMany } from 'typeorm';
 
-@Entity({ name: 'categories' })
+@Entity()
 export class CategoryModel extends Model {
   @Column({ type: 'text', unique: true, nullable: false })
   name: string;

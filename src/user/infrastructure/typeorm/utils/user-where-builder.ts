@@ -1,5 +1,5 @@
 import { BaseWhereBuilder } from 'src/shared/infrastructure/typeorm/utils/base-where-builder';
-import { UserModel } from '../models/user';
+import { UserModel } from '../models/user.model';
 import { UserPaginationParams } from 'src/user/domain/interfaces/user-pagination';
 import { FindOptionsWhere } from 'typeorm';
 import { WhereUtils } from 'src/shared/infrastructure/typeorm/utils/where-utils';

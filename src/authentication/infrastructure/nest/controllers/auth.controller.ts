@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { TypeOrmUserRepository } from 'src/user/infrastructure/typeorm/repository/user';
 import { TypeOrmRefreshTokenRepository } from '../../typeorm/repositories/refresh-token.repository';
 import { BcryptPasswordHasher } from 'src/user/infrastructure/services/bcrypt-password-hasher';
+import { UlidGenerator } from 'src/shared/infrastructure/services/ulid.generator';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   GenerateJwtToken,
@@ -38,6 +39,8 @@ export class AuthController {
     private readonly refreshTokenRepository: TypeOrmRefreshTokenRepository,
     @Inject()
     private readonly passwordHasher: BcryptPasswordHasher,
+    @Inject()
+    private readonly idGenerator: UlidGenerator,
   ) {}
 
   @Post('refresh')
@@ -85,6 +88,7 @@ export class AuthController {
     const refreshTokenGenerateService = new GenerateRefreshToken(
       this.configService,
       this.refreshTokenRepository,
+      this.idGenerator,
     );
 
     const revokeRefreshTokenService = new RevokeRefreshToken(
@@ -135,6 +139,7 @@ export class AuthController {
     const refreshTokenGenerateService = new GenerateRefreshToken(
       this.configService,
       this.refreshTokenRepository,
+      this.idGenerator,
     );
 
     const authenticateUserService = new AuthenticateUserWithTokens(

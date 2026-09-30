@@ -1,8 +1,9 @@
+import { UlidGenerator } from 'src/shared/infrastructure/services/ulid.generator';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { SkillModel } from '../models/skill';
+import { SkillModel } from '../models/skill.model';
 import { ILike, Repository } from 'typeorm';
-import { UserModel } from '../models/user';
+import { UserModel } from '../models/user.model';
 import {
   CreateSkillProps,
   SkillRepository,
@@ -19,6 +20,7 @@ export class TypeOrmSkillRepository implements SkillRepository {
     private readonly skillRepository: Repository<SkillModel>,
     @InjectRepository(UserModel)
     private readonly userRepository: Repository<UserModel>,
+    private readonly ids: UlidGenerator,
   ) {}
 
   async create(props: CreateSkillProps): Promise<string> {
@@ -44,6 +46,7 @@ export class TypeOrmSkillRepository implements SkillRepository {
     }
 
     const newSkill = new SkillModel();
+    newSkill.id = this.ids.create();
     newSkill.name = props.name;
     newSkill.level = props.level ?? null;
 

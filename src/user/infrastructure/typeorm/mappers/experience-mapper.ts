@@ -1,5 +1,5 @@
 import { Experience } from 'src/user/domain/entities/experience.entity';
-import { ExperienceModel } from '../models/experience';
+import { ExperienceModel } from '../models/experience.model';
 
 export class ExperienceTypeOrmMapper {
   static toDomain(model: ExperienceModel): Experience {

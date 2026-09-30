@@ -1,5 +1,5 @@
 import { Comment } from 'src/comment/domain/entities/comment.entity';
-import { CommentModel } from '../models/comment';
+import { CommentModel } from '../models/comment.model';
 
 export class CommentTypeOrmMapper {
   constructor() {}
@@ -7,8 +7,8 @@ export class CommentTypeOrmMapper {
   static execute(c: CommentModel): Comment {
     return new Comment({
       id: c.id,
-      userId: c.userId,
-      projectId: c.projectId,
+      userId: c.user_id,
+      projectId: c.project_id,
       message: c.message,
       isActive: c.isActive,
       createdAt: c.createdAt,

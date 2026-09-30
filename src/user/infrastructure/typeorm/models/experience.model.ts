@@ -1,9 +1,9 @@
-import { Column, Entity, ManyToOne } from 'typeorm';
-import { UserModel } from './user';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { UserModel } from './user.model';
 import { Model } from 'src/shared/infrastructure/typeorm/models/base.model';
 import { ExperienceType } from 'src/user/domain/enums/experience';
 
-@Entity({ name: 'experiences' })
+@Entity()
 export class ExperienceModel extends Model {
   @Column({ type: 'enum', enum: ExperienceType })
   type: ExperienceType;
@@ -27,5 +27,6 @@ export class ExperienceModel extends Model {
   isCurrent: boolean;
 
   @ManyToOne(() => UserModel, (user) => user.experiences)
+  @JoinColumn({ name: 'user_id' })
   user: UserModel;
 }

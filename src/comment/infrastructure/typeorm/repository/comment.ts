@@ -1,9 +1,10 @@
+import { UlidGenerator } from 'src/shared/infrastructure/services/ulid.generator';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CommentRepository } from 'src/comment/domain/repositories/comment.repository';
-import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project';
+import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project.model';
 import { Repository } from 'typeorm';
-import { CommentModel } from '../models/comment';
-import { UserModel } from 'src/user/infrastructure/typeorm/models/user';
+import { CommentModel } from '../models/comment.model';
+import { UserModel } from 'src/user/infrastructure/typeorm/models/user.model';
 import { CommentTypeOrmMapper } from '../mappers/comment.mapper';
 import { Comment } from 'src/comment/domain/entities/comment.entity';
 
@@ -11,6 +12,7 @@ export class TypeOrmCommentRepository implements CommentRepository {
   constructor(
     @InjectRepository(CommentModel)
     private readonly commentRepository: Repository<CommentModel>,
+    private readonly ids: UlidGenerator,
   ) {}
 
   async addComment(
@@ -19,6 +21,7 @@ export class TypeOrmCommentRepository implements CommentRepository {
     text: string,
   ): Promise<void> {
     const comment = new CommentModel();
+    comment.id = this.ids.create();
     comment.project = { id: projectId } as ProjectModel;
     comment.user = { id: userId } as UserModel;
     comment.message = text;
@@ -47,7 +50,7 @@ export class TypeOrmCommentRepository implements CommentRepository {
 
   async findByProjectId(projectId: string): Promise<Comment[]> {
     const found = await this.commentRepository.find({
-      where: { projectId },
+      where: { project_id: projectId },
       relations: { user: true },
       order: { createdAt: 'DESC' },
     });

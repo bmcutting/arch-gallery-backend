@@ -1,5 +1,5 @@
 import { Skill } from 'src/user/domain/entities/skill.entity';
-import { SkillModel } from '../models/skill';
+import { SkillModel } from '../models/skill.model';
 
 export class SkillTypeOrmMapper {
   static toDomain(model: SkillModel): Skill {

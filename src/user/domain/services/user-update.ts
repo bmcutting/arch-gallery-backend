@@ -5,6 +5,7 @@ import { Skill } from '../entities/skill.entity';
 import { Experience } from '../entities/experience.entity';
 import { ExperienceType } from '../enums/experience';
 import { Level } from '../enums/level';
+import type IdGenerator from 'src/shared/domain/interfaces/id.generator';
 
 export interface UpdateUserProps {
   email?: string;
@@ -30,7 +31,10 @@ export interface UpdateUserProps {
 }
 
 export class UpdateUser {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly ids: IdGenerator,
+  ) {}
 
   async execute(user: User, props: UpdateUserProps): Promise<User> {
     let hasChanges = false;
@@ -153,7 +157,7 @@ export class UpdateUser {
     if (props.skills !== undefined) {
       const skillInstances = props.skills.map((skillData) => {
         return new Skill({
-          id: skillData.id,
+          id: skillData.id ?? this.ids.create(),
           name: skillData.name,
           level: skillData.level,
         });
@@ -169,7 +173,7 @@ export class UpdateUser {
       const experienceInstances: Experience[] = props.experiences.map(
         (expData) =>
           new Experience({
-            id: expData.id,
+            id: expData.id ?? this.ids.create(),
             type: expData.type,
             title: expData.title,
             institutionOrCompany: expData.institutionOrCompany,

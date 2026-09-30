@@ -1,12 +1,12 @@
-import { CommentModel } from 'src/comment/infrastructure/typeorm/models/comment';
-import { LikeModel } from 'src/like/infrastructure/typeorm/models/like';
-import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project';
+import { CommentModel } from 'src/comment/infrastructure/typeorm/models/comment.model';
+import { LikeModel } from 'src/like/infrastructure/typeorm/models/like.model';
+import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project.model';
 import { Model } from 'src/shared/infrastructure/typeorm/models/base.model';
 import { Column, Entity, OneToMany } from 'typeorm';
-import { SkillModel } from './skill';
-import { ExperienceModel } from './experience';
+import { SkillModel } from './skill.model';
+import { ExperienceModel } from './experience.model';
 
-@Entity({ name: 'users' })
+@Entity()
 export class UserModel extends Model {
   @Column({ type: 'varchar', length: 100, unique: true })
   userName: string;

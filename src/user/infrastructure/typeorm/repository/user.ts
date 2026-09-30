@@ -1,10 +1,11 @@
+import { UlidGenerator } from 'src/shared/infrastructure/services/ulid.generator';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   CreateUserProps,
   UserRepository,
 } from 'src/user/domain/repositories/user.repository';
-import { UserModel } from '../models/user';
+import { UserModel } from '../models/user.model';
 import { Repository } from 'typeorm';
 import { PaginationResult } from 'src/shared/domain/interfaces/pagination';
 import { User } from 'src/user/domain/entities/user.entity';
@@ -25,10 +26,12 @@ export class TypeOrmUserRepository implements UserRepository {
   constructor(
     @InjectRepository(UserModel)
     private readonly userRepository: Repository<UserModel>,
+    private readonly ids: UlidGenerator,
   ) {}
 
   async create(props: CreateUserProps): Promise<string> {
     const user = new UserModel();
+    user.id = this.ids.create();
     user.userName = props.userName;
     user.password = props.password;
     user.email = props.email;

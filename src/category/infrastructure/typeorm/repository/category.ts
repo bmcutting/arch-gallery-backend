@@ -1,14 +1,15 @@
+import { UlidGenerator } from 'src/shared/infrastructure/services/ulid.generator';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   CategoryRepository,
   CreateCategoryProps,
 } from 'src/category/domain/repositories/category.repository';
-import { CategoryModel } from '../models/category';
+import { CategoryModel } from '../models/category.model';
 import { ILike, Repository } from 'typeorm';
 import { Category } from 'src/category/domain/entities/category';
 import { CategoryPaginationParams } from 'src/category/domain/interfaces/category-pagination';
 import { PaginationResult } from 'src/shared/domain/interfaces/pagination';
-import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project';
+import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project.model';
 import { NotFoundProjectException } from 'src/project/domain/exceptions/project';
 import { CategoryTypeOrmMapper } from '../mappers/category.mapper';
 import { NotFoundCategoryException } from 'src/category/domain/exceptions/category';
@@ -25,6 +26,7 @@ export class TypeOrmCategoryRepository implements CategoryRepository {
     private readonly categoryRepository: Repository<CategoryModel>,
     @InjectRepository(ProjectModel)
     private readonly projectRepository: Repository<ProjectModel>,
+    private readonly ids: UlidGenerator,
   ) {}
 
   async create(props: CreateCategoryProps): Promise<string> {
@@ -51,7 +53,10 @@ export class TypeOrmCategoryRepository implements CategoryRepository {
       return category.id;
     }
 
-    category = this.categoryRepository.create({ name: props.name.trim() });
+    category = this.categoryRepository.create({
+      id: this.ids.create(),
+      name: props.name.trim(),
+    });
     await this.categoryRepository.save(category);
     project.categories.push(category);
     await this.projectRepository.save(project);

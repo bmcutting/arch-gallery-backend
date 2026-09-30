@@ -1,5 +1,5 @@
 import { Category } from 'src/category/domain/entities/category';
-import { CategoryModel } from '../models/category';
+import { CategoryModel } from '../models/category.model';
 
 export class CategoryTypeOrmMapper {
   constructor() {}

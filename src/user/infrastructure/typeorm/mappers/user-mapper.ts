@@ -1,5 +1,5 @@
 import { User } from 'src/user/domain/entities/user.entity';
-import { UserModel } from '../models/user';
+import { UserModel } from '../models/user.model';
 import { SkillTypeOrmMapper } from './skill-mapper';
 import { ExperienceTypeOrmMapper } from './experience-mapper';
 

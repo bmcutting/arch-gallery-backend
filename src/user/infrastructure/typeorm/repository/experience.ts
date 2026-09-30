@@ -1,8 +1,9 @@
+import { UlidGenerator } from 'src/shared/infrastructure/services/ulid.generator';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ExperienceModel } from '../models/experience';
+import { ExperienceModel } from '../models/experience.model';
 import { Repository } from 'typeorm';
-import { UserModel } from '../models/user';
+import { UserModel } from '../models/user.model';
 import { ExperienceTypeOrmMapper } from '../mappers/experience-mapper';
 import {
   CreateExperienceProps,
@@ -19,6 +20,7 @@ export class TypeOrmExperienceRepository implements ExperienceRepository {
     private readonly experienceRepository: Repository<ExperienceModel>,
     @InjectRepository(UserModel)
     private readonly userRepository: Repository<UserModel>,
+    private readonly ids: UlidGenerator,
   ) {}
 
   async create(props: CreateExperienceProps): Promise<string> {
@@ -30,6 +32,8 @@ export class TypeOrmExperienceRepository implements ExperienceRepository {
     }
 
     const experience = new ExperienceModel();
+    experience.id = this.ids.create();
+    experience.user = { id: props.userId } as UserModel;
     experience.type = props.type;
     experience.title = props.title;
     experience.institutionOrCompany = props.institutionOrCompany;
@@ -39,8 +43,6 @@ export class TypeOrmExperienceRepository implements ExperienceRepository {
     experience.isCurrent = props.isCurrent ?? false;
 
     await this.experienceRepository.save(experience);
-    user.experiences.push(experience);
-    await this.userRepository.save(user);
 
     return experience.id;
   }

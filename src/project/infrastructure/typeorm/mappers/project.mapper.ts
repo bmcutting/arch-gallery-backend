@@ -1,5 +1,5 @@
 import { Project } from 'src/project/domain/entities/project.entity';
-import { ProjectModel } from '../models/project';
+import { ProjectModel } from '../models/project.model';
 import { UserTypeOrmMapper } from 'src/user/infrastructure/typeorm/mappers/user-mapper';
 import { CategoryTypeOrmMapper } from 'src/category/infrastructure/typeorm/mappers/category.mapper';
 import { LikeTypeOrmMapper } from '../../../../like/infrastructure/typeorm/mappers/like.mapper';

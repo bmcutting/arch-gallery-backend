@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmCommentRepository } from './infrastructure/typeorm/repository/comment';
-import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project';
-import { CommentModel } from './infrastructure/typeorm/models/comment';
+import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project.model';
+import { CommentModel } from './infrastructure/typeorm/models/comment.model';
 import { CommentController } from './infrastructure/nest/controllers/comment.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmProjectRepository } from 'src/project/infrastructure/typeorm/repository/project';
 import { JwtService } from '@nestjs/jwt';
-import { LikeModel } from 'src/like/infrastructure/typeorm/models/like';
-import { CategoryModel } from 'src/category/infrastructure/typeorm/models/category';
+import { LikeModel } from 'src/like/infrastructure/typeorm/models/like.model';
+import { CategoryModel } from 'src/category/infrastructure/typeorm/models/category.model';
 
 @Module({
   imports: [
@@ -19,11 +19,7 @@ import { CategoryModel } from 'src/category/infrastructure/typeorm/models/catego
     ]),
   ],
   controllers: [CommentController],
-  providers: [
-    TypeOrmProjectRepository,
-    TypeOrmCommentRepository,
-    JwtService,
-  ],
+  providers: [TypeOrmProjectRepository, TypeOrmCommentRepository, JwtService],
   exports: [TypeOrmCommentRepository],
 })
 export class CommentModule {}

@@ -14,13 +14,13 @@ import { UserModule } from 'src/user/user.module';
 import { CommentModule } from 'src/comment/comment.module';
 import { LikeModule } from 'src/like/like.module';
 
-import { CategoryModel } from 'src/category/infrastructure/typeorm/models/category';
-import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project';
-import { UserModel } from 'src/user/infrastructure/typeorm/models/user';
-import { CommentModel } from 'src/comment/infrastructure/typeorm/models/comment';
-import { LikeModel } from 'src/like/infrastructure/typeorm/models/like';
-import { SkillModel } from 'src/user/infrastructure/typeorm/models/skill';
-import { ExperienceModel } from 'src/user/infrastructure/typeorm/models/experience';
+import { CategoryModel } from 'src/category/infrastructure/typeorm/models/category.model';
+import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project.model';
+import { UserModel } from 'src/user/infrastructure/typeorm/models/user.model';
+import { CommentModel } from 'src/comment/infrastructure/typeorm/models/comment.model';
+import { LikeModel } from 'src/like/infrastructure/typeorm/models/like.model';
+import { SkillModel } from 'src/user/infrastructure/typeorm/models/skill.model';
+import { ExperienceModel } from 'src/user/infrastructure/typeorm/models/experience.model';
 
 import { TransactionExecutor } from 'src/shared/infrastructure/typeorm/services/typeorm-transaction.executor';
 import { UlidGenerator } from 'src/shared/infrastructure/services/ulid.generator';

@@ -8,7 +8,7 @@ export class RefreshTokenMapper {
   static toDomain(model: RefreshTokenModel): RefreshToken {
     return new RefreshToken({
       id: model.id,
-      userId: model.userId,
+      userId: model.user_id,
       token: model.token,
       expiresAt: model.expiresAt,
       isRevoked: model.isRevoked,
@@ -23,7 +23,7 @@ export class RefreshTokenMapper {
   static toModel(domain: RefreshToken): RefreshTokenModel {
     const model = new RefreshTokenModel();
     model.id = domain.id;
-    model.userId = domain.userId;
+    model.user_id = domain.userId;
     model.token = domain.token;
     model.expiresAt = domain.expiresAt;
     model.isRevoked = domain.isRevoked;

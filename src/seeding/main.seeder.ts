@@ -1,14 +1,14 @@
-import { CategoryModel } from 'src/category/infrastructure/typeorm/models/category';
-import { CommentModel } from 'src/comment/infrastructure/typeorm/models/comment';
-import { LikeModel } from 'src/like/infrastructure/typeorm/models/like';
-import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project';
-import { UserModel } from 'src/user/infrastructure/typeorm/models/user';
+import { CategoryModel } from 'src/category/infrastructure/typeorm/models/category.model';
+import { CommentModel } from 'src/comment/infrastructure/typeorm/models/comment.model';
+import { LikeModel } from 'src/like/infrastructure/typeorm/models/like.model';
+import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project.model';
+import { UserModel } from 'src/user/infrastructure/typeorm/models/user.model';
 import { DataSource } from 'typeorm';
 import { faker } from '@faker-js/faker';
 import { Seeder, SeederFactoryManager } from 'typeorm-extension';
 import * as bcrypt from 'bcryptjs';
-import { SkillModel } from 'src/user/infrastructure/typeorm/models/skill';
-import { ExperienceModel } from 'src/user/infrastructure/typeorm/models/experience';
+import { SkillModel } from 'src/user/infrastructure/typeorm/models/skill.model';
+import { ExperienceModel } from 'src/user/infrastructure/typeorm/models/experience.model';
 
 export class MainSeeder implements Seeder {
   public async run(

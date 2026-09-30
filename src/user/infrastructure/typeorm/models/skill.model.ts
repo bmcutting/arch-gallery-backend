@@ -1,9 +1,9 @@
-import { Column, Entity, ManyToOne } from 'typeorm';
-import { UserModel } from './user';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { UserModel } from './user.model';
 import { Model } from 'src/shared/infrastructure/typeorm/models/base.model';
 import { Level } from 'src/user/domain/enums/level';
 
-@Entity({ name: 'skills' })
+@Entity()
 export class SkillModel extends Model {
   @Column({ type: 'varchar', length: 100, unique: true })
   name: string;
@@ -12,5 +12,6 @@ export class SkillModel extends Model {
   level: Level | null;
 
   @ManyToOne(() => UserModel, (user) => user.skills)
+  @JoinColumn({ name: 'user_id' })
   user: UserModel;
 }

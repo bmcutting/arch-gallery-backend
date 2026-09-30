@@ -13,6 +13,7 @@ import { UserResponse } from 'src/user/application/queries/responses/user.respon
 import { GetAllUsersQuery } from 'src/user/application/queries/get-all-users.query';
 import { UserPaginationRequest } from 'src/user/application/queries/requests/user-pagination.request';
 import { TypeOrmUserRepository } from '../../typeorm/repository/user';
+import { UlidGenerator } from 'src/shared/infrastructure/services/ulid.generator';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -34,7 +35,10 @@ import { User } from 'src/user/domain/entities/user.entity';
 @ApiBearerAuth('JWT-auth')
 @UseGuards(JwtAuthGuard)
 export class UserController {
-  constructor(private readonly userRepository: TypeOrmUserRepository) {}
+  constructor(
+    private readonly userRepository: TypeOrmUserRepository,
+    private readonly ids: UlidGenerator,
+  ) {}
 
   @Get('me')
   @ApiOperation({
@@ -109,7 +113,7 @@ export class UserController {
       throw new ForbiddenException('No puedes modificar otro usuario');
     }
 
-    const updateUserService = new UpdateUser(this.userRepository);
+    const updateUserService = new UpdateUser(this.userRepository, this.ids);
     const command = new UpdateUserCommand(
       this.userRepository,
       updateUserService,

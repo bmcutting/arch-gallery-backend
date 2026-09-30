@@ -1,11 +1,11 @@
 import { Faker } from '@faker-js/faker';
-import { randomUUID } from 'crypto';
-import { UserModel } from '../user/infrastructure/typeorm/models/user';
+import { ulid } from 'ulid';
+import { UserModel } from '../user/infrastructure/typeorm/models/user.model';
 import { setSeederFactory } from 'typeorm-extension';
 
 export const UserFactory = setSeederFactory(UserModel, (faker: Faker) => {
   const user = new UserModel();
-  user.id = randomUUID();
+  user.id = ulid();
   user.userName = faker.internet.username();
   user.email = faker.internet.email();
   user.password = faker.internet.password({ length: 12 });

@@ -1,5 +1,5 @@
 //import { FindOptionsRelations } from 'typeorm';
-//import { UserModel } from '../models/user';
+//import { UserModel } from '../models/user.model';
 
 import { NotImplementedException } from '@nestjs/common';
 

@@ -1,7 +1,7 @@
 import { BaseWhereBuilder } from 'src/shared/infrastructure/typeorm/utils/base-where-builder';
 import { FindOptionsWhere } from 'typeorm';
 import { WhereUtils } from 'src/shared/infrastructure/typeorm/utils/where-utils';
-import { CategoryModel } from '../models/category';
+import { CategoryModel } from '../models/category.model';
 import { CategoryPaginationParams } from 'src/category/domain/interfaces/category-pagination';
 
 export class CategoryWhereBuilder extends BaseWhereBuilder<

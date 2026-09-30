@@ -1,11 +1,12 @@
+import { UlidGenerator } from 'src/shared/infrastructure/services/ulid.generator';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   CreateProjectProps,
   ProjectRepository,
 } from 'src/project/domain/repositories/project.repository';
-import { ProjectModel } from '../models/project';
+import { ProjectModel } from '../models/project.model';
 import { Repository } from 'typeorm';
-import { UserModel } from 'src/user/infrastructure/typeorm/models/user';
+import { UserModel } from 'src/user/infrastructure/typeorm/models/user.model';
 import { Project } from 'src/project/domain/entities/project.entity';
 import { ProjectPaginationParams } from 'src/project/domain/interfaces/project-pagination';
 import { PaginationResult } from 'src/shared/domain/interfaces/pagination';
@@ -16,7 +17,7 @@ import {
   getPaginationInfo,
   getPaginationOptions,
 } from 'src/shared/infrastructure/utils/pagination.util';
-import { CategoryModel } from 'src/category/infrastructure/typeorm/models/category';
+import { CategoryModel } from 'src/category/infrastructure/typeorm/models/category.model';
 
 export class TypeOrmProjectRepository implements ProjectRepository {
   constructor(
@@ -24,10 +25,12 @@ export class TypeOrmProjectRepository implements ProjectRepository {
     private readonly projectRepository: Repository<ProjectModel>,
     @InjectRepository(CategoryModel)
     private readonly categoryRepository: Repository<CategoryModel>,
+    private readonly ids: UlidGenerator,
   ) {}
 
   async create(props: CreateProjectProps): Promise<string> {
     const project = new ProjectModel();
+    project.id = this.ids.create();
     project.title = props.title;
     project.description = props.description ?? '';
     project.year = props.year;
@@ -42,7 +45,10 @@ export class TypeOrmProjectRepository implements ProjectRepository {
         categoryNames.map(async (name) => {
           let category = await this.categoryRepository.findOneBy({ name });
           if (!category) {
-            category = this.categoryRepository.create({ name });
+            category = this.categoryRepository.create({
+              id: this.ids.create(),
+              name,
+            });
             await this.categoryRepository.save(category);
           }
           return category;
@@ -79,7 +85,10 @@ export class TypeOrmProjectRepository implements ProjectRepository {
         categoryNames.map(async (name) => {
           let category = await this.categoryRepository.findOneBy({ name });
           if (!category) {
-            category = this.categoryRepository.create({ name });
+            category = this.categoryRepository.create({
+              id: this.ids.create(),
+              name,
+            });
             await this.categoryRepository.save(category);
           }
           return category;

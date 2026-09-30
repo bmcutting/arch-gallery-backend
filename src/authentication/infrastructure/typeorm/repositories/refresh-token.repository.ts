@@ -27,14 +27,14 @@ export class TypeOrmRefreshTokenRepository implements RefreshTokenRepository {
 
   async findByUserId(userId: string): Promise<RefreshToken[]> {
     const models = await this.repository.find({
-      where: { userId },
+      where: { user_id: userId },
     });
     return RefreshTokenMapper.toDomainList(models);
   }
 
   async revokeByUserId(userId: string): Promise<void> {
     await this.repository.update(
-      { userId, isRevoked: false },
+      { user_id: userId, isRevoked: false },
       { isRevoked: true, revokedAt: new Date() },
     );
   }

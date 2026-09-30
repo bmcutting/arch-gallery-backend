@@ -3,11 +3,13 @@ import { RefreshTokenRepository } from '../repositories/refresh-token.repository
 import * as crypto from 'crypto';
 import { TokenHasher } from './token-hasher';
 import { RefreshToken } from '../entities/refresh-token.entity';
+import IdGenerator from 'src/shared/domain/interfaces/id.generator';
 
 export class GenerateRefreshToken {
   constructor(
     private readonly configService: ConfigService,
     private readonly repository: RefreshTokenRepository,
+    private readonly idGenerator: IdGenerator,
   ) {}
 
   async execute(userId: string): Promise<string> {
@@ -22,6 +24,7 @@ export class GenerateRefreshToken {
     const hashedToken = TokenHasher.hash(token);
 
     const refreshToken = new RefreshToken({
+      id: this.idGenerator.create(),
       userId,
       token: hashedToken,
       expiresAt,

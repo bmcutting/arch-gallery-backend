@@ -1,12 +1,12 @@
 import { Model } from 'src/shared/infrastructure/typeorm/models/base.model';
-import { UserModel } from 'src/user/infrastructure/typeorm/models/user';
+import { UserModel } from 'src/user/infrastructure/typeorm/models/user.model';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity()
 export class RefreshTokenModel extends Model {
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', length: 26 })
   @Index()
-  userId: string;
+  user_id: string;
 
   @Column({ type: 'varchar', length: 255, unique: true })
   @Index()
@@ -22,6 +22,6 @@ export class RefreshTokenModel extends Model {
   revokedAt: Date | null;
 
   @ManyToOne(() => UserModel, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn({ name: 'user_id' })
   user: UserModel;
 }
