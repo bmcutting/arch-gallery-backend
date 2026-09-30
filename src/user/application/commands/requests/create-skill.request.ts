@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional } from 'class-validator';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Level } from 'src/user/domain/enums/level';
 
 export class CreateSkillRequest {
@@ -7,6 +7,8 @@ export class CreateSkillRequest {
     description: 'Nombre de la skill',
     example: 'Modelado 3D',
   })
+  @IsString()
+  @IsNotEmpty()
   name: string;
 
   @ApiProperty({
@@ -15,11 +17,12 @@ export class CreateSkillRequest {
     example: Level.INTERMEDIATE,
   })
   @IsOptional()
+  @IsEnum(Level)
   level: Level;
 
-  @ApiProperty({
-    description: 'Id único del usuario que crea la skill',
-    example: 'a1b2c3d4-e5f6-7890-abcd-1234567890ef',
-  })
+  // Lo asigna el controlador desde el token; se ignora lo que llegue en el body.
+  @ApiHideProperty()
+  @IsOptional()
+  @IsString()
   userId: string;
 }
