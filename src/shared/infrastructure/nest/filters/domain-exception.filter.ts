@@ -3,8 +3,11 @@ import {
   Catch,
   ExceptionFilter,
   HttpStatus,
+  Logger,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import { levelForStatus } from '../../logging/log-level';
+import { userIdFrom } from '../../logging/request-user';
 import {
   DomainException,
   DomainErrorCode,
@@ -22,10 +25,32 @@ const STATUS_BY_CODE: Record<DomainErrorCode, number> = {
  */
 @Catch(DomainException)
 export class DomainExceptionFilter implements ExceptionFilter {
+  private readonly logger = new Logger(DomainExceptionFilter.name);
+
   catch(exception: DomainException, host: ArgumentsHost): void {
-    const response = host.switchToHttp().getResponse<Response>();
+    const http = host.switchToHttp();
+    const request = http.getRequest<Request>();
+    const response = http.getResponse<Response>();
     const statusCode =
       STATUS_BY_CODE[exception.code] ?? HttpStatus.INTERNAL_SERVER_ERROR;
+
+    const payload = {
+      method: request.method,
+      url: request.url,
+      userId: userIdFrom(request),
+      statusCode,
+      code: exception.code,
+      detail: exception.message,
+      ...(exception.field ? { field: exception.field } : {}),
+    };
+
+    // Un `code` desconocido cae a 500, asi que el nivel no puede ser `warn`
+    // fijo: seria el mismo fallo que `pino-http` traia de serie.
+    if (levelForStatus(statusCode) === 'error') {
+      this.logger.error(payload, 'DomainException');
+    } else {
+      this.logger.warn(payload, 'DomainException');
+    }
 
     response.status(statusCode).json({
       statusCode,

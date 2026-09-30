@@ -3,12 +3,14 @@ import { APP_FILTER } from '@nestjs/core';
 import { UlidGenerator } from './infrastructure/services/ulid.generator';
 import { TransactionExecutor } from './infrastructure/typeorm/services/typeorm-transaction.executor';
 import { DomainExceptionFilter } from './infrastructure/nest/filters/domain-exception.filter';
+import { GlobalExceptionFilter } from './infrastructure/nest/filters/global-exception.filter';
 
 @Global()
 @Module({
   providers: [
     UlidGenerator,
     TransactionExecutor,
+    { provide: APP_FILTER, useClass: GlobalExceptionFilter },
     { provide: APP_FILTER, useClass: DomainExceptionFilter },
   ],
   exports: [UlidGenerator, TransactionExecutor],
