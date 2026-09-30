@@ -19,13 +19,6 @@ export interface DomainExceptionProps {
   field?: string;
 }
 
-/**
- * Base de todas las excepciones de dominio. Es pura (extiende `Error`, sin Nest):
- * el mapeo a HTTP lo hace `DomainExceptionFilter` a partir de `code`.
- *
- * Recibe un objeto y no parámetros sueltos para poder añadir metadatos más
- * adelante sin tocar las llamadas existentes.
- */
 export abstract class DomainException extends Error {
   abstract readonly code: DomainErrorCode;
   readonly field?: string;
