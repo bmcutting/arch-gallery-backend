@@ -11,7 +11,7 @@ export class RevokeRefreshToken {
     private readonly crypto: RefreshTokenCrypto,
   ) {}
 
-  async execute({ token }: Props): Promise<void> {
-    await this.repository.revokeByToken(this.crypto.hash(token));
+  async execute({ token }: Props): Promise<boolean> {
+    return this.repository.revokeByToken(this.crypto.hash(token));
   }
 }

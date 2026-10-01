@@ -27,11 +27,13 @@ export class TypeOrmRefreshTokenRepository
     return model ? RefreshTokenMapper.toDomain(model) : null;
   }
 
-  async revokeByToken(hashedToken: string): Promise<void> {
-    await this.repository.update(
-      { token: hashedToken },
+  async revokeByToken(hashedToken: string): Promise<boolean> {
+    const result = await this.repository.update(
+      { token: hashedToken, isRevoked: false },
       { isRevoked: true, revokedAt: new Date() },
     );
+
+    return (result.affected ?? 0) > 0;
   }
 
   async deleteExpired(): Promise<void> {

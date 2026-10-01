@@ -27,7 +27,11 @@ export class RefreshTokenCommand implements Command<Props, TokenResponse> {
 
     const refreshToken = await this.unitOfWork.run({
       work: async () => {
-        await this.revokeRefreshToken.execute({ token });
+        // La validacion corre fuera de la unidad, asi que dos refresh
+        // concurrentes la pasan los dos; esta revocacion condicional es la
+        // que deja rotar solo a uno.
+        const revoked = await this.revokeRefreshToken.execute({ token });
+        if (!revoked) throw new InvalidRefreshTokenException();
 
         return this.generateRefreshToken.execute({ userId: user.id });
       },
