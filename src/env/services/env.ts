@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { durationToSeconds } from 'src/shared/infrastructure/utils/duration';
 
 const toBoolean = (value: string): boolean => value === 'true';
 
@@ -43,6 +44,11 @@ export class EnvService {
   readonly JWT_ALGORITHM = this.config.getOrThrow<string>('JWT_ALGORITHM');
   readonly REFRESH_TOKEN_EXPIRATION_TIME = this.config.getOrThrow<string>(
     'REFRESH_TOKEN_EXPIRATION_TIME',
+  );
+
+  readonly JWT_EXPIRATION_SECONDS = durationToSeconds(this.JWT_EXPIRATION_TIME);
+  readonly REFRESH_TOKEN_EXPIRATION_SECONDS = durationToSeconds(
+    this.REFRESH_TOKEN_EXPIRATION_TIME,
   );
 
   readonly LOG_LEVEL = this.config.getOrThrow<string>('LOG_LEVEL');
