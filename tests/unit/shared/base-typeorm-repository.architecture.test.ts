@@ -14,9 +14,7 @@ const SRC = join(process.cwd(), 'src');
  * y compañía) todavía no casan con el patrón `*.repository.ts`; entrarán en el
  * radar de este test cuando las fases de módulo apliquen el renombrado.
  */
-const PENDING_MIGRATION = [
-  'authentication/infrastructure/typeorm/repositories/refresh-token.repository.ts',
-];
+const PENDING_MIGRATION: string[] = [];
 
 function repositoryFiles(): string[] {
   return readdirSync(SRC, { recursive: true })

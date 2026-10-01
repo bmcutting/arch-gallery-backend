@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { UserResponse } from 'src/user/application/queries/responses/user.response';
 
 export class LoginResponse {
@@ -8,11 +8,11 @@ export class LoginResponse {
   })
   access_token: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'Token de refresco',
     example: 'kMx7K...',
   })
-  refresh_token?: string;
+  refresh_token: string;
 
   @ApiProperty({
     description: 'Tiempo de expiración en segundos',

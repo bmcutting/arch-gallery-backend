@@ -1,53 +1,55 @@
 import {
-  Injectable,
   CanActivate,
   ExecutionContext,
+  Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
+import type { Request } from 'express';
+import { EnvService } from 'src/env/services/env';
 import { User } from 'src/user/domain/entities/user.entity';
-import { ValidateJwtToken } from '../../../domain/services/jwt-token-validate';
-import { ValidateJwtTokenCommand } from '../../../application/commands/validate-jwt-token.command';
-
-interface RequestWithUser {
-  user?: User;
-  headers: Record<string, string | undefined>;
-}
+import { TypeOrmUserRepository } from 'src/user/infrastructure/typeorm/repository/user';
+import { TokenService } from '../../../domain/interfaces/token-service';
+import { JwtTokenService } from '../services/jwt-token-service';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
+  private readonly tokenService: TokenService = new JwtTokenService(
+    this.envService,
+  );
+
   constructor(
-    private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
+    private readonly envService: EnvService,
+    private readonly repository: TypeOrmUserRepository,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest<RequestWithUser>();
+    const request = context
+      .switchToHttp()
+      .getRequest<Request & { user?: User }>();
 
-    const authHeader = request.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      throw new UnauthorizedException('Authentication token required');
+    const token = this.extractTokenFromHeader(request);
+    if (!token) {
+      throw new UnauthorizedException('missing-token');
     }
 
-    const token = authHeader.substring(7); // Quitar el 'Bearer '
-
+    let user: User | null;
     try {
-      const jwtTokenValidateService = new ValidateJwtToken(
-        this.jwtService,
-        this.configService,
-      );
-      const command = new ValidateJwtTokenCommand(jwtTokenValidateService);
-
-      const user = await command.execute({ token });
-      request.user = user;
-
-      return true;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (_error) {
-      throw new UnauthorizedException(
-        'Invalid or expired authentication token',
-      );
+      const payload = this.tokenService.verify(token);
+      user = await this.repository.findById(payload.sub);
+    } catch {
+      throw new UnauthorizedException('invalid-token');
     }
+
+    if (!user || !user.isActive) {
+      throw new UnauthorizedException('invalid-token');
+    }
+
+    request.user = user;
+    return true;
+  }
+
+  private extractTokenFromHeader(request: Request): string | undefined {
+    const [type, token] = request.headers.authorization?.split(' ') ?? [];
+    return type === 'Bearer' ? token : undefined;
   }
 }

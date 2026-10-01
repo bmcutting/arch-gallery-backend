@@ -1,111 +1,60 @@
-import { Body, Controller, Inject, Post } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
-import { TypeOrmUserRepository } from 'src/user/infrastructure/typeorm/repository/user';
-import { TypeOrmRefreshTokenRepository } from '../../typeorm/repositories/refresh-token.repository';
-import { BcryptPasswordHasher } from 'src/user/infrastructure/services/bcrypt-password-hasher';
-import { UlidGenerator } from 'src/shared/infrastructure/services/ulid.generator';
+import { Body, Controller, Post } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import {
-  GenerateJwtToken,
-  TokenResponse,
-} from 'src/authentication/domain/services/jwt-token-generate';
-import { LoginRequest } from 'src/authentication/application/commands/requests/login.request';
-import { LoginResponse } from 'src/authentication/application/commands/responses/login.response';
-import { GenerateRefreshToken } from 'src/authentication/domain/services/refresh-token-generate';
-import { AuthenticateUserWithTokens } from 'src/authentication/domain/services/user-authenticate-with-tokens';
-import { LoginCommand } from 'src/authentication/application/commands/login.command';
-import { RevokeRefreshToken } from 'src/authentication/domain/services/refresh-token-revoke';
-import { LogoutCommand } from 'src/authentication/application/commands/logout.command';
-import { LogoutRequest } from 'src/authentication/application/commands/requests/logout.request';
-import { RefreshTokenCommand } from 'src/authentication/application/commands/refresh-token.command';
-import { RefreshTokenRequest } from 'src/authentication/application/commands/requests/refresh-token.request';
-import { ValidateRefreshToken } from 'src/authentication/domain/services/refresh-token-validate';
-import { CreateUserRequest } from 'src/authentication/application/commands/requests/create-user.request';
+import { EnvService } from 'src/env/services/env';
+import { UlidGenerator } from 'src/shared/infrastructure/services/ulid.generator';
+import { TypeOrmUnitOfWork } from 'src/shared/infrastructure/typeorm/services/typeorm-unit-of-work';
+import { BcryptPasswordHasher } from 'src/user/infrastructure/services/bcrypt-password-hasher';
+import { TypeOrmUserRepository } from 'src/user/infrastructure/typeorm/repository/user';
 import { UserCreator } from 'src/user/domain/services/user-create';
-import { CreateUserCommand } from 'src/authentication/application/commands/create-user.command';
+import { CreateUserCommand } from 'src/user/application/commands/create-user.command';
+import { CreateUserRequest } from 'src/user/application/commands/requests/create-user.request';
+import { CreateUserResponse } from 'src/user/application/commands/responses/create-user.response';
+import { RefreshTokenCrypto } from 'src/authentication/domain/interfaces/refresh-token-crypto';
+import { TokenService } from 'src/authentication/domain/interfaces/token-service';
+import { GenerateRefreshToken } from 'src/authentication/domain/services/refresh-token-generate';
+import { RevokeRefreshToken } from 'src/authentication/domain/services/refresh-token-revoke';
+import { ValidateRefreshToken } from 'src/authentication/domain/services/refresh-token-validate';
+import { SignIn } from 'src/authentication/domain/services/sign-in';
+import { SignInCommand } from 'src/authentication/application/commands/sign-in.command';
+import { LogoutCommand } from 'src/authentication/application/commands/logout.command';
+import { RefreshTokenCommand } from 'src/authentication/application/commands/refresh-token.command';
+import { LoginRequest } from 'src/authentication/application/commands/requests/login.request';
+import { LogoutRequest } from 'src/authentication/application/commands/requests/logout.request';
+import { RefreshTokenRequest } from 'src/authentication/application/commands/requests/refresh-token.request';
+import { LoginResponse } from 'src/authentication/application/commands/responses/login.response';
+import { LogoutResponse } from 'src/authentication/application/commands/responses/logout.response';
+import { TokenResponse } from 'src/authentication/application/commands/responses/token.response';
+import { TypeOrmRefreshTokenRepository } from '../../typeorm/repositories/refresh-token.repository';
+import { JwtTokenService } from '../services/jwt-token-service';
+import { NodeRefreshTokenCrypto } from '../services/node-refresh-token-crypto';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
+  private readonly tokenService: TokenService = new JwtTokenService(
+    this.envService,
+  );
+  private readonly crypto: RefreshTokenCrypto = new NodeRefreshTokenCrypto();
+
+  private readonly generateRefreshToken = new GenerateRefreshToken(
+    this.refreshTokenRepository,
+    this.idGenerator,
+    this.crypto,
+    this.envService.REFRESH_TOKEN_EXPIRATION_SECONDS,
+  );
+  private readonly revokeRefreshToken = new RevokeRefreshToken(
+    this.refreshTokenRepository,
+    this.crypto,
+  );
+
   constructor(
-    @Inject()
-    private readonly jwtService: JwtService,
-    @Inject()
-    private readonly configService: ConfigService,
-    @Inject()
+    private readonly envService: EnvService,
     private readonly userRepository: TypeOrmUserRepository,
-    @Inject()
     private readonly refreshTokenRepository: TypeOrmRefreshTokenRepository,
-    @Inject()
     private readonly passwordHasher: BcryptPasswordHasher,
-    @Inject()
     private readonly idGenerator: UlidGenerator,
+    private readonly unitOfWork: TypeOrmUnitOfWork,
   ) {}
-
-  @Post('refresh')
-  @ApiOperation({
-    summary: 'Refrescar access token',
-    description:
-      'Genera un nuevo access token y refresh token usando un refresh token válido',
-  })
-  @ApiBody({
-    type: RefreshTokenRequest,
-    examples: {
-      refresh: {
-        summary: 'Refrescar token',
-        value: {
-          refresh_token: 'kMx7K...',
-        },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Token refrescado exitosamente',
-    example: {
-      access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
-      refresh_token: 'new_kMx7K...',
-      expires_in: 3600,
-      token_type: 'Bearer',
-    },
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Refresh token inválido o expirado',
-  })
-  async refresh(@Body() body: RefreshTokenRequest): Promise<TokenResponse> {
-    const validateRefreshTokenService = new ValidateRefreshToken(
-      this.refreshTokenRepository,
-      this.userRepository,
-    );
-
-    const jwtTokenGenerateService = new GenerateJwtToken(
-      this.jwtService,
-      this.configService,
-    );
-
-    const refreshTokenGenerateService = new GenerateRefreshToken(
-      this.configService,
-      this.refreshTokenRepository,
-      this.idGenerator,
-    );
-
-    const revokeRefreshTokenService = new RevokeRefreshToken(
-      this.refreshTokenRepository,
-    );
-
-    const command = new RefreshTokenCommand(
-      validateRefreshTokenService,
-      jwtTokenGenerateService,
-      refreshTokenGenerateService,
-      revokeRefreshTokenService,
-    );
-
-    return await command.execute({
-      refreshToken: body.refresh_token,
-    });
-  }
 
   @Post('login')
   @ApiOperation({
@@ -117,94 +66,109 @@ export class AuthController {
     examples: {
       user: {
         summary: 'Usuario',
-        value: {
-          email: 'usuario@ejemplo.com',
-          password: '12345678',
-        },
+        value: { email: 'usuario@ejemplo.com', password: '12345678' },
       },
     },
   })
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'Login exitoso',
     type: LoginResponse,
   })
-  @ApiResponse({ status: 401, description: 'Credenciales inválidas' })
+  @ApiResponse({
+    status: 401,
+    description: 'invalid-credentials: correo o contraseña incorrectos',
+  })
   async login(@Body() body: LoginRequest): Promise<LoginResponse> {
-    const jwtTokenGenerateService = new GenerateJwtToken(
-      this.jwtService,
-      this.configService,
-    );
-
-    const refreshTokenGenerateService = new GenerateRefreshToken(
-      this.configService,
-      this.refreshTokenRepository,
-      this.idGenerator,
-    );
-
-    const authenticateUserService = new AuthenticateUserWithTokens(
+    const signIn = new SignIn(
       this.userRepository,
       this.passwordHasher,
-      jwtTokenGenerateService,
-      refreshTokenGenerateService,
+      this.tokenService,
+      this.generateRefreshToken,
     );
 
-    const command = new LoginCommand(authenticateUserService);
+    return new SignInCommand(signIn).execute({ request: body });
+  }
 
-    return await command.execute({
-      email: body.email,
-      password: body.password,
-    });
+  @Post('refresh')
+  @ApiOperation({
+    summary: 'Refrescar el par de tokens',
+    description:
+      'Emite un access token y un refresh token nuevos, y **revoca el refresh token usado**. Las dos escrituras van en una transacción.',
+  })
+  @ApiBody({
+    type: RefreshTokenRequest,
+    examples: {
+      refresh: {
+        summary: 'Refrescar token',
+        value: { refresh_token: 'kMx7K...' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Par de tokens nuevo',
+    type: TokenResponse,
+  })
+  @ApiResponse({
+    status: 401,
+    description:
+      'invalid-refresh-token: no existe, está caducado o ya fue revocado',
+  })
+  async refresh(@Body() body: RefreshTokenRequest): Promise<TokenResponse> {
+    const validateRefreshToken = new ValidateRefreshToken(
+      this.refreshTokenRepository,
+      this.userRepository,
+      this.crypto,
+    );
+
+    const command = new RefreshTokenCommand(
+      validateRefreshToken,
+      this.revokeRefreshToken,
+      this.generateRefreshToken,
+      this.tokenService,
+      this.unitOfWork,
+    );
+
+    return command.execute({ request: body });
   }
 
   @Post('logout')
   @ApiOperation({
     summary: 'Cerrar sesión',
-    description: 'Revoca el refresh token del usuario',
+    description:
+      'Revoca el refresh token. El access token sigue válido hasta caducar.',
   })
   @ApiBody({
     type: LogoutRequest,
     examples: {
       logout: {
         summary: 'Cerrar sesión',
-        value: {
-          refresh_token: 'kMx7K...',
-        },
+        value: { refresh_token: 'kMx7K...' },
       },
     },
   })
   @ApiResponse({
-    status: 200,
-    description: 'Sesión cerrada exitosamente',
-    example: { message: 'Logged out successfully' },
+    status: 201,
+    description: 'Sesión cerrada',
+    type: LogoutResponse,
   })
-  async logout(@Body() body: LogoutRequest): Promise<{ message: string }> {
-    const revokeRefreshTokenService = new RevokeRefreshToken(
-      this.refreshTokenRepository,
-    );
-
-    const command = new LogoutCommand(revokeRefreshTokenService);
-
-    await command.execute({
-      refreshToken: body.refresh_token,
+  async logout(@Body() body: LogoutRequest): Promise<LogoutResponse> {
+    return new LogoutCommand(this.revokeRefreshToken).execute({
+      request: body,
     });
-
-    return { message: 'Logged out successfully' };
   }
 
   @Post('register')
   @ApiOperation({
-    summary: 'Crear un nuevo usuario',
-    description:
-      'Permite registrar un nuevo usuario en el sistema con sus datos básicos.',
+    summary: 'Registrar un usuario',
+    description: 'Crea el usuario',
   })
   @ApiBody({
     type: CreateUserRequest,
     examples: {
-      ejemplo1: {
+      basico: {
         summary: 'Usuario básico',
-        description:
-          'Ejemplo de creación de un usuario con datos mínimos requeridos',
         value: {
           email: 'juan.perez@ejemplo.com',
           password: '12345678',
@@ -215,14 +179,22 @@ export class AuthController {
       },
     },
   })
-  @ApiResponse({ status: 201, description: 'Usuario creado exitosamente' })
+  @ApiResponse({
+    status: 201,
+    description: 'Usuario creado',
+    type: CreateUserResponse,
+  })
   @ApiResponse({ status: 400, description: 'Datos de entrada inválidos' })
-  async create(@Body() body: CreateUserRequest) {
-    const hasher = new BcryptPasswordHasher();
-    const creator = new UserCreator(hasher, this.userRepository);
+  @ApiResponse({
+    status: 409,
+    description: 'Ya existe un usuario con ese correo o nombre de usuario',
+  })
+  async register(@Body() body: CreateUserRequest): Promise<CreateUserResponse> {
+    const userCreator = new UserCreator(
+      this.passwordHasher,
+      this.userRepository,
+    );
 
-    const command = new CreateUserCommand(creator);
-
-    return await command.execute(body);
+    return new CreateUserCommand(userCreator).execute({ request: body });
   }
 }

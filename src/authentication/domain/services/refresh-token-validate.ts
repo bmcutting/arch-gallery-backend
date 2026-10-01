@@ -1,34 +1,31 @@
-import { UserRepository } from 'src/user/domain/repositories/user.repository';
-import { RefreshTokenRepository } from '../repositories/refresh-token.repository';
 import { User } from 'src/user/domain/entities/user.entity';
-import { TokenHasher } from './token-hasher';
-import { InvalidRefreshTokenException } from 'src/shared/domain/exceptions/invalid-refresh-token.exception';
+import { UserRepository } from 'src/user/domain/repositories/user.repository';
+import { RefreshTokenCrypto } from '../interfaces/refresh-token-crypto';
+import { RefreshTokenRepository } from '../repositories/refresh-token.repository';
+import { InvalidRefreshTokenException } from '../exceptions/authentication';
+
+interface Props {
+  token: string;
+}
 
 export class ValidateRefreshToken {
   constructor(
     private readonly refreshTokenRepository: RefreshTokenRepository,
     private readonly userRepository: UserRepository,
+    private readonly crypto: RefreshTokenCrypto,
   ) {}
 
-  async execute(token: string): Promise<User> {
-    const hashedToken = TokenHasher.hash(token);
+  async execute({ token }: Props): Promise<User> {
+    const refreshToken = await this.refreshTokenRepository.findByToken(
+      this.crypto.hash(token),
+    );
 
-    const refreshToken =
-      await this.refreshTokenRepository.findByToken(hashedToken);
-
-    if (!refreshToken) {
-      throw new InvalidRefreshTokenException();
-    }
-
-    if (!refreshToken.isValid()) {
+    if (!refreshToken || !refreshToken.isValid()) {
       throw new InvalidRefreshTokenException();
     }
 
     const user = await this.userRepository.findById(refreshToken.userId);
-
-    if (!user || !user.isActive) {
-      throw new InvalidRefreshTokenException();
-    }
+    if (!user || !user.isActive) throw new InvalidRefreshTokenException();
 
     return user;
   }

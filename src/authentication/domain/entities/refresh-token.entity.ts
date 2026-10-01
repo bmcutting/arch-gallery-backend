@@ -27,11 +27,6 @@ export class RefreshToken {
     this.revokedAt = props.revokedAt ?? null;
   }
 
-  revoke(): void {
-    this.isRevoked = true;
-    this.revokedAt = new Date();
-  }
-
   isExpired(): boolean {
     return new Date() > this.expiresAt;
   }
