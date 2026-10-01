@@ -3,6 +3,25 @@ import { config } from 'dotenv';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { AppNamingStrategy } from './naming.strategy';
 import { resolveEnvFilePath } from '../env/env-file';
+import { CategoryModel } from 'src/category/infrastructure/typeorm/models/category.model';
+import { CommentModel } from 'src/comment/infrastructure/typeorm/models/comment.model';
+import { LikeModel } from 'src/like/infrastructure/typeorm/models/like.model';
+import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project.model';
+import { RefreshTokenModel } from 'src/authentication/infrastructure/typeorm/models/refresh-token.model';
+import { ExperienceModel } from 'src/user/infrastructure/typeorm/models/experience.model';
+import { SkillModel } from 'src/user/infrastructure/typeorm/models/skill.model';
+import { UserModel } from 'src/user/infrastructure/typeorm/models/user.model';
+
+export const ENTITIES = [
+  CategoryModel,
+  CommentModel,
+  ExperienceModel,
+  LikeModel,
+  ProjectModel,
+  RefreshTokenModel,
+  SkillModel,
+  UserModel,
+];
 
 // Mismo fichero de entorno que carga EnvModule.
 config({ path: resolveEnvFilePath() });
@@ -16,14 +35,6 @@ export interface DatabaseConnection {
   ssl: false | { rejectUnauthorized: boolean };
 }
 
-/**
- * Construye el DataSource. Tiene dos consumidores:
- *   1. La CLI de TypeORM, via el `export default` de abajo.
- *   2. El runtime de Nest (`DatabaseModule`), pasandole la conexion desde `EnvService`.
- *
- * Los globs usan `__dirname` para resolver a `.ts` con ts-node y a `.js` en
- * `dist` sin cambiar nada.
- */
 export function createDataSource(conn: DatabaseConnection): DataSource {
   const options: DataSourceOptions = {
     type: 'postgres',
@@ -34,7 +45,7 @@ export function createDataSource(conn: DatabaseConnection): DataSource {
     database: conn.database,
     ssl: conn.ssl,
     namingStrategy: new AppNamingStrategy(),
-    entities: [__dirname + '/../**/*.model{.ts,.js}'],
+    entities: ENTITIES,
     migrations: [__dirname + '/migrations/*{.ts,.js}'],
     // La CLI nunca aplica migraciones al cargar el DataSource: las corre
     // `migration:run` o `DatabaseModule` en onModuleInit, con logging.
