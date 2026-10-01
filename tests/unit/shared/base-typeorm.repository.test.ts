@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import type { DataSource, EntityManager } from 'typeorm';
 import { BaseTypeOrmRepository } from 'src/shared/infrastructure/typeorm/repositories/base-typeorm.repository';
-import type { TransactionExecutor } from 'src/shared/infrastructure/typeorm/services/typeorm-transaction.executor';
+import type { TypeOrmUnitOfWork } from 'src/shared/infrastructure/typeorm/services/typeorm-unit-of-work';
 
 class FakeModel {
   id: string;
@@ -9,7 +9,7 @@ class FakeModel {
 
 /** Expone el getter protegido para poder observarlo desde el test. */
 class TestRepository extends BaseTypeOrmRepository<FakeModel> {
-  constructor(dataSource: DataSource, executor: TransactionExecutor) {
+  constructor(dataSource: DataSource, executor: TypeOrmUnitOfWork) {
     super(dataSource, executor, FakeModel);
   }
 
@@ -23,7 +23,7 @@ describe('BaseTypeOrmRepository', () => {
   const fromManager = { origin: 'manager' };
 
   let dataSource: DataSource;
-  let executor: TransactionExecutor;
+  let executor: TypeOrmUnitOfWork;
   let getManagerIfActive: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
@@ -31,7 +31,7 @@ describe('BaseTypeOrmRepository', () => {
       getRepository: vi.fn(() => fromDataSource),
     } as unknown as DataSource;
     getManagerIfActive = vi.fn(() => null);
-    executor = { getManagerIfActive } as unknown as TransactionExecutor;
+    executor = { getManagerIfActive } as unknown as TypeOrmUnitOfWork;
   });
 
   it('usa el DataSource cuando no hay transacción activa', () => {

@@ -13,6 +13,7 @@ import { ProjectModule } from 'src/project/project.module';
 import { UserModule } from 'src/user/user.module';
 import { CommentModule } from 'src/comment/comment.module';
 import { LikeModule } from 'src/like/like.module';
+import { AuthenticationModule } from 'src/authentication/authentication.module';
 
 import { CategoryModel } from 'src/category/infrastructure/typeorm/models/category.model';
 import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project.model';
@@ -22,7 +23,7 @@ import { LikeModel } from 'src/like/infrastructure/typeorm/models/like.model';
 import { SkillModel } from 'src/user/infrastructure/typeorm/models/skill.model';
 import { ExperienceModel } from 'src/user/infrastructure/typeorm/models/experience.model';
 
-import { TransactionExecutor } from 'src/shared/infrastructure/typeorm/services/typeorm-transaction.executor';
+import { TypeOrmUnitOfWork } from 'src/shared/infrastructure/typeorm/services/typeorm-unit-of-work';
 import { UlidGenerator } from 'src/shared/infrastructure/services/ulid.generator';
 
 const MODELS = [
@@ -36,7 +37,7 @@ const MODELS = [
 ];
 
 // En la app real `DataSource` lo provee TypeOrmCoreModule, que es @Global.
-// Aqui se replica esa forma para poder resolver TransactionExecutor sin base de datos.
+// Aqui se replica esa forma para poder resolver TypeOrmUnitOfWork sin base de datos.
 @Global()
 @Module({
   providers: [{ provide: DataSource, useValue: {} }],
@@ -91,6 +92,9 @@ describe('grafo de inyección de dependencias', () => {
     ['UserModule', UserModule],
     ['CommentModule', CommentModule],
     ['LikeModule', LikeModule],
+    // AuthenticationModule no estaba cubierto, y es el que mas riesgo tiene:
+    // su controlador inyecta seis dependencias de tres modulos distintos.
+    ['AuthenticationModule', AuthenticationModule],
   ])('%s resuelve sus dependencias', async (_name, module) => {
     const ref = await compile(module);
     await ref.close();
@@ -99,7 +103,7 @@ describe('grafo de inyección de dependencias', () => {
   it('SharedModule provee el ejecutor de transacciones y el generador de ids', async () => {
     const ref = await compile();
 
-    expect(ref.get(TransactionExecutor)).toBeInstanceOf(TransactionExecutor);
+    expect(ref.get(TypeOrmUnitOfWork)).toBeInstanceOf(TypeOrmUnitOfWork);
     expect(ref.get(UlidGenerator)).toBeInstanceOf(UlidGenerator);
     await ref.close();
   });
