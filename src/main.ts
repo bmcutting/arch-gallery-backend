@@ -6,6 +6,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { EnvService } from './env/services/env';
 import { SafeValidationPipe } from './shared/infrastructure/nest/pipes/safe-validation.pipe';
 import { parseCorsOrigins } from './shared/infrastructure/utils/cors';
+import { JWT_AUTH } from './authentication/infrastructure/nest/decorators/auth.decorator';
 
 async function bootstrap() {
   // `bufferLogs` retiene lo que Nest escribe durante el arranque hasta que
@@ -50,7 +51,7 @@ async function bootstrap() {
         description: 'Enter JWT token',
         in: 'header',
       },
-      'JWT-auth',
+      JWT_AUTH,
     )
     .addTag('Auth', 'Operaciones de autenticación')
     .addTag('Categories', 'Operaciones de categorías')

@@ -1,28 +1,14 @@
-import {
-  Controller,
-  Delete,
-  Param,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiParam,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { Controller, Delete, Param, Post, Req } from '@nestjs/common';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AddLikeCommand } from 'src/like/application/commands/add-like-command';
 import type { RequestWithUser } from 'src/user/infrastructure/nest/controllers/user.controller';
 import { TypeOrmLikeRepository } from '../../typeorm/repository/like';
-import { JwtAuthGuard } from 'src/authentication/infrastructure/nest/guards/jwt-auth.guard';
+import { Auth } from 'src/authentication/infrastructure/nest/decorators/auth.decorator';
 import { DeleteLikeCommand } from 'src/like/application/commands/delete-like-command';
 
 @ApiTags('Likes')
 @Controller('likes')
-@ApiBearerAuth('JWT-auth')
-@UseGuards(JwtAuthGuard)
+@Auth()
 export class LikeController {
   constructor(private readonly likeRepository: TypeOrmLikeRepository) {}
 

@@ -6,10 +6,8 @@ import {
   Param,
   Post,
   Req,
-  UseGuards,
 } from '@nestjs/common';
 import {
-  ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiParam,
@@ -20,7 +18,7 @@ import { TypeOrmProjectRepository } from 'src/project/infrastructure/typeorm/rep
 import { TypeOrmCommentRepository } from '../../typeorm/repository/comment';
 import { AddCommentRequest } from 'src/comment/application/commands/requests/add-comment.request';
 import { AddCommentCommand } from 'src/comment/application/commands/add-comment-command';
-import { JwtAuthGuard } from 'src/authentication/infrastructure/nest/guards/jwt-auth.guard';
+import { Auth } from 'src/authentication/infrastructure/nest/decorators/auth.decorator';
 import type { RequestWithUser } from 'src/user/infrastructure/nest/controllers/user.controller';
 import { DeleteCommentCommand } from 'src/comment/application/commands/delete-comment-command';
 import { DeleteCommentResponse } from 'src/comment/application/commands/responses/delete-comment.response';
@@ -29,8 +27,7 @@ import { GetCommentsByProjectIdQuery } from 'src/comment/application/queries/get
 
 @ApiTags('Comments')
 @Controller('comments')
-@ApiBearerAuth('JWT-auth')
-@UseGuards(JwtAuthGuard)
+@Auth()
 export class CommentController {
   constructor(
     private readonly commentRepository: TypeOrmCommentRepository,

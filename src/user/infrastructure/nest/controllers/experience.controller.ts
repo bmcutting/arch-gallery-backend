@@ -1,21 +1,7 @@
-import {
-  Body,
-  Controller,
-  Param,
-  Post,
-  Put,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { Body, Controller, Param, Post, Put, Req } from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TypeOrmUserRepository } from '../../typeorm/repository/user';
-import { JwtAuthGuard } from 'src/authentication/infrastructure/nest/guards/jwt-auth.guard';
+import { Auth } from 'src/authentication/infrastructure/nest/decorators/auth.decorator';
 import { CreateExperienceRequest } from 'src/user/application/commands/requests/create-experience.request';
 import { User } from 'src/user/domain/entities/user.entity';
 import { CreateExperienceResponse } from 'src/user/application/commands/responses/create-experience.response';
@@ -28,8 +14,7 @@ import { UpdateExperienceCommand } from 'src/user/application/commands/update-ex
 
 @ApiTags('Experiences')
 @Controller('experiences')
-@ApiBearerAuth('JWT-auth')
-@UseGuards(JwtAuthGuard)
+@Auth()
 export class ExperienceController {
   constructor(
     private readonly userRepository: TypeOrmUserRepository,

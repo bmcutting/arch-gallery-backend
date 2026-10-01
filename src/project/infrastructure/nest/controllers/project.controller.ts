@@ -8,14 +8,12 @@ import {
   Put,
   Query,
   Req,
-  UseGuards,
 } from '@nestjs/common';
 import { TypeOrmProjectRepository } from '../../typeorm/repository/project';
 import { CreateProjectRequest } from 'src/project/application/commands/requests/create-project.request';
 import { ProjectCreator } from 'src/project/domain/services/project-create';
 import { CreateProjectCommand } from 'src/project/application/commands/create-project-command';
 import {
-  ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiParam,
@@ -32,7 +30,7 @@ import { GetAllProjectsQuery } from 'src/project/application/queries/get-all-pro
 import { GetProjectByIdQuery } from 'src/project/application/queries/get-project-by-id.query';
 import { PaginationResponse } from 'src/shared/application/responses/pagination.response';
 import { GetProjectByUserIdQuery } from 'src/project/application/queries/get-project-by-user-id.query';
-import { JwtAuthGuard } from 'src/authentication/infrastructure/nest/guards/jwt-auth.guard';
+import { Auth } from 'src/authentication/infrastructure/nest/decorators/auth.decorator';
 import type { RequestWithUser } from 'src/user/infrastructure/nest/controllers/user.controller';
 import {
   GetProjectFeedQuery,
@@ -44,8 +42,7 @@ import { ProjectFeedResponse } from 'src/project/application/queries/responses/p
 
 @ApiTags('Projects')
 @Controller('projects')
-@ApiBearerAuth('JWT-auth')
-@UseGuards(JwtAuthGuard)
+@Auth()
 export class ProjectController {
   constructor(
     private readonly projectRepository: TypeOrmProjectRepository,

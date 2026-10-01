@@ -7,7 +7,6 @@ import {
   Put,
   Query,
   Req,
-  UseGuards,
 } from '@nestjs/common';
 import { UserResponse } from 'src/user/application/queries/responses/user.response';
 import { GetAllUsersQuery } from 'src/user/application/queries/get-all-users.query';
@@ -15,7 +14,6 @@ import { UserPaginationRequest } from 'src/user/application/queries/requests/use
 import { TypeOrmUserRepository } from '../../typeorm/repository/user';
 import { UlidGenerator } from 'src/shared/infrastructure/services/ulid.generator';
 import {
-  ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiParam,
@@ -27,13 +25,12 @@ import { UpdateUser } from 'src/user/domain/services/user-update';
 import { UpdateUserRequest } from 'src/user/application/commands/requests/update-user.request';
 import { UpdateUserCommand } from 'src/user/application/commands/update-user.command';
 import { PaginationResponse } from 'src/shared/application/responses/pagination.response';
-import { JwtAuthGuard } from 'src/authentication/infrastructure/nest/guards/jwt-auth.guard';
+import { Auth } from 'src/authentication/infrastructure/nest/decorators/auth.decorator';
 import { User } from 'src/user/domain/entities/user.entity';
 
 @ApiTags('Users')
 @Controller('users')
-@ApiBearerAuth('JWT-auth')
-@UseGuards(JwtAuthGuard)
+@Auth()
 export class UserController {
   constructor(
     private readonly userRepository: TypeOrmUserRepository,

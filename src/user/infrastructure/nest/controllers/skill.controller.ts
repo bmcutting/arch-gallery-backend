@@ -6,12 +6,10 @@ import {
   Param,
   Body,
   Query,
-  UseGuards,
   Req,
 } from '@nestjs/common';
 import {
   ApiTags,
-  ApiBearerAuth,
   ApiOperation,
   ApiResponse,
   ApiBody,
@@ -21,7 +19,7 @@ import { CreateSkillRequest } from 'src/user/application/commands/requests/creat
 import { SkillCreator } from 'src/user/domain/services/skill-create';
 import { TypeOrmSkillRepository } from '../../typeorm/repository/skill';
 import { TypeOrmUserRepository } from '../../typeorm/repository/user';
-import { JwtAuthGuard } from 'src/authentication/infrastructure/nest/guards/jwt-auth.guard';
+import { Auth } from 'src/authentication/infrastructure/nest/decorators/auth.decorator';
 import { CreateSkillCommand } from 'src/user/application/commands/create-skill.command';
 import { User } from 'src/user/domain/entities/user.entity';
 import { SkillResponse } from 'src/user/application/queries/responses/skill.response';
@@ -33,8 +31,7 @@ import { CreateSkillResponse } from 'src/user/application/commands/responses/cre
 
 @ApiTags('Skills')
 @Controller('skills')
-@ApiBearerAuth('JWT-auth')
-@UseGuards(JwtAuthGuard)
+@Auth()
 export class SkillController {
   constructor(
     private readonly userRepository: TypeOrmUserRepository,
