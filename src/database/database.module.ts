@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { EnvService } from 'src/env/services/env';
 import { createDataSource } from './typeorm.config';
+import { DatabaseExtensionsService } from './extensions.service';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { createDataSource } from './typeorm.config';
       }),
     }),
   ],
+  providers: [DatabaseExtensionsService],
 })
 export class DatabaseModule implements OnModuleInit {
   private readonly logger = new Logger(DatabaseModule.name);
