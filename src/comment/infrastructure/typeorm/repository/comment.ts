@@ -42,7 +42,7 @@ export class TypeOrmCommentRepository implements CommentRepository {
 
   async findById(id: string): Promise<Comment | null> {
     const found = await this.commentRepository.findOne({
-      where: { id },
+      where: { id, isActive: true },
     });
 
     return found ? CommentTypeOrmMapper.execute(found) : null;

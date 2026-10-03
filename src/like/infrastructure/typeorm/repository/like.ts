@@ -53,7 +53,7 @@ export class TypeOrmLikeRepository implements LikeRepository {
 
   async findById(id: string): Promise<Like | null> {
     const found = await this.likeRepository.findOne({
-      where: { id },
+      where: { id, isActive: true },
     });
 
     return found ? LikeTypeOrmMapper.execute(found) : null;
