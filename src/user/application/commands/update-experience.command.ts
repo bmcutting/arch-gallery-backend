@@ -4,9 +4,11 @@ import { UpdateExperienceResponse } from './responses/update-experience.response
 import { ExperienceRepository } from 'src/user/domain/repositories/experience.repository';
 import { NotFoundExperienceException } from 'src/user/domain/exceptions/experience';
 import { UpdateExperience } from 'src/user/domain/services/experience-update';
+import { ensureResourceOwner } from 'src/authorization/domain/services/ensure-resource-owner';
 
 interface UpdateExperienceProps {
   request: UpdateExperienceRequest;
+  currentUserId: string;
 }
 
 export class UpdateExperienceCommand implements Command<
@@ -27,6 +29,11 @@ export class UpdateExperienceCommand implements Command<
     if (!experience) {
       throw new NotFoundExperienceException();
     }
+
+    ensureResourceOwner({
+      ownerId: experience.getUserId(),
+      userId: props.currentUserId,
+    });
 
     await this.updateExperienceService.execute(experience, {
       type: experience.type,

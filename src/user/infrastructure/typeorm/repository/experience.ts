@@ -33,7 +33,7 @@ export class TypeOrmExperienceRepository implements ExperienceRepository {
 
     const experience = new ExperienceModel();
     experience.id = this.ids.create();
-    experience.user = { id: props.userId } as UserModel;
+    experience.user_id = props.userId;
     experience.type = props.type;
     experience.title = props.title;
     experience.institutionOrCompany = props.institutionOrCompany;

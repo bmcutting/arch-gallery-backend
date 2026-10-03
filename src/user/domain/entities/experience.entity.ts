@@ -2,6 +2,7 @@ import { ExperienceType } from '../enums/experience';
 
 export interface ExperienceProps {
   id: string;
+  userId: string;
   type: ExperienceType;
   title: string;
   institutionOrCompany: string;
@@ -13,6 +14,7 @@ export interface ExperienceProps {
 
 export class Experience {
   readonly id: string;
+  readonly userId: string;
   type: ExperienceType;
   title: string;
   institutionOrCompany: string;
@@ -23,6 +25,7 @@ export class Experience {
 
   constructor(props: ExperienceProps) {
     this.id = props.id;
+    this.userId = props.userId;
     this.type = props.type;
     this.title = props.title;
     this.institutionOrCompany = props.institutionOrCompany;
@@ -35,6 +38,10 @@ export class Experience {
   // Getters
   getId(): string {
     return this.id;
+  }
+
+  getUserId(): string {
+    return this.userId;
   }
 
   getType(): ExperienceType {

@@ -5,6 +5,7 @@ export class ExperienceTypeOrmMapper {
   static toDomain(model: ExperienceModel): Experience {
     return new Experience({
       id: model.id,
+      userId: model.user_id,
       type: model.type,
       title: model.title,
       institutionOrCompany: model.institutionOrCompany,
@@ -18,6 +19,7 @@ export class ExperienceTypeOrmMapper {
   static toModel(domain: Experience): ExperienceModel {
     const model = new ExperienceModel();
     model.id = domain.getId();
+    model.user_id = domain.getUserId();
     model.type = domain.getType();
     model.title = domain.getTitle();
     model.institutionOrCompany = domain.getInstitutionOrCompany();

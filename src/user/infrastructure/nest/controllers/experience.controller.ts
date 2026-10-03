@@ -84,7 +84,11 @@ export class ExperienceController {
       },
     },
   })
-  async update(@Param('id') id: string, @Body() body: UpdateExperienceRequest) {
+  async update(
+    @Param('id') id: string,
+    @Req() req: { user: User },
+    @Body() body: UpdateExperienceRequest,
+  ) {
     const updateExperienceService = new UpdateExperience(
       this.experienceRepository,
     );
@@ -92,6 +96,9 @@ export class ExperienceController {
       this.experienceRepository,
       updateExperienceService,
     );
-    return command.execute({ request: { ...body, experienceId: id } });
+    return command.execute({
+      request: { ...body, experienceId: id },
+      currentUserId: req.user.id,
+    });
   }
 }

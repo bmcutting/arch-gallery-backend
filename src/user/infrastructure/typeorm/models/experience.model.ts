@@ -5,6 +5,9 @@ import { ExperienceType } from 'src/user/domain/enums/experience';
 
 @Entity()
 export class ExperienceModel extends Model {
+  @Column({ type: 'varchar', length: 26 })
+  user_id: string;
+
   @Column({ type: 'enum', enum: ExperienceType })
   type: ExperienceType;
 

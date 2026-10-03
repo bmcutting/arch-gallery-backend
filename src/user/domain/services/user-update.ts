@@ -172,6 +172,7 @@ export class UpdateUser {
         (expData) =>
           new Experience({
             id: expData.id ?? this.ids.create(),
+            userId: user.getId(),
             type: expData.type,
             title: expData.title,
             institutionOrCompany: expData.institutionOrCompany,
