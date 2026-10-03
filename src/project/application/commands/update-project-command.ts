@@ -4,7 +4,7 @@ import { UpdateProjectResponse } from './responses/update-project.response';
 import { ProjectRepository } from 'src/project/domain/repositories/project.repository';
 import { UpdateProject } from 'src/project/domain/services/project-update';
 import { NotFoundProjectException } from 'src/project/domain/exceptions/project';
-import { ForbiddenException } from '@nestjs/common';
+import { ensureResourceOwner } from 'src/authorization/domain/services/ensure-resource-owner';
 
 interface UpdateProjectProps {
   request: UpdateProjectRequest;
@@ -27,11 +27,10 @@ export class UpdateProjectCommand implements Command<
       throw new NotFoundProjectException();
     }
 
-    if (project.getUser().getId() !== props.currentUserId) {
-      throw new ForbiddenException(
-        'No puedes modificar un proyecto de otro usuario',
-      );
-    }
+    ensureResourceOwner({
+      ownerId: project.getUser().getId(),
+      userId: props.currentUserId,
+    });
 
     await this.updateProjectService.execute(project, {
       title: props.request.title,

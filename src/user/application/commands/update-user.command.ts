@@ -4,9 +4,11 @@ import { Command } from 'src/shared/application/interfaces/command.interface';
 import { UserRepository } from 'src/user/domain/repositories/user.repository';
 import { NotFoundUserException } from 'src/user/domain/exceptions/user';
 import { UpdateUser } from 'src/user/domain/services/user-update';
+import { ensureResourceOwner } from 'src/authorization/domain/services/ensure-resource-owner';
 
 interface UpdateUserProps {
   request: UpdateUserRequest;
+  currentUserId: string;
 }
 
 export class UpdateUserCommand implements Command<
@@ -23,6 +25,12 @@ export class UpdateUserCommand implements Command<
     if (!user) {
       throw new NotFoundUserException();
     }
+
+    // El dueño de un usuario es él mismo.
+    ensureResourceOwner({
+      ownerId: user.getId(),
+      userId: props.currentUserId,
+    });
 
     await this.updateUserService.execute(user, {
       email: props.request.email,

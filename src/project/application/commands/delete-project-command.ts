@@ -3,7 +3,7 @@ import { DeleteProjectRequest } from './requests/delete-project.request';
 import { DeleteProjectResponse } from './responses/delete-project.response';
 import { Command } from 'src/shared/application/interfaces/command.interface';
 import { NotFoundProjectException } from 'src/project/domain/exceptions/project';
-import { ForbiddenException } from '@nestjs/common';
+import { ensureResourceOwner } from 'src/authorization/domain/services/ensure-resource-owner';
 
 export class DeleteProjectCommand implements Command<
   DeleteProjectRequest,
@@ -17,11 +17,10 @@ export class DeleteProjectCommand implements Command<
       throw new NotFoundProjectException();
     }
 
-    if (project.getUser().getId() !== props.currentUserId) {
-      throw new ForbiddenException(
-        'No puedes eliminar un proyecto de otro usuario',
-      );
-    }
+    ensureResourceOwner({
+      ownerId: project.getUser().getId(),
+      userId: props.currentUserId,
+    });
 
     await this.projectRepository.delete(props.projectId);
 

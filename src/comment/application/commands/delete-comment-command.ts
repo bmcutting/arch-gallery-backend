@@ -4,7 +4,7 @@ import { DeleteCommentRequest } from './requests/delete-comment.request';
 import { CommentRepository } from 'src/comment/domain/repositories/comment.repository';
 import { NotFoundCommentException } from 'src/comment/domain/exceptions/comment';
 import { ProjectRepository } from 'src/project/domain/repositories/project.repository';
-import { ForbiddenException } from '@nestjs/common';
+import { ensureCommentDeletable } from 'src/authorization/domain/services/ensure-comment-deletable';
 
 export class DeleteCommentCommand implements Command<
   DeleteCommentRequest,
@@ -21,15 +21,15 @@ export class DeleteCommentCommand implements Command<
       throw new NotFoundCommentException();
     }
 
-    // Puede borrar el comentario su autor o el dueño del proyecto comentado.
-    if (comment.getUserId() !== props.currentUserId) {
-      const project = await this.projectRepository.findById(
-        comment.getProjectId(),
-      );
-      if (!project || project.getUser().getId() !== props.currentUserId) {
-        throw new ForbiddenException('No puedes eliminar este comentario');
-      }
-    }
+    const project = await this.projectRepository.findById(
+      comment.getProjectId(),
+    );
+
+    ensureCommentDeletable({
+      commentOwnerId: comment.getUserId(),
+      projectOwnerId: project?.getUser().getId() ?? null,
+      userId: props.currentUserId,
+    });
 
     await this.commentRepository.removeComment(props.commentId);
 

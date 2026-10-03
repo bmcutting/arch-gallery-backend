@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  ForbiddenException,
-  Get,
-  Param,
-  Put,
-  Query,
-  Req,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Put, Query, Req } from '@nestjs/common';
 import { UserResponse } from 'src/user/application/queries/responses/user.response';
 import { GetAllUsersQuery } from 'src/user/application/queries/get-all-users.query';
 import { UserPaginationRequest } from 'src/user/application/queries/requests/user-pagination.request';
@@ -106,16 +97,15 @@ export class UserController {
     @Req() req: RequestWithUser,
     @Body() body: UpdateUserRequest,
   ) {
-    if (id !== req.user.id) {
-      throw new ForbiddenException('No puedes modificar otro usuario');
-    }
-
     const updateUserService = new UpdateUser(this.userRepository, this.ids);
     const command = new UpdateUserCommand(
       this.userRepository,
       updateUserService,
     );
-    return command.execute({ request: { ...body, userId: id } });
+    return command.execute({
+      request: { ...body, userId: id },
+      currentUserId: req.user.id,
+    });
   }
 
   @Get()
