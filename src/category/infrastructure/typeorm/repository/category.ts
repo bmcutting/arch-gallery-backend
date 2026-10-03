@@ -103,18 +103,6 @@ export class TypeOrmCategoryRepository implements CategoryRepository {
     };
   }
 
-  async update(category: Category): Promise<void> {
-    const existing = await this.categoryRepository.findOne({
-      where: { name: category.name },
-    });
-    if (!existing) {
-      await this.categoryRepository.update(category.id, {
-        createdAt: category.createdAt,
-        name: category.name,
-      });
-    }
-  }
-
   async delete(id: string): Promise<void> {
     await this.categoryRepository.update(id, {
       isActive: false,

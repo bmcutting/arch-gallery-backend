@@ -8,13 +8,10 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req } from '@nestjs/common';
 import { CreateCategoryRequest } from 'src/category/application/commands/requests/create-category.request';
 import { CategoryCreator } from 'src/category/domain/services/category-create';
 import { CreateCategoryCommand } from 'src/category/application/commands/create-category-command';
-import { UpdateCategoryRequest } from 'src/category/application/commands/requests/update-category.request';
-import { UpdateCategory } from 'src/category/domain/services/category-update';
-import { UpdateCategoryCommand } from 'src/category/application/commands/update-category-command';
 import { CategoryResponse } from 'src/category/application/queries/responses/category.response';
 import { CategoryPaginationRequest } from 'src/category/application/queries/requests/category-pagination.request';
 import { GetAllCategoriesQuery } from 'src/category/application/queries/get-all-categories.query';
@@ -22,6 +19,7 @@ import { PaginationResponse } from 'src/shared/application/responses/pagination.
 import { GetCategoryByIdQuery } from 'src/category/application/queries/get-category-by-id.query';
 import { SearchCategoriesQuery } from 'src/category/application/queries/search-categories.query';
 import { Auth } from 'src/authentication/infrastructure/nest/decorators/auth.decorator';
+import type { RequestWithUser } from 'src/user/infrastructure/nest/controllers/user.controller';
 
 @ApiTags('Categories')
 @Controller('categories')
@@ -53,15 +51,21 @@ export class CategoryController {
   })
   @ApiResponse({ status: 201, description: 'Categoría creada exitosamente' })
   @ApiResponse({ status: 400, description: 'Datos de entrada inválidos' })
-  async create(@Body() body: CreateCategoryRequest) {
+  async create(
+    @Req() req: RequestWithUser,
+    @Body() body: CreateCategoryRequest,
+  ) {
     const creator = new CategoryCreator(
       this.categoryRepository,
       this.projectRepository,
     );
 
-    const command = new CreateCategoryCommand(creator);
+    const command = new CreateCategoryCommand(this.projectRepository, creator);
 
-    return await command.execute(body);
+    return await command.execute({
+      request: body,
+      currentUserId: req.user.id,
+    });
   }
 
   @Get('search')
@@ -86,32 +90,6 @@ export class CategoryController {
   ): Promise<CategoryResponse[] | null> {
     const searchQuery = new SearchCategoriesQuery(this.categoryRepository);
     return await searchQuery.execute({ name });
-  }
-
-  @Put(':id')
-  @ApiOperation({
-    summary: 'Actualizar una categoría',
-    description: 'Permite modificar el nombre de una categoría existente.',
-  })
-  @ApiBody({
-    type: UpdateCategoryRequest,
-    examples: {
-      ejemplo: {
-        summary: 'Actualizar el nombre',
-        description: 'Ejemplo de actualización',
-        value: {
-          name: 'Urbanismo',
-        },
-      },
-    },
-  })
-  async update(@Param('id') id: string, @Body() body: UpdateCategoryRequest) {
-    const updateCategoryService = new UpdateCategory(this.categoryRepository);
-    const command = new UpdateCategoryCommand(
-      this.categoryRepository,
-      updateCategoryService,
-    );
-    return command.execute({ request: { ...body, categoryId: id } });
   }
 
   @Get()
