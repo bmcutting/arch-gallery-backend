@@ -6,25 +6,33 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { BaseExceptionFilter } from '@nestjs/core';
 import { GlobalExceptionFilter } from 'src/shared/infrastructure/nest/filters/global-exception.filter';
+
+const USER_ID = '01M3R49RS764YCWZ6SMQ7KNH5H';
 
 describe('GlobalExceptionFilter', () => {
   let filter: GlobalExceptionFilter;
   let host: ArgumentsHost;
+  let status: ReturnType<typeof vi.fn>;
+  let json: ReturnType<typeof vi.fn>;
   let warn: ReturnType<typeof vi.spyOn>;
   let error: ReturnType<typeof vi.spyOn>;
-  let delegated: ReturnType<typeof vi.spyOn>;
+
+  const body = () =>
+    (json.mock.calls[0] as unknown[])[0] as Record<string, unknown>;
 
   beforeEach(() => {
     filter = new GlobalExceptionFilter();
+    json = vi.fn();
+    status = vi.fn(() => ({ json }));
     host = {
       switchToHttp: () => ({
         getRequest: () => ({
           method: 'POST',
           url: '/projects',
-          user: { id: '01M3R49RS764YCWZ6SMQ7KNH5H' },
+          user: { id: USER_ID },
         }),
+        getResponse: () => ({ status }),
       }),
     } as unknown as ArgumentsHost;
 
@@ -34,113 +42,141 @@ describe('GlobalExceptionFilter', () => {
     error = vi
       .spyOn(Logger.prototype, 'error')
       .mockImplementation(() => undefined);
-    // La respuesta la sigue escribiendo BaseExceptionFilter: este filtro solo
-    // loguea, asi que no cambia el cuerpo de ningun error.
-    delegated = vi
-      .spyOn(BaseExceptionFilter.prototype, 'catch')
-      .mockImplementation(() => undefined);
   });
 
-  it('delega siempre la respuesta en BaseExceptionFilter', () => {
-    const exception = new ForbiddenException('nope');
+  describe('cuerpo de la respuesta', () => {
+    it('responde { statusCode, message } y nada más', () => {
+      filter.catch(new ForbiddenException('not-resource-owner'), host);
 
-    filter.catch(exception, host);
-
-    expect(delegated).toHaveBeenCalledWith(exception, host);
-  });
-
-  it('loguea un 4xx como warn, con metodo, ruta y status', () => {
-    filter.catch(new ForbiddenException('nope'), host);
-
-    expect(error).not.toHaveBeenCalled();
-    expect(warn).toHaveBeenCalledWith(
-      expect.objectContaining({
-        method: 'POST',
-        url: '/projects',
+      expect(status).toHaveBeenCalledWith(403);
+      expect(body()).toEqual({
         statusCode: 403,
-      }),
-      expect.any(String),
-    );
+        message: 'not-resource-owner',
+      });
+    });
+
+    it('no incluye el campo `error` de Nest', () => {
+      // Es lo que hacía conviviendo dos formas de cuerpo de error.
+      filter.catch(new ForbiddenException('nope'), host);
+
+      expect(body()).not.toHaveProperty('error');
+    });
+
+    it('conserva el array de mensajes de una validación', () => {
+      filter.catch(
+        new BadRequestException(['property foo should not exist']),
+        host,
+      );
+
+      expect(body()).toEqual({
+        statusCode: 400,
+        message: ['property foo should not exist'],
+      });
+    });
+
+    it('acepta un getResponse en forma de cadena', () => {
+      filter.catch(new BadRequestException(), host);
+
+      expect(body()).toEqual({ statusCode: 400, message: 'Bad Request' });
+    });
+
+    it('propaga `field` cuando la respuesta lo trae', () => {
+      filter.catch(
+        new BadRequestException({ message: 'repeat-user', field: 'email' }),
+        host,
+      );
+
+      expect(body()).toEqual({
+        statusCode: 400,
+        message: 'repeat-user',
+        field: 'email',
+      });
+    });
+
+    it('responde un mensaje genérico a lo que no es HttpException', () => {
+      // El detalle del fallo está en el log; al cliente no le sale.
+      filter.catch(new TypeError('no se puede: /etc/secreto'), host);
+
+      expect(status).toHaveBeenCalledWith(500);
+      expect(body()).toEqual({ statusCode: 500, message: 'internal-error' });
+    });
   });
 
-  it('lleva el userId real, no el null que Pino trae ligado', () => {
-    // El logger con contexto de peticion se crea antes de que corra el guard,
-    // asi que su `userId` vale null incluso estando autenticado. Pasarlo en el
-    // objeto del log lo pisa.
-    filter.catch(new ForbiddenException('nope'), host);
+  describe('log', () => {
+    it('loguea un 4xx como warn, con metodo, ruta y status', () => {
+      filter.catch(new ForbiddenException('nope'), host);
 
-    expect(warn).toHaveBeenCalledWith(
-      expect.objectContaining({ userId: '01M3R49RS764YCWZ6SMQ7KNH5H' }),
-      expect.any(String),
-    );
-  });
+      expect(error).not.toHaveBeenCalled();
+      expect(warn).toHaveBeenCalledWith(
+        expect.objectContaining({
+          method: 'POST',
+          url: '/projects',
+          statusCode: 403,
+        }),
+        expect.any(String),
+      );
+    });
 
-  it('saca el detalle de getResponse, no de exception.message', () => {
-    // `message` de una BadRequestException del ValidationPipe es el literal
-    // 'Bad Request Exception'; el array de class-validator vive en getResponse.
-    filter.catch(
-      new BadRequestException(['property foo should not exist']),
-      host,
-    );
+    it('lleva el userId real, no el null que Pino trae ligado', () => {
+      filter.catch(new ForbiddenException('nope'), host);
 
-    expect(warn).toHaveBeenCalledWith(
-      expect.objectContaining({ detail: ['property foo should not exist'] }),
-      expect.any(String),
-    );
-  });
+      expect(warn).toHaveBeenCalledWith(
+        expect.objectContaining({ userId: USER_ID }),
+        expect.any(String),
+      );
+    });
 
-  it('acepta un getResponse en forma de cadena', () => {
-    filter.catch(new BadRequestException(), host);
+    it('saca el detalle de getResponse, no de exception.message', () => {
+      // `message` de una BadRequestException del ValidationPipe es el literal
+      // 'Bad Request Exception'; el array de class-validator vive en getResponse.
+      filter.catch(
+        new BadRequestException(['property foo should not exist']),
+        host,
+      );
 
-    expect(warn).toHaveBeenCalledWith(
-      expect.objectContaining({ detail: 'Bad Request' }),
-      expect.any(String),
-    );
-  });
+      expect(warn).toHaveBeenCalledWith(
+        expect.objectContaining({ detail: ['property foo should not exist'] }),
+        expect.any(String),
+      );
+    });
 
-  it('loguea un 5xx como error y con stack', () => {
-    filter.catch(new InternalServerErrorException('boom'), host);
+    it('loguea un 5xx como error y con stack', () => {
+      filter.catch(new InternalServerErrorException('boom'), host);
 
-    expect(warn).not.toHaveBeenCalled();
-    expect(error).toHaveBeenCalledWith(
-      expect.objectContaining({
-        statusCode: 500,
-        stack: expect.any(String) as string,
-      }),
-      expect.any(String),
-    );
-  });
+      expect(warn).not.toHaveBeenCalled();
+      expect(error).toHaveBeenCalledWith(
+        expect.objectContaining({
+          statusCode: 500,
+          stack: expect.any(String) as string,
+        }),
+        expect.any(String),
+      );
+    });
 
-  it('loguea como error una excepcion que no es HttpException', () => {
-    filter.catch(new TypeError('no se puede'), host);
+    it('loguea con stack lo que no es HttpException', () => {
+      // Antes lo hacía `ExceptionsHandler` al delegar; ahora es cosa suya.
+      filter.catch(new TypeError('no se puede'), host);
 
-    expect(error).toHaveBeenCalledWith(
-      expect.objectContaining({
-        method: 'POST',
-        url: '/projects',
-        statusCode: 500,
-        detail: 'no se puede',
-      }),
-      expect.any(String),
-    );
-  });
+      expect(error).toHaveBeenCalledWith(
+        expect.objectContaining({
+          method: 'POST',
+          url: '/projects',
+          statusCode: 500,
+          detail: 'no se puede',
+          stack: expect.any(String) as string,
+        }),
+        expect.any(String),
+      );
+    });
 
-  it('no duplica el stack de lo que ya loguea ExceptionsHandler', () => {
-    // BaseExceptionFilter loguea por su cuenta las excepciones que no son
-    // HttpException, con stack y objeto de error completo. Repetirlo aqui
-    // imprimiria la misma traza dos veces por cada 500.
-    filter.catch(new TypeError('no se puede'), host);
+    it('no revienta con algo que no es un Error', () => {
+      filter.catch('fallo en crudo', host);
 
-    const payload = error.mock.calls[0][0] as Record<string, unknown>;
-    expect(payload).not.toHaveProperty('stack');
-  });
-
-  it('no revienta con algo que no es un Error', () => {
-    filter.catch('fallo en crudo', host);
-
-    expect(error).toHaveBeenCalledWith(
-      expect.objectContaining({ detail: 'fallo en crudo' }),
-      expect.any(String),
-    );
+      expect(error).toHaveBeenCalledWith(
+        expect.objectContaining({ detail: 'fallo en crudo', stack: undefined }),
+        expect.any(String),
+      );
+      expect(body()).toEqual({ statusCode: 500, message: 'internal-error' });
+    });
   });
 });
