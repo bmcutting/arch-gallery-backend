@@ -1,16 +1,29 @@
-import { Body, Controller, Param, Post, Put, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+} from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { TypeOrmUserRepository } from '../../typeorm/repository/user';
 import { Auth } from 'src/authentication/infrastructure/nest/decorators/auth.decorator';
-import { CreateExperienceRequest } from 'src/user/application/commands/requests/create-experience.request';
-import { User } from 'src/user/domain/entities/user.entity';
-import { CreateExperienceResponse } from 'src/user/application/commands/responses/create-experience.response';
-import { ExperienceCreator } from 'src/user/domain/services/experience-create';
-import { CreateExperienceCommand } from 'src/user/application/commands/create-experience.command';
-import { TypeOrmExperienceRepository } from '../../typeorm/repository/experience';
-import { UpdateExperienceRequest } from 'src/user/application/commands/requests/update-experience.request';
-import { UpdateExperience } from 'src/user/domain/services/experience-update';
-import { UpdateExperienceCommand } from 'src/user/application/commands/update-experience.command';
+import { PaginationResponse } from 'src/shared/application/responses/pagination.response';
+import { UlidGenerator } from 'src/shared/infrastructure/services/ulid.generator';
+import { ExperienceCreateCommand } from 'src/user/application/commands/experience/experience-create.command';
+import { ExperienceCreateRequest } from 'src/user/application/commands/experience/requests/experience-create.request';
+import { ExperienceUpdateCommand } from 'src/user/application/commands/experience/experience-update.command';
+import { ExperienceUpdateRequest } from 'src/user/application/commands/experience/requests/experience-update.request';
+import { ExperienceGetMineQuery } from 'src/user/application/queries/experience/experience-get-mine.query';
+import { ExperienceGetMineRequest } from 'src/user/application/queries/experience/requests/experience-get-mine.request';
+import { ExperienceResponse } from 'src/user/application/queries/experience/responses/experience.response';
+import { ExperienceCreate } from 'src/user/domain/services/experience/experience-create';
+import { UpdateExperience } from 'src/user/domain/services/experience/experience-update';
+import { TypeOrmExperienceRepository } from '../../typeorm/repositories/experience.repository';
+import { TypeOrmUserRepository } from '../../typeorm/repositories/user.repository';
+import type { RequestWithUser } from './user.controller';
 
 @ApiTags('Experiences')
 @Controller('experiences')
@@ -19,85 +32,79 @@ export class ExperienceController {
   constructor(
     private readonly userRepository: TypeOrmUserRepository,
     private readonly experienceRepository: TypeOrmExperienceRepository,
+    private readonly ids: UlidGenerator,
   ) {}
 
-  @Post()
+  @Get('me')
   @ApiOperation({
-    summary: 'Crear una nueva experience asociada a un usuario',
+    summary: 'Listar las experiencias del usuario autenticado',
     description:
-      'Permite registrar una nueva experience en el sistema asociándola a un usuario.',
+      'Se puede filtrar por tipo y ordenar por año, título o institución.',
   })
-  @ApiBody({
-    type: CreateExperienceRequest,
-    examples: {
-      ejemplo: {
-        summary: 'Experience nueva',
-        description: 'Ejemplo de creación de una experience',
-        value: {
-          title: 'Máster en Urbanismo',
-          userId: '28582f21-2435-4a2e-9a4b-b002bc5cb0d6',
-          institutionOrCompany: 'Universidad Politécnica de Madrid',
-          description: 'Programa de posgrado en urbanismo sostenible',
-          startYear: 2020,
-          isCurrent: false,
-        },
-      },
-    },
-  })
-  @ApiResponse({ status: 201, description: 'Experiencia creada exitosamente' })
-  @ApiResponse({ status: 400, description: 'Datos de entrada inválidos' })
-  async create(
-    @Req() req: { user: User },
-    @Body() body: CreateExperienceRequest,
-  ): Promise<CreateExperienceResponse> {
-    const creator = new ExperienceCreator(
-      this.userRepository,
-      this.experienceRepository,
-    );
-    const command = new CreateExperienceCommand(creator);
+  @ApiResponse({ status: 200, description: 'Experiencias paginadas' })
+  async getMine(
+    @Req() req: RequestWithUser,
+    @Query() params: ExperienceGetMineRequest,
+  ): Promise<PaginationResponse<ExperienceResponse>> {
+    const query = new ExperienceGetMineQuery(this.experienceRepository);
 
-    return await command.execute({
-      ...body,
-      userId: req.user.id,
+    return await query.execute({
+      request: params,
+      currentUserId: req.user.id,
     });
   }
 
-  @Put(':id')
+  @Post()
   @ApiOperation({
-    summary: 'Actualizar una experience',
-    description: 'Permite modificar el nombre de una experience existente.',
+    summary: 'Crear una experiencia para el usuario autenticado',
   })
-  @ApiBody({
-    type: UpdateExperienceRequest,
-    examples: {
-      ejemplo: {
-        summary: 'Actualizar el nombre',
-        description: 'Ejemplo de actualización',
-        value: {
-          title: 'Máster en Urbanismo',
-          userId: '28582f21-2435-4a2e-9a4b-b002bc5cb0d6',
-          institutionOrCompany: 'Universidad Politécnica de Madrid',
-          description: 'Programa de posgrado en urbanismo sostenible',
-          startYear: 2020,
-          isCurrent: false,
-        },
-      },
-    },
+  @ApiBody({ type: ExperienceCreateRequest })
+  @ApiResponse({
+    status: 201,
+    description: 'Experiencia creada',
+    type: ExperienceResponse,
   })
+  async create(
+    @Req() req: RequestWithUser,
+    @Body() body: ExperienceCreateRequest,
+  ): Promise<ExperienceResponse> {
+    const service = new ExperienceCreate(
+      this.userRepository,
+      this.experienceRepository,
+      this.ids,
+    );
+    const command = new ExperienceCreateCommand(service);
+
+    return await command.execute({
+      request: body,
+      currentUserId: req.user.id,
+    });
+  }
+
+  @Patch(':id')
+  @ApiOperation({ summary: 'Editar una experiencia propia' })
+  @ApiBody({ type: ExperienceUpdateRequest })
+  @ApiResponse({
+    status: 200,
+    description: 'Experiencia actualizada',
+    type: ExperienceResponse,
+  })
+  @ApiResponse({ status: 403, description: 'not-resource-owner' })
+  @ApiResponse({ status: 404, description: 'experience-not-found' })
   async update(
+    @Req() req: RequestWithUser,
     @Param('id') id: string,
-    @Req() req: { user: User },
-    @Body() body: UpdateExperienceRequest,
-  ) {
-    const updateExperienceService = new UpdateExperience(
+    @Body() body: ExperienceUpdateRequest,
+  ): Promise<ExperienceResponse> {
+    const service = new UpdateExperience(this.experienceRepository);
+    const command = new ExperienceUpdateCommand(
       this.experienceRepository,
+      service,
     );
-    const command = new UpdateExperienceCommand(
-      this.experienceRepository,
-      updateExperienceService,
-    );
-    return command.execute({
-      request: { ...body, experienceId: id },
+
+    return await command.execute({
+      request: body,
+      id,
       currentUserId: req.user.id,
     });
   }

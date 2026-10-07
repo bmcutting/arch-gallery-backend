@@ -1,5 +1,5 @@
 import { Command } from 'src/shared/application/interfaces/command.interface';
-import { UserResponseMapper } from 'src/user/application/mappers/user.mapper';
+import { UserResponseMapper } from 'src/user/application/mappers/user-response-mapper';
 import { SignIn } from 'src/authentication/domain/services/sign-in';
 import { LoginRequest } from './requests/login.request';
 import { LoginResponse } from './responses/login.response';

@@ -2,18 +2,18 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 
 export class NotFoundSkillException extends HttpException {
   constructor() {
-    super(`Skill not found`, HttpStatus.NOT_FOUND);
+    super(`skill-not-found`, HttpStatus.NOT_FOUND);
   }
 }
 
-export class RepeatSkillException extends HttpException {
+export class InvalidSkillNameException extends HttpException {
   constructor() {
-    super(`Skill already exists`, HttpStatus.CONFLICT);
+    super(`skill-name-invalid`, HttpStatus.BAD_REQUEST);
   }
 }
 
-export class InvalidSkillLevelException extends HttpException {
+export class DuplicateUserSkillException extends HttpException {
   constructor() {
-    super(`Invalid skill level`, HttpStatus.BAD_REQUEST);
+    super(`user-skill-duplicate`, HttpStatus.BAD_REQUEST);
   }
 }

@@ -1,17 +1,17 @@
+import { PaginationResult } from 'src/shared/domain/interfaces/pagination';
 import { Skill } from '../entities/skill.entity';
-import { Level } from '../enums/level';
+import { SkillScope } from '../enums/skill-scope';
+import { SkillPaginationParams } from '../interfaces/skill-pagination';
 
 export interface SkillRepository {
-  create(props: CreateSkillProps): Promise<string>;
-  findById(id: string): Promise<Skill | null>;
-  findByName(name: string): Promise<Skill[] | null>;
-  findAll(userId: string): Promise<Skill[]>;
-  update(skill: Skill): Promise<string>;
+  save(skill: Skill): Promise<void>;
+  update(skill: Skill): Promise<void>;
   delete(id: string): Promise<void>;
-}
-
-export interface CreateSkillProps {
-  userId: string;
-  name: string;
-  level?: Level;
+  findById(id: string): Promise<Skill | null>;
+  findByNormalizedName(
+    normalizedName: string,
+    scope: SkillScope,
+    createdById?: string,
+  ): Promise<Skill | null>;
+  find(props: SkillPaginationParams): Promise<PaginationResult<Skill>>;
 }

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserResponse } from 'src/user/application/queries/responses/user.response';
+import { UserResponse } from 'src/user/application/queries/user/responses/user.response';
 
 export class LoginResponse {
   @ApiProperty({

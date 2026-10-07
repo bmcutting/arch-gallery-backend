@@ -20,7 +20,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { TypeOrmUserRepository } from 'src/user/infrastructure/typeorm/repository/user';
+import { TypeOrmUserRepository } from 'src/user/infrastructure/typeorm/repositories/user.repository';
 import { UpdateProject } from 'src/project/domain/services/project-update';
 import { UpdateProjectCommand } from 'src/project/application/commands/update-project-command';
 import { UpdateProjectRequest } from 'src/project/application/commands/requests/update-project.request';

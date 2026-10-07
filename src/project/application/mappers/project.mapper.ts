@@ -1,7 +1,7 @@
 import { Project } from 'src/project/domain/entities/project.entity';
 import { ProjectResponse } from '../queries/responses/project.response';
 import { CategoryResponseMapper } from 'src/category/application/mappers/category.mapper';
-import { UserResponseMapper } from 'src/user/application/mappers/user.mapper';
+import { UserResponseMapper } from 'src/user/application/mappers/user-response-mapper';
 import { LikeResponseMapper } from 'src/like/application/mappers/like.mapper';
 import { CommentResponseMapper } from 'src/comment/application/mappers/comment.mapper';
 

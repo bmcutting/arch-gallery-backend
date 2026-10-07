@@ -6,10 +6,10 @@ export interface ExperienceProps {
   type: ExperienceType;
   title: string;
   institutionOrCompany: string;
-  description?: string;
+  description: string | null;
   startYear: number;
-  endYear?: number;
-  isCurrent?: boolean;
+  endYear: number | null;
+  isCurrent: boolean;
 }
 
 export class Experience {
@@ -18,9 +18,9 @@ export class Experience {
   type: ExperienceType;
   title: string;
   institutionOrCompany: string;
-  description?: string;
+  description: string | null;
   startYear: number;
-  endYear?: number;
+  endYear: number | null;
   isCurrent: boolean;
 
   constructor(props: ExperienceProps) {
@@ -32,7 +32,7 @@ export class Experience {
     this.description = props.description;
     this.startYear = props.startYear;
     this.endYear = props.endYear;
-    this.isCurrent = props.isCurrent ?? false;
+    this.isCurrent = props.isCurrent;
   }
 
   // Getters
@@ -56,7 +56,7 @@ export class Experience {
     return this.institutionOrCompany;
   }
 
-  getDescription(): string | undefined {
+  getDescription(): string | null {
     return this.description;
   }
 
@@ -64,7 +64,7 @@ export class Experience {
     return this.startYear;
   }
 
-  getEndYear(): number | undefined {
+  getEndYear(): number | null {
     return this.endYear;
   }
 
@@ -85,7 +85,7 @@ export class Experience {
     this.institutionOrCompany = name;
   }
 
-  setDescription(description: string): void {
+  setDescription(description: string | null): void {
     this.description = description;
   }
 
@@ -93,7 +93,7 @@ export class Experience {
     this.startYear = year;
   }
 
-  setEndYear(year: number): void {
+  setEndYear(year: number | null): void {
     this.endYear = year;
   }
 

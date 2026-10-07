@@ -11,6 +11,7 @@ import { RefreshTokenModel } from 'src/authentication/infrastructure/typeorm/mod
 import { ExperienceModel } from 'src/user/infrastructure/typeorm/models/experience.model';
 import { SkillModel } from 'src/user/infrastructure/typeorm/models/skill.model';
 import { UserModel } from 'src/user/infrastructure/typeorm/models/user.model';
+import { UserSkillModel } from 'src/user/infrastructure/typeorm/models/user-skill.model';
 
 export const ENTITIES = [
   CategoryModel,
@@ -21,6 +22,7 @@ export const ENTITIES = [
   RefreshTokenModel,
   SkillModel,
   UserModel,
+  UserSkillModel,
 ];
 
 // Mismo fichero de entorno que carga EnvModule.

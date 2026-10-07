@@ -1,40 +1,90 @@
-import { Level } from '../enums/level';
+import { SkillScope } from '../enums/skill-scope';
 
 export interface SkillProps {
   id: string;
-  name: string;
-  level?: Level;
+  scope: SkillScope;
+  displayName: string;
+  normalizedName: string;
+  createdById: string | null;
+  createdAt?: Date;
+  isActive?: boolean;
+  deletedAt?: Date | null;
 }
 
 export class Skill {
   readonly id: string;
-  name: string;
-  level?: Level;
+  readonly createdAt: Date;
+  scope: SkillScope;
+  displayName: string;
+  normalizedName: string;
+  createdById: string | null;
+  isActive: boolean;
+  deletedAt: Date | null;
 
   constructor(props: SkillProps) {
     this.id = props.id;
-    this.name = props.name;
-    this.level = props.level;
+    this.createdAt = props.createdAt ?? new Date();
+    this.scope = props.scope;
+    this.displayName = props.displayName;
+    this.normalizedName = props.normalizedName;
+    this.createdById = props.createdById;
+    this.isActive = props.isActive ?? true;
+    this.deletedAt = props.deletedAt ?? null;
   }
 
   getId(): string {
     return this.id;
   }
 
-  getName(): string {
-    return this.name;
+  getDisplayName(): string {
+    return this.displayName;
   }
 
-  getLevel(): Level | undefined | null {
-    return this.level;
+  getNormalizedName(): string {
+    return this.normalizedName;
   }
 
-  // Setters
-  setName(name: string): void {
-    this.name = name;
+  getScope(): SkillScope {
+    return this.scope;
   }
 
-  setLevel(level: Level): void {
-    this.level = level;
+  getCreatedAt(): Date {
+    return this.createdAt;
+  }
+
+  getCreatedById(): string | null {
+    return this.createdById;
+  }
+
+  getIsActive(): boolean {
+    return this.isActive;
+  }
+
+  getDeletedAt(): Date | null {
+    return this.deletedAt;
+  }
+
+  isGlobal(): boolean {
+    return this.scope === SkillScope.GLOBAL;
+  }
+
+  setScope(scope: SkillScope): void {
+    this.scope = scope;
+  }
+
+  reactivate(): void {
+    this.isActive = true;
+    this.deletedAt = null;
+  }
+
+  delete(): void {
+    this.isActive = false;
+    this.deletedAt = new Date();
+  }
+
+  // Los dos nombres se cambian juntos o no se cambian: separados pueden discrepar.
+  rename(props: { displayName: string; normalizedName: string }): void {
+    this.displayName = props.displayName;
+    this.normalizedName = props.normalizedName;
   }
 }

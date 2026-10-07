@@ -4,11 +4,11 @@ import { EnvService } from 'src/env/services/env';
 import { UlidGenerator } from 'src/shared/infrastructure/services/ulid.generator';
 import { TypeOrmUnitOfWork } from 'src/shared/infrastructure/typeorm/services/typeorm-unit-of-work';
 import { BcryptPasswordHasher } from 'src/user/infrastructure/services/bcrypt-password-hasher';
-import { TypeOrmUserRepository } from 'src/user/infrastructure/typeorm/repository/user';
-import { UserCreator } from 'src/user/domain/services/user-create';
-import { CreateUserCommand } from 'src/user/application/commands/create-user.command';
-import { CreateUserRequest } from 'src/user/application/commands/requests/create-user.request';
-import { CreateUserResponse } from 'src/user/application/commands/responses/create-user.response';
+import { TypeOrmUserRepository } from 'src/user/infrastructure/typeorm/repositories/user.repository';
+import { UserCreator } from 'src/user/domain/services/user/user-create';
+import { UserCreateCommand } from 'src/user/application/commands/user/user-create.command';
+import { UserCreateRequest } from 'src/user/application/commands/user/requests/user-create.request';
+import { UserResponse } from 'src/user/application/queries/user/responses/user.response';
 import { RefreshTokenCrypto } from 'src/authentication/domain/interfaces/refresh-token-crypto';
 import { TokenService } from 'src/authentication/domain/interfaces/token-service';
 import { GenerateRefreshToken } from 'src/authentication/domain/services/refresh-token-generate';
@@ -165,7 +165,7 @@ export class AuthController {
     description: 'Crea el usuario',
   })
   @ApiBody({
-    type: CreateUserRequest,
+    type: UserCreateRequest,
     examples: {
       basico: {
         summary: 'Usuario básico',
@@ -182,19 +182,20 @@ export class AuthController {
   @ApiResponse({
     status: 201,
     description: 'Usuario creado',
-    type: CreateUserResponse,
+    type: UserResponse,
   })
   @ApiResponse({ status: 400, description: 'Datos de entrada inválidos' })
   @ApiResponse({
     status: 409,
     description: 'Ya existe un usuario con ese correo o nombre de usuario',
   })
-  async register(@Body() body: CreateUserRequest): Promise<CreateUserResponse> {
+  async register(@Body() body: UserCreateRequest): Promise<UserResponse> {
     const userCreator = new UserCreator(
       this.passwordHasher,
       this.userRepository,
+      this.idGenerator,
     );
 
-    return new CreateUserCommand(userCreator).execute({ request: body });
+    return new UserCreateCommand(userCreator).execute({ request: body });
   }
 }

@@ -1,0 +1,164 @@
+import { User } from '../../entities/user.entity';
+import { UserRepository } from '../../repositories/user.repository';
+import {
+  NotFoundUserException,
+  RepeatUserException,
+} from '../../exceptions/user';
+
+export interface UpdateUserProps {
+  id: string;
+  user?: User;
+  email?: string;
+  userName?: string;
+  firstName?: string;
+  lastName?: string;
+  phoneNumber?: string;
+  longBio?: string;
+  shortBio?: string;
+  profileImageUrl?: string;
+  coverImageUrl?: string;
+  website?: string;
+  location?: string;
+  experienceYears?: number;
+  specialization?: string;
+  instagramUrl?: string;
+  twitterUrl?: string;
+  linkedinUrl?: string;
+  languages?: string[];
+}
+
+export class UpdateUser {
+  constructor(private readonly userRepository: UserRepository) {}
+
+  async execute(props: UpdateUserProps): Promise<User> {
+    const user = props.user ?? (await this.userRepository.findById(props.id));
+    if (!user) throw new NotFoundUserException();
+
+    let hasChanges = false;
+
+    if (props.email !== undefined && props.email !== user.getEmail()) {
+      const existingUser = await this.userRepository.findByEmail(props.email);
+      if (existingUser) {
+        throw new RepeatUserException();
+      }
+      user.setEmail(props.email);
+      hasChanges = true;
+    }
+
+    if (
+      props.firstName !== undefined &&
+      props.firstName !== user.getFirstName()
+    ) {
+      user.setFirstName(props.firstName);
+      hasChanges = true;
+    }
+
+    if (props.lastName !== undefined && props.lastName !== user.getLastName()) {
+      user.setLastName(props.lastName);
+      hasChanges = true;
+    }
+
+    if (props.userName !== undefined && props.userName !== user.getUserName()) {
+      user.setUserName(props.userName);
+      hasChanges = true;
+    }
+
+    if (
+      props.phoneNumber !== undefined &&
+      props.phoneNumber !== user.getPhoneNumber()
+    ) {
+      user.setPhoneNumber(props.phoneNumber);
+      hasChanges = true;
+    }
+
+    if (props.longBio !== undefined && props.longBio !== user.getLongBio()) {
+      user.setLongBio(props.longBio);
+      hasChanges = true;
+    }
+
+    if (props.shortBio !== undefined && props.shortBio !== user.getShortBio()) {
+      user.setShortBio(props.shortBio);
+      hasChanges = true;
+    }
+
+    if (
+      props.profileImageUrl !== undefined &&
+      props.profileImageUrl !== user.getProfileImageUrl()
+    ) {
+      user.setProfileImageUrl(props.profileImageUrl);
+      hasChanges = true;
+    }
+
+    if (
+      props.coverImageUrl !== undefined &&
+      props.coverImageUrl !== user.getCoverImageUrl()
+    ) {
+      user.setCoverImageUrl(props.coverImageUrl);
+      hasChanges = true;
+    }
+
+    if (props.website !== undefined && props.website !== user.website) {
+      user.website = props.website;
+      hasChanges = true;
+    }
+
+    if (props.location !== undefined && props.location !== user.getLocation()) {
+      user.setLocation(props.location);
+      hasChanges = true;
+    }
+
+    if (
+      props.experienceYears !== undefined &&
+      props.experienceYears !== user.getExperienceYears()
+    ) {
+      user.setExperienceYears(props.experienceYears);
+      hasChanges = true;
+    }
+
+    if (
+      props.specialization !== undefined &&
+      props.specialization !== user.getSpecialization()
+    ) {
+      user.setSpecialization(props.specialization);
+      hasChanges = true;
+    }
+
+    if (
+      props.instagramUrl !== undefined &&
+      props.instagramUrl !== user.getInstagramUrl()
+    ) {
+      user.setInstagramUrl(props.instagramUrl);
+      hasChanges = true;
+    }
+
+    if (
+      props.twitterUrl !== undefined &&
+      props.twitterUrl !== user.getTwitterUrl()
+    ) {
+      user.setTwitterUrl(props.twitterUrl);
+      hasChanges = true;
+    }
+
+    if (
+      props.linkedinUrl !== undefined &&
+      props.linkedinUrl !== user.getLinkedinUrl()
+    ) {
+      user.setLinkedinUrl(props.linkedinUrl);
+      hasChanges = true;
+    }
+
+    if (
+      props.languages !== undefined &&
+      JSON.stringify(props.languages) !== JSON.stringify(user.getLanguages())
+    ) {
+      user.setLanguages(props.languages);
+      hasChanges = true;
+    }
+
+    if (hasChanges) {
+      await this.userRepository.update(user);
+    }
+
+    return user;
+  }
+}

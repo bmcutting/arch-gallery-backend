@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { CategoryResponse } from 'src/category/application/queries/responses/category.response';
 import { CommentResponse } from 'src/comment/application/queries/responses/comment.response';
 import { LikeResponse } from 'src/like/application/queries/responses/like.response';
-import { UserResponse } from 'src/user/application/queries/responses/user.response';
+import { UserResponse } from 'src/user/application/queries/user/responses/user.response';
 
 export class ProjectResponse {
   @ApiProperty({

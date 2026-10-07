@@ -7,6 +7,10 @@ import {
   Raw,
 } from 'typeorm';
 
+import { SimpleTextNormalizer } from 'src/shared/domain/services/simple-text.normalizer';
+
+const normalizer = new SimpleTextNormalizer();
+
 let rawParamCounter = 0;
 
 export class WhereUtils {
@@ -30,7 +34,7 @@ export class WhereUtils {
   static ilikeUnaccent(value?: string): FindOperator<string> | undefined {
     if (!value) return undefined;
 
-    const normalized = value.toLowerCase().replace(/[^a-z0-9]/gi, '');
+    const normalized = normalizer.normalize(value);
     const key = `param_${rawParamCounter++}`;
 
     return Raw(
@@ -45,9 +49,7 @@ export class WhereUtils {
   ): FindOperator<string> | undefined {
     if (!values?.length) return undefined;
 
-    const normalizedValues = values.map((v) =>
-      v.toLowerCase().replace(/[^a-z0-9]/gi, ''),
-    );
+    const normalizedValues = values.map((v) => normalizer.normalize(v));
     const keyBase = `param_${rawParamCounter++}`;
 
     return Raw(

@@ -9,7 +9,7 @@ interface Props {
   user: {
     id: string;
     userName: string;
-    profileImageUrl: string;
+    profileImageUrl: string | null;
   };
 }
 
@@ -24,7 +24,7 @@ export class Comment {
   user: {
     id: string;
     userName: string;
-    profileImageUrl: string;
+    profileImageUrl: string | null;
   };
 
   constructor(props: Props) {

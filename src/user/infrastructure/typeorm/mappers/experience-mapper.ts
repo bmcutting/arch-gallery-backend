@@ -9,9 +9,9 @@ export class ExperienceTypeOrmMapper {
       type: model.type,
       title: model.title,
       institutionOrCompany: model.institutionOrCompany,
-      description: model.description ? model.description : undefined,
+      description: model.description,
       startYear: model.startYear,
-      endYear: model.endYear ? model.endYear : undefined,
+      endYear: model.endYear,
       isCurrent: model.isCurrent,
     });
   }
@@ -23,9 +23,9 @@ export class ExperienceTypeOrmMapper {
     model.type = domain.getType();
     model.title = domain.getTitle();
     model.institutionOrCompany = domain.getInstitutionOrCompany();
-    model.description = domain.getDescription() ?? '';
+    model.description = domain.getDescription();
     model.startYear = domain.getStartYear();
-    model.endYear = domain.getEndYear() ?? 0;
+    model.endYear = domain.getEndYear();
     model.isCurrent = domain.getIsCurrent();
 
     return model;

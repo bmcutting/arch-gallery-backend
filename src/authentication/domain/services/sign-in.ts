@@ -26,7 +26,7 @@ export class SignIn {
   ) {}
 
   async execute({ email, password }: Props): Promise<SignInResult> {
-    const user = await this.userRepository.findByEmail(email);
+    const user = await this.userRepository.findByEmailWithPassword(email);
 
     if (!user || !user.isActive) throw new InvalidCredentialsException();
 

@@ -5,9 +5,6 @@ import { ExperienceType } from 'src/user/domain/enums/experience';
 
 @Entity()
 export class ExperienceModel extends Model {
-  @Column({ type: 'varchar', length: 26 })
-  user_id: string;
-
   @Column({ type: 'enum', enum: ExperienceType })
   type: ExperienceType;
 
@@ -32,4 +29,7 @@ export class ExperienceModel extends Model {
   @ManyToOne(() => UserModel, (user) => user.experiences)
   @JoinColumn({ name: 'user_id' })
   user: UserModel;
+
+  @Column({ type: 'varchar' })
+  user_id: string;
 }

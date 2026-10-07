@@ -1,5 +1,5 @@
 import { Experience } from './experience.entity';
-import { Skill } from './skill.entity';
+import { UserSkill } from './user-skill.entity';
 
 interface Props {
   id: string;
@@ -8,24 +8,24 @@ interface Props {
   userName: string;
   firstName: string;
   lastName: string;
-  phoneNumber?: string;
-  shortBio?: string;
-  longBio?: string;
-  skills?: Skill[];
-  experiences?: Experience[];
-  profileImageUrl?: string;
-  coverImageUrl?: string;
-  website?: string;
-  location?: string;
-  experienceYears?: number;
-  specialization?: string;
-  instagramUrl?: string;
-  twitterUrl?: string;
-  linkedinUrl?: string;
-  languages?: string[];
+  phoneNumber: string | null;
+  shortBio: string | null;
+  longBio: string | null;
+  profileImageUrl: string | null;
+  coverImageUrl: string | null;
+  website: string | null;
+  location: string | null;
+  experienceYears: number | null;
+  specialization: string | null;
+  instagramUrl: string | null;
+  twitterUrl: string | null;
+  linkedinUrl: string | null;
+  languages: string[];
+  skills: UserSkill[];
+  experiences: Experience[];
   isActive: boolean;
   createdAt?: Date;
-  deletedAt?: Date | null;
+  deletedAt: Date | null;
 }
 
 export class User {
@@ -36,20 +36,20 @@ export class User {
   userName: string;
   firstName: string;
   lastName: string;
-  phoneNumber: string;
-  shortBio: string;
-  longBio: string;
-  skills: Skill[];
+  phoneNumber: string | null;
+  shortBio: string | null;
+  longBio: string | null;
+  profileImageUrl: string | null;
+  coverImageUrl: string | null;
+  website: string | null;
+  location: string | null;
+  experienceYears: number | null;
+  specialization: string | null;
+  instagramUrl: string | null;
+  twitterUrl: string | null;
+  linkedinUrl: string | null;
+  skills: UserSkill[];
   experiences: Experience[];
-  profileImageUrl: string;
-  coverImageUrl: string;
-  website: string;
-  location: string;
-  experienceYears: number;
-  specialization: string;
-  instagramUrl: string;
-  twitterUrl: string;
-  linkedinUrl: string;
   languages: string[];
   isActive: boolean;
   deletedAt: Date | null;
@@ -61,24 +61,24 @@ export class User {
     this.firstName = props.firstName;
     this.lastName = props.lastName;
     this.userName = props.userName;
-    this.phoneNumber = props.phoneNumber ?? '';
-    this.shortBio = props.shortBio ?? '';
-    this.longBio = props.longBio ?? '';
-    this.skills = props.skills ?? [];
-    this.experiences = props.experiences ?? [];
-    this.profileImageUrl = props.profileImageUrl ?? '';
-    this.coverImageUrl = props.coverImageUrl ?? '';
-    this.website = props.website ?? '';
-    this.location = props.location ?? '';
-    this.experienceYears = props.experienceYears ?? 0;
-    this.specialization = props.specialization ?? '';
-    this.instagramUrl = props.instagramUrl ?? '';
-    this.twitterUrl = props.twitterUrl ?? '';
-    this.linkedinUrl = props.linkedinUrl ?? '';
-    this.languages = props.languages ?? [];
+    this.phoneNumber = props.phoneNumber;
+    this.shortBio = props.shortBio;
+    this.longBio = props.longBio;
+    this.skills = props.skills;
+    this.experiences = props.experiences;
+    this.profileImageUrl = props.profileImageUrl;
+    this.coverImageUrl = props.coverImageUrl;
+    this.website = props.website;
+    this.location = props.location;
+    this.experienceYears = props.experienceYears;
+    this.specialization = props.specialization;
+    this.instagramUrl = props.instagramUrl;
+    this.twitterUrl = props.twitterUrl;
+    this.linkedinUrl = props.linkedinUrl;
+    this.languages = props.languages;
     this.isActive = props.isActive;
     this.createdAt = props.createdAt ?? new Date();
-    this.deletedAt = props.deletedAt ?? null;
+    this.deletedAt = props.deletedAt;
   }
 
   // Getters
@@ -118,19 +118,19 @@ export class User {
     return this.phoneNumber;
   }
 
-  getShortBio(): string {
+  getShortBio(): string | null {
     return this.shortBio;
   }
 
-  getLongBio(): string {
+  getLongBio(): string | null {
     return this.longBio;
   }
 
-  getWebsite(): string {
+  getWebsite(): string | null {
     return this.website;
   }
 
-  getSkills(): Skill[] {
+  getSkills(): UserSkill[] {
     return this.skills;
   }
 
@@ -175,6 +175,10 @@ export class User {
   }
 
   // Setters
+  setPassword(password: string): void {
+    this.password = password;
+  }
+
   setEmail(email: string) {
     this.email = email;
   }
@@ -207,7 +211,7 @@ export class User {
     this.longBio = longBio;
   }
 
-  setSkill(skills: Skill[]): void {
+  setSkill(skills: UserSkill[]): void {
     this.skills = skills;
   }
 

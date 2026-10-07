@@ -7,7 +7,7 @@ import {
 import type { Request } from 'express';
 import { EnvService } from 'src/env/services/env';
 import { User } from 'src/user/domain/entities/user.entity';
-import { TypeOrmUserRepository } from 'src/user/infrastructure/typeorm/repository/user';
+import { TypeOrmUserRepository } from 'src/user/infrastructure/typeorm/repositories/user.repository';
 import { TokenService } from '../../../domain/interfaces/token-service';
 import { JwtTokenService } from '../services/jwt-token-service';
 

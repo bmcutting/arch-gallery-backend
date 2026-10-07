@@ -1,28 +1,36 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { TypeOrmUserRepository } from './infrastructure/typeorm/repository/user';
-import { UserModel } from './infrastructure/typeorm/models/user.model';
+import { TypeOrmUserRepository } from './infrastructure/typeorm/repositories/user.repository';
+import { TypeOrmSkillRepository } from './infrastructure/typeorm/repositories/skill.repository';
+import { TypeOrmUserSkillRepository } from './infrastructure/typeorm/repositories/user-skill.repository';
+import { TypeOrmExperienceRepository } from './infrastructure/typeorm/repositories/experience.repository';
 import { UserController } from './infrastructure/nest/controllers/user.controller';
 import { ExperienceController } from './infrastructure/nest/controllers/experience.controller';
-import { SkillController } from './infrastructure/nest/controllers/skill.controller';
-import { TypeOrmSkillRepository } from './infrastructure/typeorm/repository/skill';
-import { TypeOrmExperienceRepository } from './infrastructure/typeorm/repository/experience';
-import { SkillModel } from './infrastructure/typeorm/models/skill.model';
-import { ExperienceModel } from './infrastructure/typeorm/models/experience.model';
+import {
+  SkillController,
+  UserSkillController,
+} from './infrastructure/nest/controllers/skill.controller';
 import { BcryptPasswordHasher } from './infrastructure/services/bcrypt-password-hasher';
 
+// Sin `TypeOrmModule.forFeature`: los cuatro repositorios extienden BaseTypeOrmRepository, que
+// resuelve el DataSource global, asi que no necesitan token de repositorio por entidad.
 @Module({
-  imports: [TypeOrmModule.forFeature([UserModel, SkillModel, ExperienceModel])],
-  controllers: [UserController, ExperienceController, SkillController],
+  controllers: [
+    UserController,
+    ExperienceController,
+    SkillController,
+    UserSkillController,
+  ],
   providers: [
     TypeOrmUserRepository,
     TypeOrmSkillRepository,
+    TypeOrmUserSkillRepository,
     TypeOrmExperienceRepository,
     BcryptPasswordHasher,
   ],
   exports: [
     TypeOrmUserRepository,
     TypeOrmSkillRepository,
+    TypeOrmUserSkillRepository,
     TypeOrmExperienceRepository,
     BcryptPasswordHasher,
   ],

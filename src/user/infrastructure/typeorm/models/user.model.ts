@@ -3,7 +3,7 @@ import { LikeModel } from 'src/like/infrastructure/typeorm/models/like.model';
 import { ProjectModel } from 'src/project/infrastructure/typeorm/models/project.model';
 import { Model } from 'src/shared/infrastructure/typeorm/models/base.model';
 import { Column, Entity, OneToMany } from 'typeorm';
-import { SkillModel } from './skill.model';
+import { UserSkillModel } from './user-skill.model';
 import { ExperienceModel } from './experience.model';
 
 @Entity()
@@ -14,7 +14,7 @@ export class UserModel extends Model {
   @Column({ type: 'varchar', length: 255, unique: true })
   email: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, select: false })
   password: string;
 
   @Column({ type: 'varchar', length: 100 })
@@ -24,58 +24,56 @@ export class UserModel extends Model {
   lastName: string;
 
   @Column({ type: 'varchar', length: 200, nullable: true })
-  shortBio: string;
+  shortBio: string | null;
 
   @Column({ type: 'varchar', length: 1000, nullable: true })
-  longBio: string;
+  longBio: string | null;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
-  phoneNumber: string;
+  phoneNumber: string | null;
 
   @Column({ type: 'text', nullable: true })
-  profileImageUrl: string;
+  profileImageUrl: string | null;
 
   @Column({ type: 'text', nullable: true })
-  coverImageUrl: string;
+  coverImageUrl: string | null;
 
   @Column({ type: 'text', nullable: true })
-  website: string;
+  website: string | null;
 
   @Column({ type: 'varchar', length: 100, nullable: true })
-  location: string;
+  location: string | null;
 
   @Column({ type: 'int', nullable: true })
-  experienceYears: number;
+  experienceYears: number | null;
 
   @Column({ type: 'text', nullable: true })
-  specialization: string;
+  specialization: string | null;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  instagramUrl: string;
+  instagramUrl: string | null;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  twitterUrl: string;
+  twitterUrl: string | null;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  linkedinUrl: string;
+  linkedinUrl: string | null;
 
   @Column('text', { array: true, nullable: true })
   languages: string[];
 
-  @OneToMany(() => SkillModel, (skill) => skill.user, { cascade: true })
-  skills: SkillModel[];
+  @OneToMany(() => UserSkillModel, (userSkill) => userSkill.user)
+  skills: UserSkillModel[];
 
-  @OneToMany(() => ExperienceModel, (experience) => experience.user, {
-    cascade: true,
-  })
+  @OneToMany(() => ExperienceModel, (experience) => experience.user)
   experiences: ExperienceModel[];
 
-  @OneToMany(() => ProjectModel, (project) => project.user, { cascade: true })
+  @OneToMany(() => ProjectModel, (project) => project.user)
   projects: ProjectModel[];
 
-  @OneToMany(() => LikeModel, (like) => like.user, { cascade: true })
+  @OneToMany(() => LikeModel, (like) => like.user)
   likes: LikeModel[];
 
-  @OneToMany(() => CommentModel, (comment) => comment.user, { cascade: true })
+  @OneToMany(() => CommentModel, (comment) => comment.user)
   comments: CommentModel[];
 }

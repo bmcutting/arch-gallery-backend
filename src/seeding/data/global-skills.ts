@@ -1,0 +1,23 @@
+// El catálogo curado. Las filas sembradas son GLOBAL y sin dueño.
+export const GLOBAL_SKILLS = [
+  'AutoCAD',
+  'Revit',
+  'SketchUp',
+  'Rhinoceros',
+  'ArchiCAD',
+  '3ds Max',
+  'Lumion',
+  'V-Ray',
+  'Diseño arquitectónico',
+  'Diseño de interiores',
+  'Urbanismo',
+  'Paisajismo',
+  'Arquitectura sostenible',
+  'Restauración patrimonial',
+  'Modelado BIM',
+  'Renderizado',
+  'Maquetación',
+  'Dibujo técnico',
+  'Gestión de obra',
+  'Cálculo estructural',
+];

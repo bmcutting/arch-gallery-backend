@@ -1,17 +1,39 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { UserModel } from './user.model';
 import { Model } from 'src/shared/infrastructure/typeorm/models/base.model';
-import { Level } from 'src/user/domain/enums/level';
+import { SkillScope } from 'src/user/domain/enums/skill-scope';
+import { UserSkillModel } from './user-skill.model';
 
 @Entity()
+@Index('IDX_skill_scope_normalized_name', ['scope', 'normalizedName'])
+@Index('IDX_skill_created_by_normalized_name', [
+  'created_by_id',
+  'normalizedName',
+])
 export class SkillModel extends Model {
-  @Column({ type: 'varchar', length: 100, unique: true })
-  name: string;
+  @Column({ type: 'varchar', length: 100 })
+  displayName: string;
 
-  @Column({ type: 'enum', enum: Level, nullable: true })
-  level: Level | null;
+  @Column({ type: 'varchar', length: 100 })
+  normalizedName: string;
 
-  @ManyToOne(() => UserModel, (user) => user.skills)
-  @JoinColumn({ name: 'user_id' })
-  user: UserModel;
+  @Column({ type: 'enum', enum: SkillScope })
+  scope: SkillScope;
+
+  @Column({ type: 'varchar', length: 26, nullable: true })
+  created_by_id: string | null;
+
+  @ManyToOne(() => UserModel, { nullable: true })
+  @JoinColumn({ name: 'created_by_id' })
+  createdBy: UserModel | null;
+
+  @OneToMany(() => UserSkillModel, (userSkill) => userSkill.skill)
+  userSkills: UserSkillModel[];
 }

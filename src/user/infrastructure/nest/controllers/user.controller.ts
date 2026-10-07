@@ -1,8 +1,16 @@
-import { Body, Controller, Get, Param, Put, Query, Req } from '@nestjs/common';
-import { UserResponse } from 'src/user/application/queries/responses/user.response';
-import { GetAllUsersQuery } from 'src/user/application/queries/get-all-users.query';
-import { UserPaginationRequest } from 'src/user/application/queries/requests/user-pagination.request';
-import { TypeOrmUserRepository } from '../../typeorm/repository/user';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Query,
+  Req,
+} from '@nestjs/common';
+import { UserResponse } from 'src/user/application/queries/user/responses/user.response';
+import { UserGetAllQuery } from 'src/user/application/queries/user/user-get-all.query';
+import { UserGetAllRequest } from 'src/user/application/queries/user/requests/user-get-all.request';
+import { TypeOrmUserRepository } from '../../typeorm/repositories/user.repository';
 import { UlidGenerator } from 'src/shared/infrastructure/services/ulid.generator';
 import {
   ApiBody,
@@ -11,13 +19,26 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { GetUserByIdQuery } from 'src/user/application/queries/get-user-by-id.query';
-import { UpdateUser } from 'src/user/domain/services/user-update';
-import { UpdateUserRequest } from 'src/user/application/commands/requests/update-user.request';
-import { UpdateUserCommand } from 'src/user/application/commands/update-user.command';
+import { UserGetByIdQuery } from 'src/user/application/queries/user/user-get-by-id.query';
+import { UpdateUser } from 'src/user/domain/services/user/user-update';
+import { UserUpdateRequest } from 'src/user/application/commands/user/requests/user-update.request';
+import { UserUpdateCommand } from 'src/user/application/commands/user/user-update.command';
+import { UserChangePasswordRequest } from 'src/user/application/commands/user/requests/user-change-password.request';
+import { UserChangePasswordCommand } from 'src/user/application/commands/user/user-change-password.command';
+import { UserChangePassword } from 'src/user/domain/services/user/user-change-password';
+import { BcryptPasswordHasher } from 'src/user/infrastructure/services/bcrypt-password-hasher';
 import { PaginationResponse } from 'src/shared/application/responses/pagination.response';
 import { Auth } from 'src/authentication/infrastructure/nest/decorators/auth.decorator';
 import { User } from 'src/user/domain/entities/user.entity';
+import { TypeOrmUnitOfWork } from 'src/shared/infrastructure/typeorm/services/typeorm-unit-of-work';
+import { SimpleTextNormalizer } from 'src/shared/domain/services/simple-text.normalizer';
+import { UserSkillSync } from 'src/user/domain/services/user-skill/user-skill-sync';
+import { ExperienceSync } from 'src/user/domain/services/experience/experience-sync';
+import { SkillResolve } from 'src/user/domain/services/skill/skill-resolve';
+import { SkillFindById } from 'src/user/domain/services/skill/skill-find-by-id';
+import { TypeOrmSkillRepository } from '../../typeorm/repositories/skill.repository';
+import { TypeOrmUserSkillRepository } from '../../typeorm/repositories/user-skill.repository';
+import { TypeOrmExperienceRepository } from '../../typeorm/repositories/experience.repository';
 
 @ApiTags('Users')
 @Controller('users')
@@ -25,6 +46,10 @@ import { User } from 'src/user/domain/entities/user.entity';
 export class UserController {
   constructor(
     private readonly userRepository: TypeOrmUserRepository,
+    private readonly skillRepository: TypeOrmSkillRepository,
+    private readonly userSkillRepository: TypeOrmUserSkillRepository,
+    private readonly experienceRepository: TypeOrmExperienceRepository,
+    private readonly unitOfWork: TypeOrmUnitOfWork,
     private readonly ids: UlidGenerator,
   ) {}
 
@@ -44,11 +69,38 @@ export class UserController {
     description: 'Token inválido o no proporcionado',
   })
   async getMe(@Req() req: RequestWithUser): Promise<UserResponse> {
-    const query = new GetUserByIdQuery(this.userRepository);
+    const query = new UserGetByIdQuery(this.userRepository);
     return await query.execute({ id: req.user.id });
   }
 
-  @Put(':id')
+  @Patch('change-password')
+  @ApiOperation({
+    summary: 'Cambiar la contraseña del usuario autenticado',
+    description: 'Exige la contraseña actual para confirmar el cambio.',
+  })
+  @ApiBody({ type: UserChangePasswordRequest })
+  @ApiResponse({ status: 200, description: 'Contraseña actualizada' })
+  @ApiResponse({
+    status: 409,
+    description: 'not-equal-passwords: la contraseña actual no coincide',
+  })
+  async changePassword(
+    @Req() req: RequestWithUser,
+    @Body() body: UserChangePasswordRequest,
+  ): Promise<void> {
+    const service = new UserChangePassword(
+      this.userRepository,
+      new BcryptPasswordHasher(),
+    );
+    const command = new UserChangePasswordCommand(this.userRepository, service);
+
+    return await command.execute({
+      request: body,
+      currentUserId: req.user.id,
+    });
+  }
+
+  @Patch(':id')
   @ApiOperation({
     summary: 'Actualizar un usuario',
     description:
@@ -56,7 +108,7 @@ export class UserController {
   })
   @ApiParam({ name: 'id', description: 'ID único del usuario', type: String })
   @ApiBody({
-    type: UpdateUserRequest,
+    type: UserUpdateRequest,
     examples: {
       ejemplo1: {
         summary: 'Actualizar todos los campos',
@@ -95,16 +147,32 @@ export class UserController {
   async update(
     @Param('id') id: string,
     @Req() req: RequestWithUser,
-    @Body() body: UpdateUserRequest,
-  ) {
-    const updateUserService = new UpdateUser(this.userRepository, this.ids);
-    const command = new UpdateUserCommand(
+    @Body() body: UserUpdateRequest,
+  ): Promise<UserResponse> {
+    const command = new UserUpdateCommand(
       this.userRepository,
-      updateUserService,
+      new UpdateUser(this.userRepository),
+      new UserSkillSync(
+        this.userSkillRepository,
+        new SkillResolve(
+          this.skillRepository,
+          new SkillFindById(this.skillRepository),
+          new SimpleTextNormalizer(),
+          this.ids,
+        ),
+        this.ids,
+      ),
+      new ExperienceSync(this.experienceRepository, this.ids),
     );
-    return command.execute({
-      request: { ...body, userId: id },
-      currentUserId: req.user.id,
+
+    // Escribe tres tablas si llegan skills y experiencias.
+    return await this.unitOfWork.run({
+      work: async () =>
+        await command.execute({
+          request: body,
+          id,
+          currentUserId: req.user.id,
+        }),
     });
   }
 
@@ -120,9 +188,9 @@ export class UserController {
     type: [UserResponse],
   })
   async getUsers(
-    @Query() params: UserPaginationRequest,
+    @Query() params: UserGetAllRequest,
   ): Promise<PaginationResponse<UserResponse>> {
-    const getAllUsersQuery = new GetAllUsersQuery(this.userRepository);
+    const getAllUsersQuery = new UserGetAllQuery(this.userRepository);
     const paginationResponse = await getAllUsersQuery.execute(params);
     return paginationResponse;
   }
@@ -141,7 +209,7 @@ export class UserController {
   })
   @ApiResponse({ status: 404, description: 'Usuario no encontrado' })
   async findById(@Param('id') id: string): Promise<UserResponse> {
-    const query = new GetUserByIdQuery(this.userRepository);
+    const query = new UserGetByIdQuery(this.userRepository);
     return query.execute({ id });
   }
 }

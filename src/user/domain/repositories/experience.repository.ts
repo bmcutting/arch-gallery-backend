@@ -1,21 +1,13 @@
+import { PaginationResult } from 'src/shared/domain/interfaces/pagination';
 import { Experience } from '../entities/experience.entity';
-import { ExperienceType } from '../enums/experience';
+import { ExperiencePaginationParams } from '../interfaces/experience-pagination';
 
 export interface ExperienceRepository {
-  create(props: CreateExperienceProps): Promise<string>;
-  findById(id: string): Promise<Experience | null>;
-  findAll(userId: string): Promise<Experience[]>;
-  update(skill: Experience): Promise<string>;
+  save(experience: Experience): Promise<void>;
+  update(experience: Experience): Promise<void>;
   delete(id: string): Promise<void>;
-}
-
-export interface CreateExperienceProps {
-  userId: string;
-  type: ExperienceType;
-  title: string;
-  institutionOrCompany: string;
-  startYear: number;
-  description?: string;
-  endYear?: number;
-  isCurrent?: boolean;
+  findById(id: string): Promise<Experience | null>;
+  find(
+    props: ExperiencePaginationParams,
+  ): Promise<PaginationResult<Experience>>;
 }

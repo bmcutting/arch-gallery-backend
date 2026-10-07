@@ -1,124 +1,158 @@
 import {
-  Controller,
-  Post,
-  Get,
-  Put,
-  Param,
   Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
   Query,
   Req,
 } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiBody,
-  ApiQuery,
-} from '@nestjs/swagger';
-import { CreateSkillRequest } from 'src/user/application/commands/requests/create-skill.request';
-import { SkillCreator } from 'src/user/domain/services/skill-create';
-import { TypeOrmSkillRepository } from '../../typeorm/repository/skill';
-import { TypeOrmUserRepository } from '../../typeorm/repository/user';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Auth } from 'src/authentication/infrastructure/nest/decorators/auth.decorator';
-import { CreateSkillCommand } from 'src/user/application/commands/create-skill.command';
-import { User } from 'src/user/domain/entities/user.entity';
-import { SkillResponse } from 'src/user/application/queries/responses/skill.response';
-import { UpdateSkillRequest } from 'src/user/application/commands/requests/update-skill.request';
-import { UpdateSkill } from 'src/user/domain/services/skill-update';
-import { UpdateSkillCommand } from 'src/user/application/commands/update-skill.command';
-import { SearchSkillsQuery } from 'src/user/application/queries/search-skills.query';
-import { CreateSkillResponse } from 'src/user/application/commands/responses/create-skill.response';
+import { PaginationResponse } from 'src/shared/application/responses/pagination.response';
+import { UlidGenerator } from 'src/shared/infrastructure/services/ulid.generator';
+import { TypeOrmUnitOfWork } from 'src/shared/infrastructure/typeorm/services/typeorm-unit-of-work';
+import { SimpleTextNormalizer } from 'src/shared/domain/services/simple-text.normalizer';
+import { UserSkillUpdateCommand } from 'src/user/application/commands/skill/user-skill-update.command';
+import { UserSkillUpdateRequest } from 'src/user/application/commands/skill/requests/user-skill-update.request';
+import { SkillResponse } from 'src/user/application/queries/skill/responses/skill.response';
+import { UserSkillResponse } from 'src/user/application/queries/skill/responses/user-skill.response';
+import { SkillGetAllQuery } from 'src/user/application/queries/skill/skill-get-all.query';
+import { SkillGetAllRequest } from 'src/user/application/queries/skill/requests/skill-get-all.request';
+import { SkillFindById } from 'src/user/domain/services/skill/skill-find-by-id';
+import { UserSkillGetMineQuery } from 'src/user/application/queries/skill/user-skill-get-mine.query';
+import { UserSkillGetMineRequest } from 'src/user/application/queries/skill/requests/user-skill-get-mine.request';
+import { SkillDeleteCommand } from 'src/user/application/commands/skill/skill-delete.command';
+import { SkillFindOwn } from 'src/user/domain/services/skill/skill-find-own';
+import { SkillResolve } from 'src/user/domain/services/skill/skill-resolve';
+import { SkillDelete } from 'src/user/domain/services/skill/skill-delete';
+import { UserSkillSync } from 'src/user/domain/services/user-skill/user-skill-sync';
+import { TypeOrmSkillRepository } from '../../typeorm/repositories/skill.repository';
+import { TypeOrmUserSkillRepository } from '../../typeorm/repositories/user-skill.repository';
+import type { RequestWithUser } from './user.controller';
 
 @ApiTags('Skills')
 @Controller('skills')
 @Auth()
 export class SkillController {
   constructor(
-    private readonly userRepository: TypeOrmUserRepository,
     private readonly skillRepository: TypeOrmSkillRepository,
+    private readonly userSkillRepository: TypeOrmUserSkillRepository,
+    private readonly unitOfWork: TypeOrmUnitOfWork,
+    private readonly ids: UlidGenerator,
   ) {}
 
-  @Post()
+  @Get()
   @ApiOperation({
-    summary: 'Crear una nueva skill asociada a un usuario',
+    summary: 'Listar el catálogo de habilidades',
     description:
-      'Permite registrar una nueva skill en el sistema asociándola a un usuario.',
+      'Devuelve las habilidades del catálogo global más las privadas del usuario autenticado.',
   })
-  @ApiBody({
-    type: CreateSkillRequest,
-    examples: {
-      ejemplo: {
-        summary: 'Skill nueva',
-        description: 'Ejemplo de creación de una skill',
-        value: {
-          name: 'Modelado 3D',
-          userId: '28582f21-2435-4a2e-9a4b-b002bc5cb0d6',
-        },
-      },
-    },
-  })
-  @ApiResponse({ status: 201, description: 'Skill creada exitosamente' })
-  @ApiResponse({ status: 400, description: 'Datos de entrada inválidos' })
-  async create(
-    @Req() req: { user: User },
-    @Body() body: CreateSkillRequest,
-  ): Promise<CreateSkillResponse> {
-    const creator = new SkillCreator(this.userRepository, this.skillRepository);
-    const command = new CreateSkillCommand(creator);
+  @ApiResponse({ status: 200, description: 'Catálogo paginado' })
+  async getAll(
+    @Req() req: RequestWithUser,
+    @Query() params: SkillGetAllRequest,
+  ): Promise<PaginationResponse<SkillResponse>> {
+    const query = new SkillGetAllQuery(this.skillRepository);
 
-    return await command.execute({
-      ...body,
-      userId: req.user.id,
+    return await query.execute({
+      request: params,
+      currentUserId: req.user.id,
     });
   }
 
-  @Get('search')
+  @Delete(':id')
   @ApiOperation({
-    summary: 'Buscar skills por nombre',
+    summary: 'Borrar una habilidad propia del catálogo',
     description:
-      'Devuelve una lista de skills que coinciden parcial o totalmente con el texto ingresado.',
+      'Solo habilidades privadas creadas por el usuario. Borra también las asociaciones con su perfil.',
   })
-  @ApiQuery({
-    name: 'name',
-    required: true,
-    description: 'Texto a buscar dentro del nombre de las skills',
-    type: String,
-  })
+  @ApiResponse({ status: 200, description: 'Habilidad borrada' })
   @ApiResponse({
-    status: 200,
-    description: 'Lista de skills coincidentes',
-    type: [SkillResponse],
+    status: 404,
+    description: 'skill-not-found: no existe, o no es una habilidad propia',
   })
-  async searchSkills(
-    @Query('name') name: string,
-  ): Promise<SkillResponse[] | null> {
-    const searchQuery = new SearchSkillsQuery(this.skillRepository);
-    return await searchQuery.execute({ name });
+  async remove(
+    @Req() req: RequestWithUser,
+    @Param('id') id: string,
+  ): Promise<void> {
+    const service = new SkillDelete(
+      this.skillRepository,
+      this.userSkillRepository,
+      new SkillFindOwn(this.skillRepository),
+    );
+    const command = new SkillDeleteCommand(this.unitOfWork, service);
+
+    return await command.execute({ id, currentUserId: req.user.id });
+  }
+}
+
+@ApiTags('Users')
+@Controller('users/me/skills')
+@Auth()
+export class UserSkillController {
+  constructor(
+    private readonly skillRepository: TypeOrmSkillRepository,
+    private readonly userSkillRepository: TypeOrmUserSkillRepository,
+    private readonly unitOfWork: TypeOrmUnitOfWork,
+    private readonly ids: UlidGenerator,
+  ) {}
+
+  @Get()
+  @ApiOperation({
+    summary: 'Listar las habilidades del usuario autenticado',
+    description:
+      'Se puede filtrar por nombre, nivel y procedencia, y ordenar por nombre, nivel o fecha.',
+  })
+  @ApiResponse({ status: 200, description: 'Habilidades paginadas' })
+  async getMine(
+    @Req() req: RequestWithUser,
+    @Query() params: UserSkillGetMineRequest,
+  ): Promise<PaginationResponse<UserSkillResponse>> {
+    const query = new UserSkillGetMineQuery(this.userSkillRepository);
+
+    return await query.execute({
+      request: params,
+      currentUserId: req.user.id,
+    });
   }
 
-  @Put(':id')
+  @Patch()
   @ApiOperation({
-    summary: 'Actualizar una skill',
-    description: 'Permite modificar el nombre de una skill existente.',
+    summary: 'Actualizar las habilidades del usuario autenticado',
+    description:
+      'Recibe el conjunto completo: lo que no venga se elimina. Cada elemento lleva `id` de una ' +
+      'habilidad del catálogo o `name` para crearla; si llegan los dos gana el `id`.',
   })
-  @ApiBody({
-    type: UpdateSkillRequest,
-    examples: {
-      ejemplo: {
-        summary: 'Actualizar el nombre',
-        description: 'Ejemplo de actualización',
-        value: {
-          name: 'Renderizado avanzado',
-        },
-      },
-    },
+  @ApiBody({ type: UserSkillUpdateRequest })
+  @ApiResponse({ status: 200, description: 'Habilidades del perfil' })
+  @ApiResponse({
+    status: 400,
+    description:
+      'user-skill-duplicate: la misma habilidad llega dos veces. skill-name-invalid: nombre vacío.',
   })
-  async update(@Param('id') id: string, @Body() body: UpdateSkillRequest) {
-    const updateSkillService = new UpdateSkill(this.skillRepository);
-    const command = new UpdateSkillCommand(
+  async update(
+    @Req() req: RequestWithUser,
+    @Body() body: UserSkillUpdateRequest,
+  ): Promise<UserSkillResponse[]> {
+    const normalizer = new SimpleTextNormalizer();
+    const skillResolve = new SkillResolve(
       this.skillRepository,
-      updateSkillService,
+      new SkillFindById(this.skillRepository),
+      normalizer,
+      this.ids,
     );
-    return command.execute({ request: { ...body, skillId: id } });
+    const sync = new UserSkillSync(
+      this.userSkillRepository,
+      skillResolve,
+      this.ids,
+    );
+    const command = new UserSkillUpdateCommand(this.unitOfWork, sync);
+
+    return await command.execute({
+      request: body,
+      currentUserId: req.user.id,
+    });
   }
 }
