@@ -15,8 +15,8 @@ export class ProjectPaginationRequest extends PaginationRequest {
     type: [SortOptionRequest],
     description: 'Opciones de ordenamiento para usuarios',
     example: [
-      { field: 'createdAt', order: 'DESC' },
-      { field: 'lastName', order: 'ASC' },
+      { field: 'createdAt', direction: 'DESC' },
+      { field: 'lastName', direction: 'ASC' },
     ],
   })
   @TransformSort(ProjectSortFields)

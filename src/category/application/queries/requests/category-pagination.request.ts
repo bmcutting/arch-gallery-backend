@@ -14,7 +14,7 @@ export class CategoryPaginationRequest extends PaginationRequest {
   @ApiPropertyOptional({
     type: [SortOptionRequest],
     description: 'Opciones de ordenamiento para categorñia',
-    example: [{ field: 'name', order: 'DESC' }],
+    example: [{ field: 'name', direction: 'DESC' }],
   })
   @TransformSort(CategorySortFields)
   sort?: SortOptionRequest<CategorySortFields>[];
