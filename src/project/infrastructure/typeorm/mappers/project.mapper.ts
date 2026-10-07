@@ -6,8 +6,6 @@ import { LikeTypeOrmMapper } from '../../../../like/infrastructure/typeorm/mappe
 import { CommentTypeOrmMapper } from '../../../../comment/infrastructure/typeorm/mappers/comment.mapper';
 
 export class ProjectTypeOrmMapper {
-  constructor() {}
-
   static execute(p: ProjectModel): Project {
     return new Project({
       id: p.id,

@@ -2,8 +2,6 @@ import { Category } from 'src/category/domain/entities/category';
 import { CategoryModel } from '../models/category.model';
 
 export class CategoryTypeOrmMapper {
-  constructor() {}
-
   static toDomain(c: CategoryModel): Category {
     return new Category({
       id: c.id,

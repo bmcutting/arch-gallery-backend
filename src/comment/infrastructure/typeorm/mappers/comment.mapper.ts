@@ -2,8 +2,6 @@ import { Comment } from 'src/comment/domain/entities/comment.entity';
 import { CommentModel } from '../models/comment.model';
 
 export class CommentTypeOrmMapper {
-  constructor() {}
-
   static execute(c: CommentModel): Comment {
     return new Comment({
       id: c.id,
