@@ -11,7 +11,6 @@ import { ProjectFactory } from './project.factory';
 import { LikeFactory } from './like.factory';
 import { CategoryFactory } from './category.factory';
 import { CommentFactory } from './comment.factory';
-import { SkillFactory } from './skill.factory';
 import { ExperienceFactory } from './experience.factory';
 
 config({ path: resolveEnvFilePath() });
@@ -32,9 +31,13 @@ const base = createDataSource({
     : false,
 });
 
+const dropSchema = toBool(process.env.DB_DROP_SCHEMA);
+
 const options: DataSourceOptions & SeederOptions = {
   ...base.options,
-  synchronize: toBool(process.env.DB_SYNCHRONIZE),
+  // Si se va a borrar el esquema, no sincronizar al abrir: con un esquema que ya derivo el
+  // ALTER falla antes de llegar al drop, y el flag no sirve para nada.
+  synchronize: dropSchema ? false : toBool(process.env.DB_SYNCHRONIZE),
   seeds: [MainSeeder],
   factories: [
     UserFactory,
@@ -42,7 +45,6 @@ const options: DataSourceOptions & SeederOptions = {
     LikeFactory,
     CategoryFactory,
     CommentFactory,
-    SkillFactory,
     ExperienceFactory,
   ],
 };
@@ -52,7 +54,7 @@ async function seed() {
   await dataSource.initialize();
 
   // Borrar el esquema es opt-in: antes `npm run seed` lo hacia siempre.
-  if (toBool(process.env.DB_DROP_SCHEMA)) {
+  if (dropSchema) {
     console.warn('DB_DROP_SCHEMA=true: recreando el esquema desde cero');
     await dataSource.synchronize(true);
   }
